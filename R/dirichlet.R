@@ -58,16 +58,17 @@ fun_rdirichlet_population <- function(n, m, p, alpha=NULL, name_var='x', name_so
       stopifnot(length(alpha) == p)
    }
 
+   col_source <- 'source'
    df_sources <- fun_rdirichlet(m, alpha, text = name_source) %>%
       tibble::add_column(source = 1:m, .before = 1)
-   names_source <- setdiff(colnames(df_sources), 'source')
+   names_source <- setdiff(colnames(df_sources), col_source)
 
    df_pop <- df_sources %>%
       dplyr::group_by(source) %>%
       tidyr::nest(.key = name_source) %>%
-      dplyr::mutate(samples = purrr::map(theta, ~ fun_rdirichlet(n, .x, name_var))) %>%
+      dplyr::mutate(samples = purrr::map(name_source, ~ fun_rdirichlet(n, .x, name_var))) %>%
       tidyr::unnest(samples)
-   names_var <- setdiff(colnames(df_pop), name_source)
+   names_var <- setdiff(colnames(df_pop), col_source)
 
    list(alpha = alpha,
         df_sources = df_sources,
