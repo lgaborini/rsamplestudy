@@ -2,7 +2,7 @@
 % Please edit documentation in R/ref_quest_split.R
 \name{make_dataset_splits}
 \alias{make_dataset_splits}
-\title{Generate reference and questioned observations from}
+\title{Generate reference/questioned/background observations from a multiple-source dataset.}
 \usage{
 make_dataset_splits(df, k_ref, k_quest, col_source = "source", ...)
 }
@@ -13,11 +13,47 @@ make_dataset_splits(df, k_ref, k_quest, col_source = "source", ...)
 
 \item{k_quest}{number of questioned samples}
 
-\item{col_source}{column containing the source identifier}
+\item{col_source}{column containing the source identifier (string or column number)}
+
+\item{...}{Arguments passed on to \code{make_idx_splits}
+\describe{
+  \item{sources}{all class labels}
+  \item{source_ref}{the reference source (scalar; if \code{NULL}, a random source will be picked)}
+  \item{source_quest}{the questioned source(s) (if \code{NULL}, anything but the reference source)}
+  \item{k_ref}{number of reference samples}
+  \item{k_quest}{number of questioned samples}
+  \item{background}{see details (default: \code{outside})}
+}}
+
+\item{source_ref}{the reference source (scalar; if \code{NULL}, a random source will be picked)}
+
+\item{source_quest}{the questioned source(s) (if \code{NULL}, anything but the reference source)}
+
+\item{background}{see details (default: \code{outside})}
+
+\item{replace}{use sampling with replacement, else error}
 }
 \value{
-a list of indexes and a list of dataframes
+a list of indexes (\code{idx_reference}, \code{idx_questioned}, \code{idx_background}) and a list of dataframes (\code{df_reference}, \code{df_questioned}, \code{df_background})
 }
 \description{
-Generate reference and questioned observations from
+The function splits a dataframe by rows, into a sample of reference items, questioned items and background items.
+The split is done according by the item source.
+}
+\details{
+Reference and questioned samples are always non-intersecting, even when the source is the same.
+
+Sampling with replacement is used, if necessary and not forbidden.
+}
+\section{Background selection}{
+
+
+If \code{background} is \code{outside}, the background dataset comprises all items who do not lie in any of the reference and questioned sets.
+If \code{background} is \code{others}, the background dataset comprises all items from the non-reference and non-questioned sources
+
+By default, \code{background} is \code{outside}: background data can contain items from \emph{all} sources.
+}
+
+\seealso{
+\link{make_idx_splits}
 }

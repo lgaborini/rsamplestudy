@@ -1,16 +1,29 @@
-#' Generate reference and questioned observations from
+#' Generate reference/questioned/background observations from a multiple-source dataset.
+#'
+#' The function splits a dataframe by rows, into a sample of reference items, questioned items and background items.
+#' The split is done according by the item source.
+#'
+#' Reference and questioned samples are always non-intersecting, even when the source is the same.
+#'
+#' Sampling with replacement is used, if necessary and not forbidden.
 #'
 #' @param df all available data
 #' @param k_ref number of reference samples
 #' @param k_quest number of questioned samples
-#' @param col_source column containing the source identifier
-#' @inheritParams make_idx_splits
+#' @param col_source column containing the source identifier (string or column number)
+#' @param source_ref the reference source (scalar; if \code{NULL}, a random source will be picked)
+#' @param source_quest the questioned source(s) (if \code{NULL}, anything but the reference source)
+#' @param background see details (default: \code{outside})
+#' @param replace use sampling with replacement, else error
+#' @inheritSection make_idx_splits Background selection
+#' @inheritDotParams make_idx_splits
 #' @export
-#' @return a list of indexes and a list of dataframes
+#' @return a list of indexes (\code{idx_reference}, \code{idx_questioned}, \code{idx_background}) and a list of dataframes (\code{df_reference}, \code{df_questioned}, \code{df_background})
+#' @seealso \link{make_idx_splits}
 make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) {
    sources <- df %>% pluck(col_source)
 
-   list_idx <- make_idx_splits(sources, n_ref = k_ref, n_quest = k_quest, ...)
+   list_idx <- make_idx_splits(sources, k_ref = k_ref, k_quest = k_quest, ...)
 
    c(list_idx, list(
       df_reference = df[list_idx$idx_reference,],
@@ -21,28 +34,39 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 
 
 
-
 #' Extract questioned/reference/background samples from a list of populations from sources
 #'
 #' The function splits a list of items (rows) into a sample of reference items, questioned items and background items.
 #' Reference and questioned samples are always non-intersecting, even when the source is the same.
 #'
-#' If `background` is `outside`, the background dataset comprises all items who do not lie in any of the reference and questioned sets.
-#' If `background` is `others`, the background dataset comprises all items from the non-reference and non-questioned sources
+#' Sampling with replacement is used, if necessary and not forbidden.
 #'
-#' Sampling with replacement is used, if necessary.
+#' @section Source sampling:
+#'
+#' Questioned items are sampled from all but the reference source.
+#'
+#' @section Background selection:
+#'
+#' If \code{background} is \code{outside}, the background dataset comprises all items who do not lie in any of the reference and questioned sets.
+#' If \code{background} is \code{others}, the background dataset comprises all items from the non-reference and non-questioned sources
+#'
+#' By default, \code{background} is \code{outside}: background data can contain items from \emph{all} sources.
 #'
 #' @param sources all class labels
-#' @param source_ref the reference source (scalar; if NULL, a random source will be picked)
-#' @param source_quest the questioned source(s) (if NULL, anything but the reference source)
-#' @param n_ref number of reference samples
-#' @param n_quest number of questioned samples
-#' @param background see details
+#' @param source_ref the reference source (scalar; if \code{NULL}, a random source will be picked)
+#' @param source_quest the questioned source(s) (if \code{NULL}, anything but the reference source)
+#' @param k_ref number of reference samples
+#' @param k_quest number of questioned samples
+#' @param background see details (default: \code{outside})
 #' @param replace use sampling with replacement, else error
 #' @importFrom assertthat assert_that
-#' @return list of indexes
+#' @return list of indexes (\code{idx_reference}, \code{idx_questioned}, \code{idx_background})
 #' @export
-make_idx_splits <- function(sources, n_ref, n_quest, source_ref = NULL, source_quest = NULL, background = 'outside', use_replace = TRUE) {
+#' @seealso \link{make_dataset_splits}
+make_idx_splits <- function(sources, k_ref, k_quest,
+                            source_ref = NULL, source_quest = NULL,
+                            same_source = NULL,
+                            background = 'outside', use_replace = TRUE) {
    sources <- as.vector(sources)
    source_all <- unique(sources)
    idx_all <- seq_along(sources)
@@ -50,7 +74,7 @@ make_idx_splits <- function(sources, n_ref, n_quest, source_ref = NULL, source_q
    if (is.null(source_ref)) {
       source_ref <- sample(source_all, 1)
    }
-   assert_that(assertthat::is.scalar(source_ref))
+   assertthat::assert_that(assertthat::is.scalar(source_ref))
 
    if (is.null(source_quest)) {
       source_quest <- setdiff(source_all, source_ref)
@@ -62,6 +86,7 @@ make_idx_splits <- function(sources, n_ref, n_quest, source_ref = NULL, source_q
       source_quest <- as.vector(source_quest)
    }
 
+   # Check whether the questioned and reference sources are the same
    if (identical(unique(source_ref), unique(source_quest))) {
       sampling_same <- TRUE
    } else {
@@ -81,20 +106,20 @@ make_idx_splits <- function(sources, n_ref, n_quest, source_ref = NULL, source_q
    }
 
    # Build the reference sample
-   do_replace_ref <- (len_ref < n_ref) & use_replace
-   idx_reference <- idx_ref_all %>% sample(n_ref, replace = do_replace_ref) %>% sort
+   do_replace_ref <- (len_ref < k_ref) & use_replace
+   idx_reference <- sort(sample(idx_ref_all, k_ref, replace = do_replace_ref))
    if (do_replace_ref) {
       if (use_replace) { message('Reference items: sampling with replacement is being used.') }
-      else { error('Reference items: sampling with replacement is being used.') }
+      else { stop('Reference items: sampling with replacement is being used.') }
    }
 
    # Build the questioned sample w/o reference items
    idx_quest_all_no_ref <- setdiff(idx_quest_all, idx_reference)
-   do_replace_quest <- (length(idx_quest_all_no_ref) < n_quest) & use_replace
-   idx_questioned <- sample(idx_quest_all_no_ref, n_quest, replace = do_replace_quest) %>% sort
+   do_replace_quest <- (length(idx_quest_all_no_ref) < k_quest) & use_replace
+   idx_questioned <- sample(idx_quest_all_no_ref, k_quest, replace = do_replace_quest) %>% sort
    if (do_replace_quest) {
       if (use_replace) { message('Questioned items: sampling with replacement is being used.') }
-      else { error('Questioned items: sampling with replacement is being used.') }
+      else { stop('Questioned items: sampling with replacement is being used.') }
    }
 
    # Build the background dataset

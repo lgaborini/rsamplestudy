@@ -4,34 +4,50 @@
 \alias{make_idx_splits}
 \title{Extract questioned/reference/background samples from a list of populations from sources}
 \usage{
-make_idx_splits(sources, n_ref, n_quest, source_ref = NULL,
-  source_quest = NULL, background = "outside", use_replace = TRUE)
+make_idx_splits(sources, k_ref, k_quest, source_ref = NULL,
+  source_quest = NULL, same_source = NULL, background = "outside",
+  use_replace = TRUE)
 }
 \arguments{
 \item{sources}{all class labels}
 
-\item{n_ref}{number of reference samples}
+\item{k_ref}{number of reference samples}
 
-\item{n_quest}{number of questioned samples}
+\item{k_quest}{number of questioned samples}
 
-\item{source_ref}{the reference source (scalar; if NULL, a random source will be picked)}
+\item{source_ref}{the reference source (scalar; if \code{NULL}, a random source will be picked)}
 
-\item{source_quest}{the questioned source(s) (if NULL, anything but the reference source)}
+\item{source_quest}{the questioned source(s) (if \code{NULL}, anything but the reference source)}
 
-\item{background}{see details}
+\item{background}{see details (default: \code{outside})}
 
 \item{replace}{use sampling with replacement, else error}
 }
 \value{
-list of indexes
+list of indexes (\code{idx_reference}, \code{idx_questioned}, \code{idx_background})
 }
 \description{
 The function splits a list of items (rows) into a sample of reference items, questioned items and background items.
 Reference and questioned samples are always non-intersecting, even when the source is the same.
 }
 \details{
-If `background` is `outside`, the background dataset comprises all items who do not lie in any of the reference and questioned sets.
-If `background` is `others`, the background dataset comprises all items from the non-reference and non-questioned sources
+Sampling with replacement is used, if necessary and not forbidden.
+}
+\section{Source sampling}{
 
-Sampling with replacement is used, if necessary.
+
+Questioned items are sampled from all but the reference source.
+}
+
+\section{Background selection}{
+
+
+If \code{background} is \code{outside}, the background dataset comprises all items who do not lie in any of the reference and questioned sets.
+If \code{background} is \code{others}, the background dataset comprises all items from the non-reference and non-questioned sources
+
+By default, \code{background} is \code{outside}: background data can contain items from \emph{all} sources.
+}
+
+\seealso{
+\link{make_dataset_splits}
 }
