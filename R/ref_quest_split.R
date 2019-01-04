@@ -17,11 +17,12 @@
 #' @param replace use sampling with replacement, else error
 #' @inheritSection make_idx_splits Background selection
 #' @inheritDotParams make_idx_splits
+#' @importFrom purrr pluck
 #' @export
 #' @return a list of indexes (\code{idx_reference}, \code{idx_questioned}, \code{idx_background}) and a list of dataframes (\code{df_reference}, \code{df_questioned}, \code{df_background})
 #' @seealso \link{make_idx_splits}
 make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) {
-   sources <- df %>% pluck(col_source)
+   sources <- purrr::pluck(df, col_source)
 
    list_idx <- make_idx_splits(sources, k_ref = k_ref, k_quest = k_quest, ...)
 
@@ -116,7 +117,7 @@ make_idx_splits <- function(sources, k_ref, k_quest,
    # Build the questioned sample w/o reference items
    idx_quest_all_no_ref <- setdiff(idx_quest_all, idx_reference)
    do_replace_quest <- (length(idx_quest_all_no_ref) < k_quest) & use_replace
-   idx_questioned <- sample(idx_quest_all_no_ref, k_quest, replace = do_replace_quest) %>% sort
+   idx_questioned <- sort(sample(idx_quest_all_no_ref, k_quest, replace = do_replace_quest))
    if (do_replace_quest) {
       if (use_replace) { message('Questioned items: sampling with replacement is being used.') }
       else { stop('Questioned items: sampling with replacement is being used.') }
