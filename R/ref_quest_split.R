@@ -39,13 +39,17 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #' Extract questioned/reference/background samples from a list of populations from sources
 #'
 #' The function splits a list of items (rows) into a sample of reference items, questioned items and background items.
-#' Reference and questioned samples are always non-intersecting, even when the source is the same.
+#' Reference/questioned/background samples are always non-intersecting, even when the source is the same.
 #'
 #' Sampling with replacement is used, if necessary and not forbidden.
+#' It always guarantees that no sample appear more than once across reference/questioned/background items.
 #'
 #' @section Source sampling:
 #'
-#' If `source_quest` is NULL, questioned items are sampled from all but the reference source.
+#' If `source_quest` is NULL:
+#' if `same_source` is NULL or FALSE, questioned items are sampled from all but the reference source.
+#' if `same_source` is TRUE, questioned items are sampled from the reference source.
+#' 
 #' Else, questioned items will be sampled from the questioned source(s), even if it contains the reference one.
 #' 
 #' Items will never be sampled once (unless `replace` is TRUE): they appear once in the reference/questioned/background items.
@@ -59,7 +63,8 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #'
 #' @param sources all class labels
 #' @param source_ref the reference source (scalar; if \code{NULL}, a random source will be picked)
-#' @param source_quest the questioned source(s) (if \code{NULL}, anything but the reference source)
+#' @param source_quest the questioned source(s) (if \code{NULL}, anything but the reference source: behaviour overridden by `same_source`)
+#' @param same_source if source_quest is NULL and same_source is TRUE, questioned source is the reference source
 #' @param k_ref number of reference samples
 #' @param k_quest number of questioned samples
 #' @param background see details (default: \code{outside})
@@ -71,21 +76,29 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 make_idx_splits <- function(sources, k_ref, k_quest,
                             source_ref = NULL, source_quest = NULL,
                             same_source = NULL,
-                            background = 'outside', use_replace = TRUE) {
+                            background = 'outside', replace = TRUE) {
    sources <- as.vector(sources)
    source_all <- unique(sources)
    idx_all <- seq_along(sources)
 
+   # Setup reference source
    if (is.null(source_ref)) {
       source_ref <- sample(source_all, 1)
    }
    assertthat::assert_that(assertthat::is.scalar(source_ref))
 
+   # Setup questioned source(s)
    if (is.null(source_quest)) {
-      source_quest <- setdiff(source_all, source_ref)
-      if (length(source_quest) == 0) {
-         # Only one source in the dataset: must sample both from that one
+
+      # Force sampling from the same source
+      if (!is.null(same_source) && same_source) {
          source_quest <- source_ref
+      } else {
+         source_quest <- setdiff(source_all, source_ref)
+         if (length(source_quest) == 0) {
+            # Only one source in the dataset: must sample both from that one
+            source_quest <- source_ref
+         }
       }
    } else {
       source_quest <- as.vector(source_quest)
@@ -113,10 +126,10 @@ make_idx_splits <- function(sources, k_ref, k_quest,
    }
 
    # Build the reference sample
-   do_replace_ref <- (len_ref < k_ref) & use_replace
+   do_replace_ref <- (len_ref < k_ref) & replace
    idx_reference <- sort(resample(idx_ref_all, k_ref, replace = do_replace_ref))
    if (do_replace_ref) {
-      if (use_replace) { message('Reference items: sampling with replacement is being used.') }
+      if (replace) { message('Reference items: sampling with replacement is being used.') }
       else { stop('Reference items: sampling with replacement is being used.') }
    }
 
@@ -125,10 +138,10 @@ make_idx_splits <- function(sources, k_ref, k_quest,
    # Do not sample items in the reference sample
    # All other items are kept, and can be sampled from
    idx_quest_all_no_ref <- setdiff(idx_quest_all, idx_reference)
-   do_replace_quest <- (length(idx_quest_all_no_ref) < k_quest) & use_replace
+   do_replace_quest <- (length(idx_quest_all_no_ref) < k_quest) & replace
    idx_questioned <- sort(resample(idx_quest_all_no_ref, k_quest, replace = do_replace_quest))
    if (do_replace_quest) {
-      if (use_replace) { message('Questioned items: sampling with replacement is being used.') }
+      if (replace) { message('Questioned items: sampling with replacement is being used.') }
       else { stop('Questioned items: sampling with replacement is being used.') }
    }
 

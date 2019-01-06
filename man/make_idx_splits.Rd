@@ -6,7 +6,7 @@
 \usage{
 make_idx_splits(sources, k_ref, k_quest, source_ref = NULL,
   source_quest = NULL, same_source = NULL, background = "outside",
-  use_replace = TRUE)
+  replace = TRUE)
 }
 \arguments{
 \item{sources}{all class labels}
@@ -17,7 +17,9 @@ make_idx_splits(sources, k_ref, k_quest, source_ref = NULL,
 
 \item{source_ref}{the reference source (scalar; if \code{NULL}, a random source will be picked)}
 
-\item{source_quest}{the questioned source(s) (if \code{NULL}, anything but the reference source)}
+\item{source_quest}{the questioned source(s) (if \code{NULL}, anything but the reference source: behaviour overridden by `same_source`)}
+
+\item{same_source}{if source_quest is NULL and same_source is TRUE, questioned source is the reference source}
 
 \item{background}{see details (default: \code{outside})}
 
@@ -28,15 +30,22 @@ list of indexes (\code{idx_reference}, \code{idx_questioned}, \code{idx_backgrou
 }
 \description{
 The function splits a list of items (rows) into a sample of reference items, questioned items and background items.
-Reference and questioned samples are always non-intersecting, even when the source is the same.
+Reference/questioned/background samples are always non-intersecting, even when the source is the same.
 }
 \details{
 Sampling with replacement is used, if necessary and not forbidden.
+It always guarantees that no sample appear more than once across reference/questioned/background items.
 }
 \section{Source sampling}{
 
 
-Questioned items are sampled from all but the reference source.
+If `source_quest` is NULL:
+if `same_source` is NULL or FALSE, questioned items are sampled from all but the reference source.
+if `same_source` is TRUE, questioned items are sampled from the reference source.
+
+Else, questioned items will be sampled from the questioned source(s), even if it contains the reference one.
+
+Items will never be sampled once (unless `replace` is TRUE): they appear once in the reference/questioned/background items.
 }
 
 \section{Background selection}{
