@@ -11,4 +11,4 @@ LazyData: true
 Imports: dplyr, magrittr, tidyr, purrr, Compositional, assertthat
 Suggests: 
     testthat
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1

@@ -16,6 +16,7 @@
 #' @param background see details (default: \code{outside})
 #' @param replace use sampling with replacement, else error
 #' @inheritSection make_idx_splits Background selection
+#' @inheritSection make_idx_splits Source sampling
 #' @inheritDotParams make_idx_splits
 #' @importFrom purrr pluck
 #' @export
@@ -44,7 +45,10 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #'
 #' @section Source sampling:
 #'
-#' Questioned items are sampled from all but the reference source.
+#' If `source_quest` is NULL, questioned items are sampled from all but the reference source.
+#' Else, questioned items will be sampled from the questioned source(s), even if it contains the reference one.
+#' 
+#' Items will never be sampled once (unless `replace` is TRUE): they appear once in the reference/questioned/background items.
 #'
 #' @section Background selection:
 #'
@@ -94,12 +98,14 @@ make_idx_splits <- function(sources, k_ref, k_quest,
       sampling_same <- FALSE
    }
 
+   # Indexes of items from the reference source
    idx_ref_all <- which(sources %in% source_ref)
    len_ref <- length(idx_ref_all)
    if (len_ref == 0) {
       stop('Reference class not found.')
    }
 
+   # Indexes of items from the questioned sources
    idx_quest_all <- which(sources %in% source_quest)
    len_quest_all <- length(idx_quest_all)
    if (len_quest_all == 0) {
@@ -108,16 +114,19 @@ make_idx_splits <- function(sources, k_ref, k_quest,
 
    # Build the reference sample
    do_replace_ref <- (len_ref < k_ref) & use_replace
-   idx_reference <- sort(sample(idx_ref_all, k_ref, replace = do_replace_ref))
+   idx_reference <- sort(resample(idx_ref_all, k_ref, replace = do_replace_ref))
    if (do_replace_ref) {
       if (use_replace) { message('Reference items: sampling with replacement is being used.') }
       else { stop('Reference items: sampling with replacement is being used.') }
    }
 
    # Build the questioned sample w/o reference items
+
+   # Do not sample items in the reference sample
+   # All other items are kept, and can be sampled from
    idx_quest_all_no_ref <- setdiff(idx_quest_all, idx_reference)
    do_replace_quest <- (length(idx_quest_all_no_ref) < k_quest) & use_replace
-   idx_questioned <- sort(sample(idx_quest_all_no_ref, k_quest, replace = do_replace_quest))
+   idx_questioned <- sort(resample(idx_quest_all_no_ref, k_quest, replace = do_replace_quest))
    if (do_replace_quest) {
       if (use_replace) { message('Questioned items: sampling with replacement is being used.') }
       else { stop('Questioned items: sampling with replacement is being used.') }
@@ -133,4 +142,20 @@ make_idx_splits <- function(sources, k_ref, k_quest,
    }
 
    list(idx_reference = idx_reference, idx_questioned = idx_questioned, idx_background = idx_background)
+}
+
+
+
+#' Random Samples and Permutations
+#'
+#' `resample`` takes a sample of the specified size from the elements of x using either with or without replacement.
+#'
+#' Works like `sample`, but it is safer if x is a scalar.
+#'
+#' @param x a vector of one or more elements from which to choose
+#' @param size a non-negative integer giving the number of items to choose.
+#' @export
+#' @inheritParams sample
+resample <- function(x, size, replace = FALSE) {
+   x[sample.int(length(x), size = size, replace = replace)]
 }
