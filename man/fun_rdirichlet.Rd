@@ -11,7 +11,7 @@ fun_rdirichlet(n, a, text = "x")
 
 \item{a}{Dirichlet parameter (a vector)}
 
-\item{text}{optional variable names (default: 'x')}
+\item{text}{optional variable names (default: \code{'x'})}
 }
 \value{
 a tibble with named colums, where each row is a Dirichlet sample

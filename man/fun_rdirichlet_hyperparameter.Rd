@@ -13,7 +13,7 @@ fun_rdirichlet_hyperparameter(p)
 a tibble with named colums
 }
 \description{
-Assume it comes from a Uniform distribution on the (p-1)-simplex.
+Assume it comes from a Uniform distribution on the $(p-1)$-simplex.
 }
 \details{
 Formally, we sample from a Dirichlet with constant base measure, and concentration parameter = p.

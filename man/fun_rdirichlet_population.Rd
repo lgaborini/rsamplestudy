@@ -15,19 +15,21 @@ fun_rdirichlet_population(n, m, p, alpha = NULL, name_var = "x",
 \item{p}{number of variables}
 
 \item{alpha}{between-source alpha hyperparameter.
-If NULL, it is generated from the Uniform distribution on the (p-1)-simplex.}
+If \code{NULL}, it is generated from the Uniform distribution on the $(p-1)$-simplex.}
 
-\item{name_var}{names for data variables (default: 'x')}
+\item{name_var}{names for data variables (default: \code{'x'})}
 
-\item{name_source}{names for source parameters (default: 'theta')}
+\item{name_source}{names for source parameters (default: \code{'theta'})}
 }
 \value{
 list of samples:
-- alpha: the Dirichlet between hyperparameter
-- df_sources: tibble of the Dirichlet population parameters, source column is 'source', variables start with name_source
-- df_pop: the Dirichlet data, source column is 'source', variables start with name_var
-- names_var: names of columns containing data variables
-- names_source: names of columns containing source variables
+\itemize{
+\item \code{alpha}: the Dirichlet between hyperparameter
+\item \code{df_sources}: tibble of the Dirichlet population parameters, source column is \code{'source'}, variables start with \code{name_source}
+\item \code{df_pop}: the Dirichlet data, source column is \code{'source'}, variables start with \code{name_var}
+\item \code{names_var}: names of columns containing data variables
+\item \code{names_source}: names of columns containing source variables
+}
 }
 \description{
 Optionally pass the between-source alpha hyperparameter used to generate the source parameters.

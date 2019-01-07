@@ -2,7 +2,7 @@
 #'
 #' @param n number of samples
 #' @param a Dirichlet parameter (a vector)
-#' @param text optional variable names (default: 'x')
+#' @param text optional variable names (default: `'x'`)
 #' @return a tibble with named colums, where each row is a Dirichlet sample
 #' @export
 #' @importFrom Compositional rdiri
@@ -10,6 +10,7 @@
 #' @importFrom purrr set_names
 #' @inheritParams fun_rdirichlet_hyperparameter
 #' @seealso \link{Compositional::rdiri}
+#' @md
 fun_rdirichlet <- function(n, a, text='x') {
    a <- as.numeric(a)
    p <- length(a)
@@ -20,7 +21,7 @@ fun_rdirichlet <- function(n, a, text='x') {
 
 #' Sample the Dirichlet hyperparameter
 #'
-#' Assume it comes from a Uniform distribution on the (p-1)-simplex.
+#' Assume it comes from a Uniform distribution on the $(p-1)$-simplex.
 #'
 #' Formally, we sample from a Dirichlet with constant base measure, and concentration parameter = p.
 #' The resulting Dirichlet parameter is constant = 1.
@@ -42,19 +43,22 @@ fun_rdirichlet_hyperparameter <- function(p) {
 #' @param n number of samples per source
 #' @param m number of sources
 #' @param alpha between-source alpha hyperparameter.
-#'    If NULL, it is generated from the Uniform distribution on the (p-1)-simplex.
-#' @param name_var names for data variables (default: 'x')
-#' @param name_source names for source parameters (default: 'theta')
+#'    If `NULL`, it is generated from the Uniform distribution on the $(p-1)$-simplex.
+#' @param name_var names for data variables (default: `'x'`)
+#' @param name_source names for source parameters (default: `'theta'`)
 #'
 #' @return list of samples:
-#' - alpha: the Dirichlet between hyperparameter
-#' - df_sources: tibble of the Dirichlet population parameters, source column is 'source', variables start with name_source
-#' - df_pop: the Dirichlet data, source column is 'source', variables start with name_var
-#' - names_var: names of columns containing data variables
-#' - names_source: names of columns containing source variables
+#'
+#' - `alpha`: the Dirichlet between hyperparameter
+#' - `df_sources`: tibble of the Dirichlet population parameters, source column is `'source'`, variables start with `name_source`
+#' - `df_pop`: the Dirichlet data, source column is `'source'`, variables start with `name_var`
+#' - `names_var`: names of columns containing data variables
+#' - `names_source`: names of columns containing source variables
+#'
 #' @export
 #' @importFrom tibble add_column
 #' @inheritParams fun_rdirichlet_hyperparameter
+#' @md
 fun_rdirichlet_population <- function(n, m, p, alpha=NULL, name_var='x', name_source='theta') {
 
    if (is.null(alpha)) {
