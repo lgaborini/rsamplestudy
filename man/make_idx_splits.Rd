@@ -58,7 +58,7 @@ Items will never be sampled once (unless \code{replace} is \code{TRUE}): they ap
 \item If \code{background} is \code{'others'}, the background dataset comprises all items from the \strong{non}-reference and \strong{non}-questioned \strong{sources}
 }
 
-By default, \code{background} is \code{'outside'}: background data can contain items from \emph{all} sources.
+By default, \code{background} is \code{'outside'}.
 }
 
 \seealso{

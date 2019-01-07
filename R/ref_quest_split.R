@@ -65,7 +65,7 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #' - If `background` is `'outside'`, the background dataset comprises all items who **do not lie** in any of the reference and questioned sets.
 #' - If `background` is `'others'`, the background dataset comprises all items from the **non**-reference and **non**-questioned **sources**
 #'
-#' By default, `background` is `'outside'`: background data can contain items from *all* sources.
+#' By default, `background` is `'outside'`.
 #'
 #' @param sources all class labels
 #' @param source_ref the reference source (scalar; if `NULL`, a random source will be picked)
@@ -161,7 +161,7 @@ make_idx_splits <- function(sources, k_ref, k_quest,
    }
 
    if (length(idx_background) == 0) {
-      warning('no background data!')
+      warning('No background data!')
    }
 
    list(idx_reference = idx_reference, idx_questioned = idx_questioned, idx_background = idx_background)
