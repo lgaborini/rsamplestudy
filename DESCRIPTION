@@ -12,7 +12,8 @@ Imports: dplyr, magrittr, tidyr, purrr, Compositional, assertthat
 Suggests: 
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    covr
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
