@@ -30,7 +30,7 @@ fun_rdirichlet <- function(n, a, text='x') {
 #' @export
 #'
 fun_rdirichlet_hyperparameter <- function(p) {
-   fun_rdirichlet(1, rep(1/p, p), 'alpha')
+   fun_rdirichlet(1, p*rep(1/p, p), 'alpha')
 }
 
 
