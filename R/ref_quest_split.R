@@ -11,19 +11,23 @@
 #' @param k_ref number of reference samples
 #' @param k_quest number of questioned samples
 #' @param col_source column containing the source identifier (string or column number)
-#' @param source_ref the reference source (scalar; if \code{NULL}, a random source will be picked)
-#' @param source_quest the questioned source(s) (if \code{NULL}, anything but the reference source)
-#' @param background see details (default: \code{outside})
+#' @param source_ref the reference source (scalar; if `NULL`, a random source will be picked)
+#' @param source_quest the questioned source(s) (if `NULL`, anything but the reference source)
+#' @param background see details (default: `outside`)
 #' @param replace use sampling with replacement, else error
 #' @inheritSection make_idx_splits Background selection
 #' @inheritSection make_idx_splits Source sampling
 #' @inheritDotParams make_idx_splits
 #' @importFrom purrr pluck
 #' @export
-#' @return a list of indexes (\code{idx_reference}, \code{idx_questioned}, \code{idx_background}) and a list of dataframes (\code{df_reference}, \code{df_questioned}, \code{df_background})
-#' @seealso \link{make_idx_splits}
+#' @return a list of indexes (`idx_reference`, `idx_questioned`, `idx_background`) and a list of dataframes (`df_reference`, `df_questioned`, `df_background`)
+#' @seealso [make_idx_splits()]
 make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) {
    sources <- purrr::pluck(df, col_source)
+
+   if (is.null(sources)) {
+      stop(paste('column "', col_source, '" not found.'))
+   }
 
    list_idx <- make_idx_splits(sources, k_ref = k_ref, k_quest = k_quest, ...)
 
@@ -47,34 +51,34 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #'
 #' @section Source sampling:
 #'
-#' If `source_quest` is NULL:
-#' if `same_source` is NULL or FALSE, questioned items are sampled from all but the reference source.
-#' if `same_source` is TRUE, questioned items are sampled from the reference source.
+#' If `source_quest` is `NULL`:
+#'
+#' - if `same_source` is `NULL` or `FALSE`, questioned items are sampled from all but the reference source.
+#' - if `same_source` is `TRUE`, questioned items are sampled from the reference source.
 #'
 #' Else, questioned items will be sampled from the questioned source(s), even if it contains the reference one.
 #'
-#' Items will never be sampled once (unless `replace` is TRUE): they appear once in the reference/questioned/background items.
+#' Items will never be sampled once (unless `replace` is `TRUE`): they appear once in the reference/questioned/background items.
 #'
 #' @section Background selection:
 #'
-#' If \code{background} is \code{'outside'}, the background dataset comprises all items who do not lie in any of the reference and questioned sets.
-#' If \code{background} is \code{'others'}, the background dataset comprises all items from the non-reference and non-questioned sources
+#' - If `background` is `'outside'`, the background dataset comprises all items who **do not lie** in any of the reference and questioned sets.
+#' - If `background` is `'others'`, the background dataset comprises all items from the **non**-reference and **non**-questioned **sources**
 #'
-#' By default, \code{background} is \code{'outside'}: background data can contain items from \emph{all} sources.
+#' By default, `background` is `'outside'`: background data can contain items from *all* sources.
 #'
 #' @param sources all class labels
-#' @param source_ref the reference source (scalar; if \code{NULL}, a random source will be picked)
-#' @param source_quest the questioned source(s) (if \code{NULL}, anything but the reference source: behaviour overridden by `same_source`)
-#' @param same_source if `source_quest` is `NULL and `same_source` is `TRUE`, questioned source is the reference source
+#' @param source_ref the reference source (scalar; if `NULL`, a random source will be picked)
+#' @param source_quest the questioned source(s) (if `NULL`, anything but the reference source: behaviour overridden by `same_source`)
+#' @param same_source if `source_quest` is `NULL` and `same_source` is `TRUE`, questioned source is the reference source
 #' @param k_ref number of reference samples
 #' @param k_quest number of questioned samples
 #' @param background see details (default: `'outside'`)
 #' @param replace use sampling with replacement, else error
 #' @importFrom assertthat assert_that
-#' @return list of indexes (\code{idx_reference}, \code{idx_questioned}, \code{idx_background})
+#' @return list of indexes (`idx_reference`, `idx_questioned`, `idx_background`)
 #' @export
-#' @seealso \link{make_dataset_splits}
-#' @md
+#' @seealso [make_dataset_splits()]
 make_idx_splits <- function(sources, k_ref, k_quest,
                             source_ref = NULL, source_quest = NULL,
                             same_source = NULL,
@@ -156,6 +160,10 @@ make_idx_splits <- function(sources, k_ref, k_quest,
       stop('background not specified.')
    }
 
+   if (length(idx_background) == 0) {
+      warning('no background data!')
+   }
+
    list(idx_reference = idx_reference, idx_questioned = idx_questioned, idx_background = idx_background)
 }
 
@@ -163,9 +171,9 @@ make_idx_splits <- function(sources, k_ref, k_quest,
 
 #' Random Samples and Permutations
 #'
-#' `resample`` takes a sample of the specified size from the elements of x using either with or without replacement.
+#' `resample` takes a sample of the specified size from the elements of `x` using either with or without replacement.
 #'
-#' Works like `sample`, but it is safer if x is a scalar.
+#' Works like [base::sample()], but it is safer if `x` is a scalar.
 #'
 #' @param x a vector of one or more elements from which to choose
 #' @param size a non-negative integer giving the number of items to choose.

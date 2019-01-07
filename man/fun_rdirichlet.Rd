@@ -20,5 +20,5 @@ a tibble with named colums, where each row is a Dirichlet sample
 Sample n times from a Dirichlet
 }
 \seealso{
-\link{Compositional::rdiri}
+\code{\link[Compositional:rdiri]{Compositional::rdiri()}}
 }

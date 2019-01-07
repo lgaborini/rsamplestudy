@@ -21,7 +21,7 @@ n_quest_diff <- n - 1
 n_quest_diff <- 1
 
 
-s_ref <- sample(1:m, 1)
+s_ref <- sample(1:n, 1)
 s_quest_same <- s_ref
 s_quest_diff <- sort(sample(setdiff(unique(sources), s_ref), n_quest_diff))
 

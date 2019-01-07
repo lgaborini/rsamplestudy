@@ -14,8 +14,8 @@ resample(x, size, replace = FALSE)
 \item{replace}{should sampling be with replacement?}
 }
 \description{
-`resample`` takes a sample of the specified size from the elements of x using either with or without replacement.
+\code{resample} takes a sample of the specified size from the elements of \code{x} using either with or without replacement.
 }
 \details{
-Works like `sample`, but it is safer if x is a scalar.
+Works like \code{\link[base:sample]{base::sample()}}, but it is safer if \code{x} is a scalar.
 }

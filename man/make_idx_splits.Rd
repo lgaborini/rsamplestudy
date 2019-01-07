@@ -19,7 +19,7 @@ make_idx_splits(sources, k_ref, k_quest, source_ref = NULL,
 
 \item{source_quest}{the questioned source(s) (if \code{NULL}, anything but the reference source: behaviour overridden by \code{same_source})}
 
-\item{same_source}{if \code{source_quest} is \code{NULL and }same_source\code{is}TRUE`, questioned source is the reference source}
+\item{same_source}{if \code{source_quest} is \code{NULL} and \code{same_source} is \code{TRUE}, questioned source is the reference source}
 
 \item{background}{see details (default: \code{'outside'})}
 
@@ -40,24 +40,27 @@ It always guarantees that no sample appear more than once across reference/quest
 \section{Source sampling}{
 
 
-If \code{source_quest} is NULL:
-if \code{same_source} is NULL or FALSE, questioned items are sampled from all but the reference source.
-if \code{same_source} is TRUE, questioned items are sampled from the reference source.
+If \code{source_quest} is \code{NULL}:
+\itemize{
+\item if \code{same_source} is \code{NULL} or \code{FALSE}, questioned items are sampled from all but the reference source.
+\item if \code{same_source} is \code{TRUE}, questioned items are sampled from the reference source.
+}
 
 Else, questioned items will be sampled from the questioned source(s), even if it contains the reference one.
 
-Items will never be sampled once (unless \code{replace} is TRUE): they appear once in the reference/questioned/background items.
+Items will never be sampled once (unless \code{replace} is \code{TRUE}): they appear once in the reference/questioned/background items.
 }
 
 \section{Background selection}{
 
-
-If \code{background} is \code{'outside'}, the background dataset comprises all items who do not lie in any of the reference and questioned sets.
-If \code{background} is \code{'others'}, the background dataset comprises all items from the non-reference and non-questioned sources
+\itemize{
+\item If \code{background} is \code{'outside'}, the background dataset comprises all items who \strong{do not lie} in any of the reference and questioned sets.
+\item If \code{background} is \code{'others'}, the background dataset comprises all items from the \strong{non}-reference and \strong{non}-questioned \strong{sources}
+}
 
 By default, \code{background} is \code{'outside'}: background data can contain items from \emph{all} sources.
 }
 
 \seealso{
-\link{make_dataset_splits}
+\code{\link[=make_dataset_splits]{make_dataset_splits()}}
 }

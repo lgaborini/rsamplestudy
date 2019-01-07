@@ -9,8 +9,7 @@
 #' @importFrom tibble as.tibble
 #' @importFrom purrr set_names
 #' @inheritParams fun_rdirichlet_hyperparameter
-#' @seealso \link{Compositional::rdiri}
-#' @md
+#' @seealso [Compositional::rdiri()]
 fun_rdirichlet <- function(n, a, text='x') {
    a <- as.numeric(a)
    p <- length(a)
@@ -29,7 +28,6 @@ fun_rdirichlet <- function(n, a, text='x') {
 #' @param p number of variables
 #' @return a tibble with named colums
 #' @export
-#'
 fun_rdirichlet_hyperparameter <- function(p) {
    fun_rdirichlet(1, p*rep(1/p, p), 'alpha')
 }
@@ -58,7 +56,6 @@ fun_rdirichlet_hyperparameter <- function(p) {
 #' @export
 #' @importFrom tibble add_column
 #' @inheritParams fun_rdirichlet_hyperparameter
-#' @md
 fun_rdirichlet_population <- function(n, m, p, alpha=NULL, name_var='x', name_source='theta') {
 
    if (is.null(alpha)) {
