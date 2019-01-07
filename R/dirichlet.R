@@ -7,7 +7,9 @@
 #' @export
 #' @importFrom Compositional rdiri
 #' @importFrom tibble as.tibble
+#' @importFrom purrr set_names
 #' @inheritParams fun_rdirichlet_hyperparameter
+#' @seealso \link{Compositional::rdiri}
 fun_rdirichlet <- function(n, a, text='x') {
    a <- as.numeric(a)
    p <- length(a)
@@ -19,6 +21,9 @@ fun_rdirichlet <- function(n, a, text='x') {
 #' Sample the Dirichlet hyperparameter
 #'
 #' Assume it comes from a Uniform distribution on the (p-1)-simplex.
+#'
+#' Formally, we sample from a Dirichlet with constant base measure, and concentration parameter = p.
+#' The resulting Dirichlet parameter is constant = 1.
 #'
 #' @param p number of variables
 #' @return a tibble with named colums
@@ -37,7 +42,7 @@ fun_rdirichlet_hyperparameter <- function(p) {
 #' @param n number of samples per source
 #' @param m number of sources
 #' @param alpha between-source alpha hyperparameter.
-#'    If NULL, it is generated from the Uniform distribution on the p-simplex.
+#'    If NULL, it is generated from the Uniform distribution on the (p-1)-simplex.
 #' @param name_var names for data variables (default: 'x')
 #' @param name_source names for source parameters (default: 'theta')
 #'

@@ -5,10 +5,13 @@ Version: 0.1.0
 Author: Lorenzo Gaborini
 Maintainer: Lorenzo Gaborini <lorenzo.gaborini@gmail.com>
 Description: Easily generate two-level studies from known distributions.
-License: What license is it under?
+License: Proprietary
 Encoding: UTF-8
 LazyData: true
 Imports: dplyr, magrittr, tidyr, purrr, Compositional, assertthat
 Suggests: 
-    testthat
+    testthat,
+    knitr,
+    rmarkdown
 RoxygenNote: 6.1.1
+VignetteBuilder: knitr

@@ -15,3 +15,7 @@ a tibble with named colums
 \description{
 Assume it comes from a Uniform distribution on the (p-1)-simplex.
 }
+\details{
+Formally, we sample from a Dirichlet with constant base measure, and concentration parameter = p.
+The resulting Dirichlet parameter is constant = 1.
+}

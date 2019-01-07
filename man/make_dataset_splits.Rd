@@ -19,11 +19,11 @@ make_dataset_splits(df, k_ref, k_quest, col_source = "source", ...)
 \describe{
   \item{sources}{all class labels}
   \item{source_ref}{the reference source (scalar; if \code{NULL}, a random source will be picked)}
-  \item{source_quest}{the questioned source(s) (if \code{NULL}, anything but the reference source: behaviour overridden by `same_source`)}
-  \item{same_source}{if source_quest is NULL and same_source is TRUE, questioned source is the reference source}
+  \item{source_quest}{the questioned source(s) (if \code{NULL}, anything but the reference source: behaviour overridden by \code{same_source})}
+  \item{same_source}{if \code{source_quest} is \code{NULL and }same_source\code{is}TRUE`, questioned source is the reference source}
   \item{k_ref}{number of reference samples}
   \item{k_quest}{number of questioned samples}
-  \item{background}{see details (default: \code{outside})}
+  \item{background}{see details (default: \code{'outside'})}
   \item{replace}{use sampling with replacement, else error}
 }}
 
@@ -50,22 +50,22 @@ Sampling with replacement is used, if necessary and not forbidden.
 \section{Background selection}{
 
 
-If \code{background} is \code{outside}, the background dataset comprises all items who do not lie in any of the reference and questioned sets.
-If \code{background} is \code{others}, the background dataset comprises all items from the non-reference and non-questioned sources
+If \code{background} is \code{'outside'}, the background dataset comprises all items who do not lie in any of the reference and questioned sets.
+If \code{background} is \code{'others'}, the background dataset comprises all items from the non-reference and non-questioned sources
 
-By default, \code{background} is \code{outside}: background data can contain items from \emph{all} sources.
+By default, \code{background} is \code{'outside'}: background data can contain items from \emph{all} sources.
 }
 
 \section{Source sampling}{
 
 
-If `source_quest` is NULL:
-if `same_source` is NULL or FALSE, questioned items are sampled from all but the reference source.
-if `same_source` is TRUE, questioned items are sampled from the reference source.
+If \code{source_quest} is NULL:
+if \code{same_source} is NULL or FALSE, questioned items are sampled from all but the reference source.
+if \code{same_source} is TRUE, questioned items are sampled from the reference source.
 
 Else, questioned items will be sampled from the questioned source(s), even if it contains the reference one.
 
-Items will never be sampled once (unless `replace` is TRUE): they appear once in the reference/questioned/background items.
+Items will never be sampled once (unless \code{replace} is TRUE): they appear once in the reference/questioned/background items.
 }
 
 \seealso{

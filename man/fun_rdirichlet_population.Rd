@@ -15,7 +15,7 @@ fun_rdirichlet_population(n, m, p, alpha = NULL, name_var = "x",
 \item{p}{number of variables}
 
 \item{alpha}{between-source alpha hyperparameter.
-If NULL, it is generated from the Uniform distribution on the p-simplex.}
+If NULL, it is generated from the Uniform distribution on the (p-1)-simplex.}
 
 \item{name_var}{names for data variables (default: 'x')}
 

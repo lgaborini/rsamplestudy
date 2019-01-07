@@ -10,6 +10,8 @@ resample(x, size, replace = FALSE)
 \item{x}{a vector of one or more elements from which to choose}
 
 \item{size}{a non-negative integer giving the number of items to choose.}
+
+\item{replace}{should sampling be with replacement?}
 }
 \description{
 `resample`` takes a sample of the specified size from the elements of x using either with or without replacement.

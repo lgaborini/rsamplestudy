@@ -19,3 +19,6 @@ a tibble with named colums, where each row is a Dirichlet sample
 \description{
 Sample n times from a Dirichlet
 }
+\seealso{
+\link{Compositional::rdiri}
+}

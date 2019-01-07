@@ -39,6 +39,7 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #' Extract questioned/reference/background samples from a list of populations from sources
 #'
 #' The function splits a list of items (rows) into a sample of reference items, questioned items and background items.
+#'
 #' Reference/questioned/background samples are always non-intersecting, even when the source is the same.
 #'
 #' Sampling with replacement is used, if necessary and not forbidden.
@@ -49,30 +50,31 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #' If `source_quest` is NULL:
 #' if `same_source` is NULL or FALSE, questioned items are sampled from all but the reference source.
 #' if `same_source` is TRUE, questioned items are sampled from the reference source.
-#' 
+#'
 #' Else, questioned items will be sampled from the questioned source(s), even if it contains the reference one.
-#' 
+#'
 #' Items will never be sampled once (unless `replace` is TRUE): they appear once in the reference/questioned/background items.
 #'
 #' @section Background selection:
 #'
-#' If \code{background} is \code{outside}, the background dataset comprises all items who do not lie in any of the reference and questioned sets.
-#' If \code{background} is \code{others}, the background dataset comprises all items from the non-reference and non-questioned sources
+#' If \code{background} is \code{'outside'}, the background dataset comprises all items who do not lie in any of the reference and questioned sets.
+#' If \code{background} is \code{'others'}, the background dataset comprises all items from the non-reference and non-questioned sources
 #'
-#' By default, \code{background} is \code{outside}: background data can contain items from \emph{all} sources.
+#' By default, \code{background} is \code{'outside'}: background data can contain items from \emph{all} sources.
 #'
 #' @param sources all class labels
 #' @param source_ref the reference source (scalar; if \code{NULL}, a random source will be picked)
 #' @param source_quest the questioned source(s) (if \code{NULL}, anything but the reference source: behaviour overridden by `same_source`)
-#' @param same_source if source_quest is NULL and same_source is TRUE, questioned source is the reference source
+#' @param same_source if `source_quest` is `NULL and `same_source` is `TRUE`, questioned source is the reference source
 #' @param k_ref number of reference samples
 #' @param k_quest number of questioned samples
-#' @param background see details (default: \code{outside})
+#' @param background see details (default: `'outside'`)
 #' @param replace use sampling with replacement, else error
 #' @importFrom assertthat assert_that
 #' @return list of indexes (\code{idx_reference}, \code{idx_questioned}, \code{idx_background})
 #' @export
 #' @seealso \link{make_dataset_splits}
+#' @md
 make_idx_splits <- function(sources, k_ref, k_quest,
                             source_ref = NULL, source_quest = NULL,
                             same_source = NULL,
@@ -167,8 +169,8 @@ make_idx_splits <- function(sources, k_ref, k_quest,
 #'
 #' @param x a vector of one or more elements from which to choose
 #' @param size a non-negative integer giving the number of items to choose.
+#' @param replace should sampling be with replacement?
 #' @export
-#' @inheritParams sample
 resample <- function(x, size, replace = FALSE) {
    x[sample.int(length(x), size = size, replace = replace)]
 }
