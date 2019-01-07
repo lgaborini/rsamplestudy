@@ -1,0 +1,188 @@
+---
+title: "Dirichlet Distribution"
+author: "LG"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+\newcommand{\simplex}[1]{\text{Simplex}{(#1)}}
+\newcommand{\dirichlet}[1]{\text{Dirichlet}{(#1)}}
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+\newcommand{\EE}{\mathop{\mathbb{E}}}
+\newcommand{\Var}{\mathop{\mathrm{Var}}}
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(rsamplestudy)
+library(tidyverse)
+```
+
+This package contains functions to sample from a Dirichlet distribution.
+
+
+## Notation
+
+
+We call $\simplex{p-1}$ the set of vectors in $\mathbb{R}^p$ whose components form a distribution on $p$ items.   
+In other words, $\vec{X} \in \simplex{p-1}$ iff $X_i \in [0,1]$ and $\sum_{i=1}^p X_i = 1$.
+
+Let $\vec{X}$ be a vector in $\simplex{p-1}$, let $\vec{\alpha}$ be a vector in $\mathbb{R}^p$ with positive components.
+
+Then, $X$ can have the Dirichlet distribution: $X \mid \vec{\alpha} \sim \dirichlet{\vec{\alpha}}$.
+
+We can write $\vec{\alpha} = \alpha_0 \, \vec{\nu}$, where:
+
+* $\alpha_0 = \sum_i \alpha_i$ is the **concentration parameter**: $\alpha_0 \in \mathbb{R}^{+}$
+* $\vec{\nu}$ is the **base measure**: $\vec{\nu} \in \simplex{p-1}$.
+
+  
+## Properties
+
+- $\EE[\vec{X}] = \vec{\alpha} / \alpha_0 = \vec{\nu}$
+- $\Var[\vec{X}] = \dfrac{ \vec{\nu} \cdot (1 - \vec{\nu})}{\alpha_0 + 1}$
+
+
+## Particular cases
+
+If $\vec{\nu}$ is constant, $\vec{\nu} = 1/p$. The Dirichlet distribution is called **symmetric Dirichlet**, and is only parametrised by the concentration parameter $\alpha_0$.
+
+- When $\alpha_0 = p$, $\alpha_i = 1 \forall i$: the Dirichlet distribution is **uniform** over $\simplex{p-1}$.  This is the least informative situation.
+- When $\alpha_0 \to 0$, $\alpha_i \to 0$: the Dirichlet distribution concentrates over the border of $\simplex{p-1}$.
+- When $\alpha_0 \gg 1$, $\alpha_i \to 0$: the Dirichlet distribution concentrates over the mean (and the variance decreases).
+
+## Examples
+
+Sample from a $p=4$ Dirichlet:
+
+```{r}
+n <- 100
+
+# The parameter
+alpha <- c(0.5, 0.1, 5, 0.1)
+p <- length(alpha)
+
+# Concentration and base measure
+alpha0 <- sum(alpha)
+nu <- alpha / alpha0
+```
+
+$\alpha_0 = `r alpha0`$   
+$\vec{\nu} = \left( `r nu` \right)$   
+$\vec{\alpha} = \left( `r alpha` \right)$
+
+```{r}
+df_diri <- fun_rdirichlet(n, alpha)
+head(df_diri)
+```
+
+```{r sym-sens-plot-comp, echo = FALSE}
+
+scatter_plot_01 <- function(data, mapping, ...) {
+  ggplot(data = data, mapping = mapping) +
+    geom_point(...) +
+    scale_x_continuous(limits = c(0,1), expand = c(0,0)) +
+    scale_y_continuous(limits = c(0,1), expand = c(0,0))
+}
+
+scatter_matrix_simplex <- function(df) {
+   df %>% 
+      GGally::ggpairs(upper = list(continuous = scatter_plot_01), diag = 'blank', lower = 'blank', labeller = label_parsed) +
+      theme_bw()
+}
+
+scatter_matrix_simplex(df_diri)
+
+```
+
+### Uniform sampling
+
+Uniform base measure, unitary Dirichlet parameters: $\vec{\alpha} = \vec{1}$.   
+
+```{r}
+nu <- rep(1, p)/p
+alpha0 <- p
+alpha <- nu * alpha0
+```
+
+$\alpha_0 = `r alpha0`$   
+$\vec{\nu} = \left( `r nu` \right)$   
+$\vec{\alpha} = \left( `r alpha` \right)$
+
+```{r}
+df_diri <- fun_rdirichlet(n, alpha)
+head(df_diri)
+```
+
+```{r}
+scatter_matrix_simplex(df_diri)
+```
+
+
+### Concentrated sampling
+
+Concentration parameter $\gg p$, Dirichlet parameters $\gg 1$
+
+```{r}
+nu <- rep(1, p)/p
+alpha0 <- 100
+alpha <- nu * alpha0
+```
+
+$\alpha_0 = `r alpha0`$   
+$\vec{\nu} = \left( `r nu` \right)$   
+$\vec{\alpha} = \left( `r alpha` \right)$
+
+```{r}
+df_diri <- fun_rdirichlet(n, alpha)
+head(df_diri)
+```
+
+```{r}
+scatter_matrix_simplex(df_diri)
+```
+
+
+### Degenerate sampling
+
+Concentration parameter $\\ p$, Dirichlet parameters $\\ 1$
+
+```{r}
+nu <- rep(1, p)/p
+alpha0 <- 0.01
+alpha <- nu * alpha0
+```
+
+$\alpha_0 = `r alpha0`$   
+$\vec{\nu} = \left( `r nu` \right)$   
+$\vec{\alpha} = \left( `r alpha` \right)$
+
+```{r}
+df_diri <- fun_rdirichlet(n, alpha)
+head(df_diri)
+```
+
+```{r}
+scatter_matrix_simplex(df_diri)
+```
+
+## rsamplestudy: Dirichlet-Dirichlet study generation
+
+### Hyperparameters
+
+We assume that the Dirichlet hyperparameter (the level farther from the data) comes from the Uniform distribution on the (p-1)-Simplex.   
+In other words, we will sample the Dirichlet hyperparameter from the $\dirichlet{\vec{1}}$ distribution. 
+
+The shortcut function the package is `fun_rdirichlet_hyperparameter(p)`:
+
+```{r}
+df_diri <- map_dfr(1:300, ~ fun_rdirichlet_hyperparameter(3))
+scatter_matrix_simplex(df_diri)
+```
+
