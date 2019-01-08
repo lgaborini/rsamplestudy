@@ -46,8 +46,9 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #'
 #' Reference/questioned/background samples are always non-intersecting, even when the source is the same.
 #'
-#' Sampling with replacement is used, if necessary and not forbidden.
-#' It always guarantees that no sample appear more than once across reference/questioned/background items.
+#' Sampling with replacement is used, if necessary and not forbidden. If it is used, a message appears.
+#'
+#' It is **always** guaranteed that no sample appear more than once across reference/questioned/background items (but it can appear multiple times in a set).
 #'
 #' @section Source sampling:
 #'
@@ -63,9 +64,13 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #' @section Background selection:
 #'
 #' - If `background` is `'outside'`, the background dataset comprises all items who **do not lie** in any of the reference and questioned sets.
-#' - If `background` is `'others'`, the background dataset comprises all items from the **non**-reference and **non**-questioned **sources**
+#'   It can contain items from reference and questioned sources.
+#' - If `background` is `'others'`, the background dataset comprises all items from the **non**-reference and **non**-questioned **sources**.
 #'
 #' By default, `background` is `'outside'`.
+#'
+#' Notice that `background = 'others'` generates no background data if questioned sources are not specified:
+#' the union of reference and questioned sources fills the available sources in the population.
 #'
 #' @param sources all class labels
 #' @param source_ref the reference source (scalar; if `NULL`, a random source will be picked)
