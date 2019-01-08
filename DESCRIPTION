@@ -13,7 +13,9 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    covr
+    covr,
+    tidyverse,
+    GGally
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
