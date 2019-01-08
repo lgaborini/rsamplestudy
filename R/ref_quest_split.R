@@ -11,17 +11,12 @@
 #' @param k_ref number of reference samples
 #' @param k_quest number of questioned samples
 #' @param col_source column containing the source identifier (string or column number)
-#' @param source_ref the reference source (scalar; if `NULL`, a random source will be picked)
-#' @param source_quest the questioned source(s) (if `NULL`, anything but the reference source)
-#' @param background see details (default: `outside`)
-#' @param replace use sampling with replacement, else error
 #' @inheritSection make_idx_splits Background selection
 #' @inheritSection make_idx_splits Source sampling
 #' @inheritDotParams make_idx_splits
-#' @importFrom purrr pluck
 #' @export
 #' @return a list of indexes (`idx_reference`, `idx_questioned`, `idx_background`) and a list of dataframes (`df_reference`, `df_questioned`, `df_background`)
-#' @seealso [make_idx_splits()]
+#' @family set sampling
 make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) {
    sources <- purrr::pluck(df, col_source)
 
@@ -80,10 +75,9 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #' @param k_quest number of questioned samples
 #' @param background see details (default: `'outside'`)
 #' @param replace use sampling with replacement, else error
-#' @importFrom assertthat assert_that
 #' @return list of indexes (`idx_reference`, `idx_questioned`, `idx_background`)
 #' @export
-#' @seealso [make_dataset_splits()]
+#' @family set sampling
 make_idx_splits <- function(sources, k_ref, k_quest,
                             source_ref = NULL, source_quest = NULL,
                             same_source = NULL,

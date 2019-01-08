@@ -67,5 +67,6 @@ the union of reference and questioned sources fills the available sources in the
 }
 
 \seealso{
-\code{\link[=make_dataset_splits]{make_dataset_splits()}}
+Other set sampling: \code{\link{make_dataset_splits}}
 }
+\concept{set sampling}

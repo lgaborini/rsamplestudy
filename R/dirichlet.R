@@ -5,11 +5,9 @@
 #' @param text optional variable names (default: `'x'`)
 #' @return a tibble with named colums, where each row is a Dirichlet sample
 #' @export
-#' @importFrom Compositional rdiri
-#' @importFrom tibble as.tibble
-#' @importFrom purrr set_names
 #' @inheritParams fun_rdirichlet_hyperparameter
 #' @seealso [Compositional::rdiri()]
+#' @family population
 fun_rdirichlet <- function(n, a, text='x') {
    a <- as.numeric(a)
    p <- length(a)
@@ -28,6 +26,7 @@ fun_rdirichlet <- function(n, a, text='x') {
 #' @param p number of variables
 #' @return a tibble with named colums
 #' @export
+#' @family population
 fun_rdirichlet_hyperparameter <- function(p) {
    fun_rdirichlet(1, p*rep(1/p, p), 'alpha')
 }
@@ -54,8 +53,8 @@ fun_rdirichlet_hyperparameter <- function(p) {
 #' - `names_source`: names of columns containing source variables
 #'
 #' @export
-#' @importFrom tibble add_column
 #' @inheritParams fun_rdirichlet_hyperparameter
+#' @family population
 fun_rdirichlet_population <- function(n, m, p, alpha=NULL, name_var='x', name_source='theta') {
 
    if (is.null(alpha)) {
@@ -69,6 +68,7 @@ fun_rdirichlet_population <- function(n, m, p, alpha=NULL, name_var='x', name_so
       tibble::add_column(source = 1:m, .before = 1)
    names_source <- setdiff(colnames(df_sources), col_source)
 
+   samples <- NULL   # avoid R CMD check error
    df_pop <- df_sources %>%
       dplyr::group_by(source) %>%
       tidyr::nest(.key = name_source) %>%

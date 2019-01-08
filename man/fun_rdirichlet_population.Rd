@@ -34,3 +34,8 @@ list of samples:
 \description{
 Optionally pass the between-source alpha hyperparameter used to generate the source parameters.
 }
+\seealso{
+Other population: \code{\link{fun_rdirichlet_hyperparameter}},
+  \code{\link{fun_rdirichlet}}
+}
+\concept{population}

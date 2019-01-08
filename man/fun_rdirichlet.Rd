@@ -21,4 +21,8 @@ Sample n times from a Dirichlet
 }
 \seealso{
 \code{\link[Compositional:rdiri]{Compositional::rdiri()}}
+
+Other population: \code{\link{fun_rdirichlet_hyperparameter}},
+  \code{\link{fun_rdirichlet_population}}
 }
+\concept{population}

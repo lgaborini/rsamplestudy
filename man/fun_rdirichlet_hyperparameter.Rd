@@ -19,3 +19,8 @@ Assume it comes from a Uniform distribution on the $(p-1)$-simplex.
 Formally, we sample from a Dirichlet with constant base measure, and concentration parameter = p.
 The resulting Dirichlet parameter is constant = 1.
 }
+\seealso{
+Other population: \code{\link{fun_rdirichlet_population}},
+  \code{\link{fun_rdirichlet}}
+}
+\concept{population}

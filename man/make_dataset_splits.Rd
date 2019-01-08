@@ -26,14 +26,6 @@ make_dataset_splits(df, k_ref, k_quest, col_source = "source", ...)
   \item{background}{see details (default: \code{'outside'})}
   \item{replace}{use sampling with replacement, else error}
 }}
-
-\item{source_ref}{the reference source (scalar; if \code{NULL}, a random source will be picked)}
-
-\item{source_quest}{the questioned source(s) (if \code{NULL}, anything but the reference source)}
-
-\item{background}{see details (default: \code{outside})}
-
-\item{replace}{use sampling with replacement, else error}
 }
 \value{
 a list of indexes (\code{idx_reference}, \code{idx_questioned}, \code{idx_background}) and a list of dataframes (\code{df_reference}, \code{df_questioned}, \code{df_background})
@@ -76,5 +68,6 @@ Items will never be sampled once (unless \code{replace} is \code{TRUE}): they ap
 }
 
 \seealso{
-\code{\link[=make_idx_splits]{make_idx_splits()}}
+Other set sampling: \code{\link{make_idx_splits}}
 }
+\concept{set sampling}
