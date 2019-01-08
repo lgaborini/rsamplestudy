@@ -131,24 +131,24 @@ make_idx_splits <- function(sources, k_ref, k_quest,
    }
 
    # Build the reference sample
-   do_replace_ref <- (len_ref < k_ref) & replace
-   idx_reference <- sort(resample(idx_ref_all, k_ref, replace = do_replace_ref))
-   if (do_replace_ref) {
+   need_replace_ref <- (len_ref < k_ref)
+   if (need_replace_ref) {
       if (replace) { message('Reference items: sampling with replacement is being used.') }
-      else { stop('Reference items: sampling with replacement is being used.') }
+      else { stop('Reference items: not enough items with the reference source, sampling without replacemnt.') }
    }
+   idx_reference <- sort(resample(idx_ref_all, k_ref, replace = need_replace_ref))
 
    # Build the questioned sample w/o reference items
 
    # Do not sample items in the reference sample
    # All other items are kept, and can be sampled from
    idx_quest_all_no_ref <- setdiff(idx_quest_all, idx_reference)
-   do_replace_quest <- (length(idx_quest_all_no_ref) < k_quest) & replace
-   idx_questioned <- sort(resample(idx_quest_all_no_ref, k_quest, replace = do_replace_quest))
-   if (do_replace_quest) {
+   need_replace_quest <- (length(idx_quest_all_no_ref) < k_quest)
+   if (need_replace_quest) {
       if (replace) { message('Questioned items: sampling with replacement is being used.') }
-      else { stop('Questioned items: sampling with replacement is being used.') }
+      else { stop('Questioned items: not enough items with the questioned source(s), sampling without replacemnt.') }
    }
+   idx_questioned <- sort(resample(idx_quest_all_no_ref, k_quest, replace = need_replace_quest))
 
    # Build the background dataset
    if (background == 'others') {

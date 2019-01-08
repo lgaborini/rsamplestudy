@@ -34,6 +34,7 @@ n_quest_diff <- sample.int(n - 1 - 1, 1)  # guarantee that there is at least one
 # Pick out the reference source
 s_ref <- sample(seq(n), 1)
 s_quest_same <- s_ref
+
 # and the different questioned source(s)
 s_quest_diff_candidates <- setdiff(unique(sources), s_ref)
 s_quest_diff <- sort(resample(s_quest_diff_candidates, n_quest_diff))
@@ -42,20 +43,21 @@ is_background_empty <- isTRUE(all.equal(unique(sources), unique(sort(union(s_ref
 
 # make_idx_splits: idx tests -------------------------------------------------------------------
 
-# Same source
-test_that("make_idx_splits: reference source selection, same", {
-   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_same)
-   expect_equal(unique(sources[splits$idx_reference]), s_ref)
-   expect_equal(unique(sources[splits$idx_questioned]), s_quest_same)
+
+# Source not found
+test_that("make_idx_splits: missing reference or questioned source", {
+   expect_error(make_idx_splits(sources, k_ref, k_quest, source_ref = n + 1, source_quest = s_quest_same))
+   expect_error(make_idx_splits(sources, k_ref, k_quest, source_ref = n + 1, source_quest = s_quest_diff))
+   expect_error(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = n + 1))
 })
 
+# Same source
 
 test_that("make_idx_splits: quest=ref", {
    splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_same)
    expect_true(all(unique(sources[splits$idx_reference]) %in% s_ref))
    expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_same))
 })
-
 
 test_that("make_idx_splits: quest=ref, same_source = TRUE", {
    splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, same_source = TRUE)
@@ -167,6 +169,13 @@ if (!is_background_empty) {
 df <- data.frame(source = sources, x = rnorm(length(sources)))
 df_item <- data.frame(item = sources, x = rnorm(length(sources)))
 
+
+# Source not found
+test_that("make_idx_splits: missing reference or questioned source", {
+   expect_error(make_dataset_splits(df, k_ref, k_quest, source_ref = n + 1, source_quest = s_quest_same))
+   expect_error(make_dataset_splits(df, k_ref, k_quest, source_ref = n + 1, source_quest = s_quest_diff))
+   expect_error(make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = n + 1))
+})
 
 test_that("make_dataset_splits: quest=ref", {
    splits <- make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_same)
