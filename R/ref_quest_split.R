@@ -17,7 +17,7 @@
 #' @family set sampling functions
 #' @concept set sampling
 #' @examples
-#'
+#' \dontrun{
 #' # Sample different species
 #' make_dataset_splits(iris, 5, 5, col_source = 'Species')
 #'
@@ -33,7 +33,7 @@
 #'
 #' # Use background sources from non-sampled items
 #' make_dataset_splits(iris, 50, 50, col_source = 'Species', source_ref = 'virginica', source_quest = 'versicolor', background = 'others')
-#'
+#' }
 make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) {
    sources <- purrr::pluck(df, col_source)
 

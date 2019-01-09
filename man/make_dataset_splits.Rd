@@ -63,7 +63,7 @@ Items will never be sampled once (unless \code{replace} is \code{TRUE}): they ap
 }
 
 \examples{
-
+\dontrun{
 # Sample different species
 make_dataset_splits(iris, 5, 5, col_source = 'Species')
 
@@ -79,7 +79,7 @@ make_dataset_splits(iris, 500, 5, col_source = 'Species', replace = TRUE)
 
 # Use background sources from non-sampled items
 make_dataset_splits(iris, 50, 50, col_source = 'Species', source_ref = 'virginica', source_quest = 'versicolor', background = 'others')
-
+}
 }
 \seealso{
 Other set sampling functions: \code{\link{make_idx_splits}}
