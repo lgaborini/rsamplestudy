@@ -97,7 +97,12 @@ The split is done according by the item source." />
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/lgaborini/rsamplestudy">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -111,7 +116,7 @@ The split is done according by the item source." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Generate reference/questioned/background observations from a multiple-source dataset.</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/lgaborini/rsamplestudy/blob/master/R/ref_quest_split.R'><code>R/ref_quest_split.R</code></a></small>
     <div class="hidden name"><code>make_dataset_splits.Rd</code></div>
     </div>
 
@@ -132,6 +137,14 @@ The split is done according by the item source.</p>
       <td><p>all available data</p></td>
     </tr>
     <tr>
+      <th>k_ref</th>
+      <td><p>number of reference samples</p></td>
+    </tr>
+    <tr>
+      <th>k_quest</th>
+      <td><p>number of questioned samples</p></td>
+    </tr>
+    <tr>
       <th>col_source</th>
       <td><p>column containing the source identifier (string or column number)</p></td>
     </tr>
@@ -141,8 +154,6 @@ The split is done according by the item source.</p>
   <dt>source_ref</dt><dd><p>the reference source (scalar; if <code>NULL</code>, a random source will be picked)</p></dd>
   <dt>source_quest</dt><dd><p>the questioned source(s) (if <code>NULL</code>, anything but the reference source: behaviour overridden by <code>same_source</code>)</p></dd>
   <dt>same_source</dt><dd><p>if <code>source_quest</code> is <code>NULL</code> and <code>same_source</code> is <code>TRUE</code>, questioned source is the reference source</p></dd>
-  <dt>k_ref</dt><dd><p>number of reference samples</p></dd>
-  <dt>k_quest</dt><dd><p>number of questioned samples</p></dd>
   <dt>background</dt><dd><p>see details (default: <code>'outside'</code>)</p></dd>
   <dt>replace</dt><dd><p>use sampling with replacement, else error</p></dd>
 </dl></td>
@@ -194,14 +205,17 @@ the union of reference and questioned sources fills the available sources in the
 <span class='fu'>make_dataset_splits</span>(<span class='no'>iris</span>, <span class='fl'>5</span>, <span class='fl'>5</span>, <span class='kw'>col_source</span> <span class='kw'>=</span> <span class='st'>'Species'</span>, <span class='kw'>same_source</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># Sample from custom species</span>
-<span class='fu'>make_dataset_splits</span>(<span class='no'>iris</span>, <span class='fl'>5</span>, <span class='fl'>5</span>, <span class='kw'>col_source</span> <span class='kw'>=</span> <span class='st'>'Species'</span>, <span class='kw'>source_ref</span> <span class='kw'>=</span> <span class='st'>'virginica'</span>, <span class='kw'>source_quest</span> <span class='kw'>=</span> <span class='st'>'versicolor'</span>)
-<span class='fu'>make_dataset_splits</span>(<span class='no'>iris</span>, <span class='fl'>5</span>, <span class='fl'>5</span>, <span class='kw'>col_source</span> <span class='kw'>=</span> <span class='st'>'Species'</span>, <span class='kw'>source_ref</span> <span class='kw'>=</span> <span class='st'>'virginica'</span>, <span class='kw'>source_quest</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>'virginica'</span>, <span class='st'>'versicolor'</span>))
+<span class='fu'>make_dataset_splits</span>(<span class='no'>iris</span>, <span class='fl'>5</span>, <span class='fl'>5</span>, <span class='kw'>col_source</span> <span class='kw'>=</span> <span class='st'>'Species'</span>,
+   <span class='kw'>source_ref</span> <span class='kw'>=</span> <span class='st'>'virginica'</span>, <span class='kw'>source_quest</span> <span class='kw'>=</span> <span class='st'>'versicolor'</span>)
+<span class='fu'>make_dataset_splits</span>(<span class='no'>iris</span>, <span class='fl'>5</span>, <span class='fl'>5</span>, <span class='kw'>col_source</span> <span class='kw'>=</span> <span class='st'>'Species'</span>,
+   <span class='kw'>source_ref</span> <span class='kw'>=</span> <span class='st'>'virginica'</span>, <span class='kw'>source_quest</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>'virginica'</span>, <span class='st'>'versicolor'</span>))
 
 <span class='co'># Sample from reference source with replacement</span>
 <span class='fu'>make_dataset_splits</span>(<span class='no'>iris</span>, <span class='fl'>500</span>, <span class='fl'>5</span>, <span class='kw'>col_source</span> <span class='kw'>=</span> <span class='st'>'Species'</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># Use background sources from non-sampled items</span>
-<span class='fu'>make_dataset_splits</span>(<span class='no'>iris</span>, <span class='fl'>50</span>, <span class='fl'>50</span>, <span class='kw'>col_source</span> <span class='kw'>=</span> <span class='st'>'Species'</span>, <span class='kw'>source_ref</span> <span class='kw'>=</span> <span class='st'>'virginica'</span>, <span class='kw'>source_quest</span> <span class='kw'>=</span> <span class='st'>'versicolor'</span>, <span class='kw'>background</span> <span class='kw'>=</span> <span class='st'>'others'</span>)
+<span class='fu'>make_dataset_splits</span>(<span class='no'>iris</span>, <span class='fl'>50</span>, <span class='fl'>50</span>, <span class='kw'>col_source</span> <span class='kw'>=</span> <span class='st'>'Species'</span>,
+   <span class='kw'>source_ref</span> <span class='kw'>=</span> <span class='st'>'virginica'</span>, <span class='kw'>source_quest</span> <span class='kw'>=</span> <span class='st'>'versicolor'</span>, <span class='kw'>background</span> <span class='kw'>=</span> <span class='st'>'others'</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
