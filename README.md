@@ -13,6 +13,9 @@ It will be coupled to other packages where the said models are evaluated in a Ba
 
 The package is not yet on CRAN as it is very experimental.
 
+## Documentation
+
+Available documentation can be found [here](https://lgaborini.github.io/rsamplestudy/).
 
 ## Contents
 
