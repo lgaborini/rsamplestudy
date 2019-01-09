@@ -9,9 +9,11 @@
 #'
 #' @param df all available data
 #' @param col_source column containing the source identifier (string or column number)
+#' @param k_ref number of reference samples
+#' @param k_quest number of questioned samples
 #' @inheritSection make_idx_splits Background selection
 #' @inheritSection make_idx_splits Source sampling
-#' @inheritDotParams make_idx_splits -sources
+#' @inheritDotParams make_idx_splits -sources -k_ref -k_quest
 #' @export
 #' @return a list of indexes (`idx_reference`, `idx_questioned`, `idx_background`) and a list of dataframes (`df_reference`, `df_questioned`, `df_background`)
 #' @family set sampling functions
@@ -25,14 +27,17 @@
 #' make_dataset_splits(iris, 5, 5, col_source = 'Species', same_source = TRUE)
 #'
 #' # Sample from custom species
-#' make_dataset_splits(iris, 5, 5, col_source = 'Species', source_ref = 'virginica', source_quest = 'versicolor')
-#' make_dataset_splits(iris, 5, 5, col_source = 'Species', source_ref = 'virginica', source_quest = c('virginica', 'versicolor'))
+#' make_dataset_splits(iris, 5, 5, col_source = 'Species',
+#'    source_ref = 'virginica', source_quest = 'versicolor')
+#' make_dataset_splits(iris, 5, 5, col_source = 'Species',
+#'    source_ref = 'virginica', source_quest = c('virginica', 'versicolor'))
 #'
 #' # Sample from reference source with replacement
 #' make_dataset_splits(iris, 500, 5, col_source = 'Species', replace = TRUE)
 #'
 #' # Use background sources from non-sampled items
-#' make_dataset_splits(iris, 50, 50, col_source = 'Species', source_ref = 'virginica', source_quest = 'versicolor', background = 'others')
+#' make_dataset_splits(iris, 50, 50, col_source = 'Species',
+#'    source_ref = 'virginica', source_quest = 'versicolor', background = 'others')
 #' }
 make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) {
    sources <- purrr::pluck(df, col_source)

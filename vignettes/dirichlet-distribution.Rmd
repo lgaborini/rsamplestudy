@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 )
 
 library(rsamplestudy)
-library(tidyverse)
+library(magrittr)
 ```
 
 This package contains functions to sample from a Dirichlet distribution.
