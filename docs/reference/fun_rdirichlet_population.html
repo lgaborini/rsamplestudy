@@ -86,7 +86,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/dirichlet-distribution.html">Dirichlet Distribution</a>
+      <a href="../articles/dirichlet-distribution.html">Dirichlet distribution tools</a>
+    </li>
+    <li>
+      <a href="../articles/dirichletdirichlet.html">Dirichlet-Dirichlet study generation</a>
     </li>
   </ul>
 </li>
@@ -138,7 +141,7 @@
     <tr>
       <th>alpha</th>
       <td><p>between-source alpha hyperparameter.
-If <code>NULL</code>, it is generated from the Uniform distribution on the $(p-1)$-simplex.</p></td>
+If <code>NULL</code>, it is generated from the Uniform distribution on the $(p-1)$-simplex (see <code><a href='fun_rdirichlet_hyperparameter.html'>fun_rdirichlet_hyperparameter()</a></code>).</p></td>
     </tr>
     <tr>
       <th>name_var</th>
@@ -153,18 +156,13 @@ If <code>NULL</code>, it is generated from the Uniform distribution on the $(p-1
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>list of samples:</p><ul>
-<li><p><code>alpha</code>: the Dirichlet between hyperparameter</p></li>
+<li><p><code>alpha</code>: the Dirichlet hyperparameter</p></li>
 <li><p><code>df_sources</code>: tibble of the Dirichlet population parameters, source column is <code>'source'</code>, variables start with <code>name_source</code></p></li>
 <li><p><code>df_pop</code>: the Dirichlet data, source column is <code>'source'</code>, variables start with <code>name_var</code></p></li>
 <li><p><code>names_var</code>: names of columns containing data variables</p></li>
 <li><p><code>names_source</code>: names of columns containing source variables</p></li>
 </ul>
 
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other population: <code><a href='fun_rdirichlet_hyperparameter.html'>fun_rdirichlet_hyperparameter</a></code>,
-  <code><a href='fun_rdirichlet.html'>fun_rdirichlet</a></code></p></div>
     
 
   </div>
@@ -174,8 +172,6 @@ If <code>NULL</code>, it is generated from the Uniform distribution on the $(p-1
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#see-also">See also</a></li>
           </ul>
 
   </div>

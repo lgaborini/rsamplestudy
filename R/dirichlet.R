@@ -7,7 +7,7 @@
 #' @export
 #' @inheritParams fun_rdirichlet_hyperparameter
 #' @seealso [Compositional::rdiri()]
-#' @family population
+#' @family RNG functions
 fun_rdirichlet <- function(n, a, text='x') {
    a <- as.numeric(a)
    p <- length(a)
@@ -26,7 +26,7 @@ fun_rdirichlet <- function(n, a, text='x') {
 #' @param p number of variables
 #' @return a tibble with named colums
 #' @export
-#' @family population
+#' @family RNG functions
 fun_rdirichlet_hyperparameter <- function(p) {
    fun_rdirichlet(1, p*rep(1/p, p), 'alpha')
 }
@@ -40,13 +40,13 @@ fun_rdirichlet_hyperparameter <- function(p) {
 #' @param n number of samples per source
 #' @param m number of sources
 #' @param alpha between-source alpha hyperparameter.
-#'    If `NULL`, it is generated from the Uniform distribution on the $(p-1)$-simplex.
+#'    If `NULL`, it is generated from the Uniform distribution on the $(p-1)$-simplex (see [fun_rdirichlet_hyperparameter()]).
 #' @param name_var names for data variables (default: `'x'`)
 #' @param name_source names for source parameters (default: `'theta'`)
 #'
 #' @return list of samples:
 #'
-#' - `alpha`: the Dirichlet between hyperparameter
+#' - `alpha`: the Dirichlet hyperparameter
 #' - `df_sources`: tibble of the Dirichlet population parameters, source column is `'source'`, variables start with `name_source`
 #' - `df_pop`: the Dirichlet data, source column is `'source'`, variables start with `name_var`
 #' - `names_var`: names of columns containing data variables
@@ -54,7 +54,8 @@ fun_rdirichlet_hyperparameter <- function(p) {
 #'
 #' @export
 #' @inheritParams fun_rdirichlet_hyperparameter
-#' @family population
+#' @family population functions
+#' @concept population
 fun_rdirichlet_population <- function(n, m, p, alpha=NULL, name_var='x', name_source='theta') {
 
    if (is.null(alpha)) {

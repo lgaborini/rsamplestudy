@@ -15,7 +15,7 @@ fun_rdirichlet_population(n, m, p, alpha = NULL, name_var = "x",
 \item{p}{number of variables}
 
 \item{alpha}{between-source alpha hyperparameter.
-If \code{NULL}, it is generated from the Uniform distribution on the $(p-1)$-simplex.}
+If \code{NULL}, it is generated from the Uniform distribution on the $(p-1)$-simplex (see \code{\link[=fun_rdirichlet_hyperparameter]{fun_rdirichlet_hyperparameter()}}).}
 
 \item{name_var}{names for data variables (default: \code{'x'})}
 
@@ -24,7 +24,7 @@ If \code{NULL}, it is generated from the Uniform distribution on the $(p-1)$-sim
 \value{
 list of samples:
 \itemize{
-\item \code{alpha}: the Dirichlet between hyperparameter
+\item \code{alpha}: the Dirichlet hyperparameter
 \item \code{df_sources}: tibble of the Dirichlet population parameters, source column is \code{'source'}, variables start with \code{name_source}
 \item \code{df_pop}: the Dirichlet data, source column is \code{'source'}, variables start with \code{name_var}
 \item \code{names_var}: names of columns containing data variables
@@ -34,8 +34,5 @@ list of samples:
 \description{
 Optionally pass the between-source alpha hyperparameter used to generate the source parameters.
 }
-\seealso{
-Other population: \code{\link{fun_rdirichlet_hyperparameter}},
-  \code{\link{fun_rdirichlet}}
-}
 \concept{population}
+\concept{population functions}

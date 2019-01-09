@@ -1,10 +1,10 @@
 ---
-title: "Dirichlet Distribution"
-author: "LG"
+title: "Dirichlet distribution tools"
+author: "Lorenzo Gaborini"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Dirichlet distribution tools}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -84,19 +84,7 @@ head(df_diri)
 
 ```{r sym-sens-plot-comp, echo = FALSE}
 
-scatter_plot_01 <- function(data, mapping, ...) {
-  ggplot(data = data, mapping = mapping) +
-    geom_point(...) +
-    scale_x_continuous(limits = c(0,1), expand = c(0,0)) +
-    scale_y_continuous(limits = c(0,1), expand = c(0,0))
-}
-
-scatter_matrix_simplex <- function(df) {
-   df %>% 
-      GGally::ggpairs(upper = list(continuous = scatter_plot_01), diag = 'blank', lower = 'blank', labeller = label_parsed) +
-      theme_bw()
-}
-
+source('scatter_matrix_simplex.R')
 scatter_matrix_simplex(df_diri)
 
 ```
@@ -171,18 +159,3 @@ head(df_diri)
 ```{r}
 scatter_matrix_simplex(df_diri)
 ```
-
-## rsamplestudy: Dirichlet-Dirichlet study generation
-
-### Hyperparameters
-
-We assume that the Dirichlet hyperparameter (the level farther from the data) comes from the Uniform distribution on the (p-1)-Simplex.   
-In other words, we will sample the Dirichlet hyperparameter from the $\dirichlet{\vec{1}}$ distribution. 
-
-The shortcut function the package is `fun_rdirichlet_hyperparameter(p)`:
-
-```{r}
-df_diri <- map_dfr(1:300, ~ fun_rdirichlet_hyperparameter(3))
-scatter_matrix_simplex(df_diri)
-```
-

@@ -8,15 +8,32 @@
 #' Sampling with replacement is used, if necessary and not forbidden.
 #'
 #' @param df all available data
-#' @param k_ref number of reference samples
-#' @param k_quest number of questioned samples
 #' @param col_source column containing the source identifier (string or column number)
 #' @inheritSection make_idx_splits Background selection
 #' @inheritSection make_idx_splits Source sampling
-#' @inheritDotParams make_idx_splits
+#' @inheritDotParams make_idx_splits -sources
 #' @export
 #' @return a list of indexes (`idx_reference`, `idx_questioned`, `idx_background`) and a list of dataframes (`df_reference`, `df_questioned`, `df_background`)
-#' @family set sampling
+#' @family set sampling functions
+#' @concept set sampling
+#' @examples
+#'
+#' # Sample different species
+#' make_dataset_splits(iris, 5, 5, col_source = 'Species')
+#'
+#' # Sample same species
+#' make_dataset_splits(iris, 5, 5, col_source = 'Species', same_source = TRUE)
+#'
+#' # Sample from custom species
+#' make_dataset_splits(iris, 5, 5, col_source = 'Species', source_ref = 'virginica', source_quest = 'versicolor')
+#' make_dataset_splits(iris, 5, 5, col_source = 'Species', source_ref = 'virginica', source_quest = c('virginica', 'versicolor'))
+#'
+#' # Sample from reference source with replacement
+#' make_dataset_splits(iris, 500, 5, col_source = 'Species', replace = TRUE)
+#'
+#' # Use background sources from non-sampled items
+#' make_dataset_splits(iris, 50, 50, col_source = 'Species', source_ref = 'virginica', source_quest = 'versicolor', background = 'others')
+#'
 make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) {
    sources <- purrr::pluck(df, col_source)
 
@@ -77,7 +94,8 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #' @param replace use sampling with replacement, else error
 #' @return list of indexes (`idx_reference`, `idx_questioned`, `idx_background`)
 #' @export
-#' @family set sampling
+#' @family set sampling functions
+#' @concept set sampling
 make_idx_splits <- function(sources, k_ref, k_quest,
                             source_ref = NULL, source_quest = NULL,
                             same_source = NULL,
@@ -177,7 +195,6 @@ make_idx_splits <- function(sources, k_ref, k_quest,
 #' @param x a vector of one or more elements from which to choose
 #' @param size a non-negative integer giving the number of items to choose.
 #' @param replace should sampling be with replacement?
-#' @export
 resample <- function(x, size, replace = FALSE) {
    x[sample.int(length(x), size = size, replace = replace)]
 }

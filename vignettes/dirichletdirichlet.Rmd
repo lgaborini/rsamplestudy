@@ -1,0 +1,111 @@
+---
+title: "Dirichlet-Dirichlet study generation"
+author: "Lorenzo Gaborini"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Dirichlet-Dirichlet study generation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+\newcommand{\simplex}[1]{\text{Simplex}{(#1)}}
+\newcommand{\dirichlet}[1]{\text{Dirichlet}{(#1)}}
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+\newcommand{\EE}{\mathop{\mathbb{E}}}
+\newcommand{\Var}{\mathop{\mathrm{Var}}}
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(purrr)
+library(rsamplestudy)
+source('scatter_matrix_simplex.R')
+```
+
+A **study** is the set of parameters in a model, data generated from those parameters (**population**), and three sets of samples: the reference/questioned/background items.
+
+This package implements the generation of selected studies.   
+This vignette describes the Dirichlet-Dirichlet model.
+
+## The model
+
+(To be described).
+
+
+
+
+## Population generation
+
+The population can be generated using `fun_rdirichlet_population`:
+
+```{r}
+# Population parameters:
+# Number of sources
+n <- 10
+# Number of items per source
+m <- 20
+# Number of observations per item
+p <- 4
+
+list_pop <- fun_rdirichlet_population(n, m, p)
+```
+
+The output contains:
+
+- the population `df_pop`
+- the model parameters `df_sources` and `alpha`
+- names of the components of the source vectors `names_source`
+- names of the components of the item vectors `names_var`
+
+Notice that the hyperparameter is sampled, too (but it can be fixed).
+
+```{r}
+head(list_pop$df_pop)
+head(list_pop$df_sources)
+```
+
+## Hyperparameters
+
+We assume that the Dirichlet hyperparameter (the level farther from the data) comes from the Uniform distribution on the (p-1)-Simplex.   
+In other words, we will sample the Dirichlet hyperparameter from the $\dirichlet{\vec{1}}$ distribution. 
+
+The shortcut function the package is `fun_rdirichlet_hyperparameter`:
+
+```{r}
+df_diri <- map_dfr(1:300, ~ fun_rdirichlet_hyperparameter(3))
+scatter_matrix_simplex(df_diri)
+```
+
+
+## Partitioning
+
+Once the population is generated, the reference/questioned/background samples must be extracted.   
+This is generically done using `make_dataset_splits`:
+
+```{r}
+
+k_ref <- 10
+k_quest <- 5
+
+list_samples <- make_dataset_splits(list_pop$df_pop, k_ref, k_quest)
+names(list_samples)
+```
+
+```{r}
+head(list_samples$df_reference)
+head(list_samples$df_questioned)
+head(list_samples$df_background)
+```
+
+### Source parameters
+
+The chosen sources can be fixed. 
+
+See the documentation for `make_dataset_splits`.
+
+
+
+

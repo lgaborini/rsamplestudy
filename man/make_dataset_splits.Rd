@@ -9,15 +9,10 @@ make_dataset_splits(df, k_ref, k_quest, col_source = "source", ...)
 \arguments{
 \item{df}{all available data}
 
-\item{k_ref}{number of reference samples}
-
-\item{k_quest}{number of questioned samples}
-
 \item{col_source}{column containing the source identifier (string or column number)}
 
 \item{...}{Arguments passed on to \code{make_idx_splits}
 \describe{
-  \item{sources}{all class labels}
   \item{source_ref}{the reference source (scalar; if \code{NULL}, a random source will be picked)}
   \item{source_quest}{the questioned source(s) (if \code{NULL}, anything but the reference source: behaviour overridden by \code{same_source})}
   \item{same_source}{if \code{source_quest} is \code{NULL} and \code{same_source} is \code{TRUE}, questioned source is the reference source}
@@ -67,7 +62,27 @@ Else, questioned items will be sampled from the questioned source(s), even if it
 Items will never be sampled once (unless \code{replace} is \code{TRUE}): they appear once in the reference/questioned/background items.
 }
 
+\examples{
+
+# Sample different species
+make_dataset_splits(iris, 5, 5, col_source = 'Species')
+
+# Sample same species
+make_dataset_splits(iris, 5, 5, col_source = 'Species', same_source = TRUE)
+
+# Sample from custom species
+make_dataset_splits(iris, 5, 5, col_source = 'Species', source_ref = 'virginica', source_quest = 'versicolor')
+make_dataset_splits(iris, 5, 5, col_source = 'Species', source_ref = 'virginica', source_quest = c('virginica', 'versicolor'))
+
+# Sample from reference source with replacement
+make_dataset_splits(iris, 500, 5, col_source = 'Species', replace = TRUE)
+
+# Use background sources from non-sampled items
+make_dataset_splits(iris, 50, 50, col_source = 'Species', source_ref = 'virginica', source_quest = 'versicolor', background = 'others')
+
+}
 \seealso{
-Other set sampling: \code{\link{make_idx_splits}}
+Other set sampling functions: \code{\link{make_idx_splits}}
 }
 \concept{set sampling}
+\concept{set sampling functions}

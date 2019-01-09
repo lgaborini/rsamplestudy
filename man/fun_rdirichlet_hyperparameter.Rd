@@ -20,7 +20,6 @@ Formally, we sample from a Dirichlet with constant base measure, and concentrati
 The resulting Dirichlet parameter is constant = 1.
 }
 \seealso{
-Other population: \code{\link{fun_rdirichlet_population}},
-  \code{\link{fun_rdirichlet}}
+Other RNG functions: \code{\link{fun_rdirichlet}}
 }
-\concept{population}
+\concept{RNG functions}
