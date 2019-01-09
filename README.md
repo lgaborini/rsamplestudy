@@ -6,7 +6,7 @@ It is used in a evaluative forensic setting, where two sets of samples are extra
 
 It will be coupled to other packages where the said models are evaluated in a Bayesian way.
 
-[![Travis build status](https://travis-ci.org/lgaborini/rsamplestudy.svg?branch=master)](https://travis-ci.org/lgaborini/rsamplestudy)   
+[![Travis build status](https://travis-ci.org/lgaborini/rsamplestudy.svg?branch=master)](https://travis-ci.org/lgaborini/rsamplestudy)
 [![Codecov test coverage](https://codecov.io/gh/lgaborini/rsamplestudy/branch/master/graph/badge.svg)](https://codecov.io/gh/lgaborini/rsamplestudy?branch=master)
 
 ## Installation
@@ -24,4 +24,4 @@ The package contains:
 
 ## Implemented models
 
-Dirichlet-Dirichlet model
+- Dirichlet-Dirichlet model

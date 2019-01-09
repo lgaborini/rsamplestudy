@@ -5,9 +5,8 @@ library(rsamplestudy)
 
 context("test-ref-quest-split")
 
-
 # Rerun tests multiple times
-n_replicate <- 20
+n_replicate <- ifelse(TRAVIS || !NOT_CRAN, 1, 20)
 replicate(n_replicate, {
 
 
