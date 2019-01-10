@@ -11,7 +11,13 @@ It will be coupled to other packages where the said models are evaluated in a Ba
 
 ## Installation
 
-The package is not yet on CRAN as it is very experimental.
+The package is not yet on CRAN as it is very experimental.   
+You can install the development version from this repository using `devtools` or `remotes`:
+
+```
+# install.packages('remotes')
+remotes::install_github('lgaborini/rsamplestudy')
+```
 
 ## Documentation
 
