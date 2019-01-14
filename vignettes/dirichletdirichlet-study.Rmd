@@ -32,9 +32,13 @@ This vignette describes the Dirichlet-Dirichlet model.
 
 ## The model
 
-(To be described).
 
+Consider Dirichlet samples $X_i$ from $m$ different sources. Each source is sampled $n$ times:
 
+- $\vec{X}_{ij} \mid \vec{\theta_i} \sim \text{Dirichlet}(\vec{\theta}_i)$ iid $\forall j = 1, \ldots, n \,$ with $\,i = 1, \ldots, m$
+- $\vec{\theta}_i \mid \vec{\alpha} \sim \text{Dirichlet}(\vec{\alpha}) \quad$ iid $\forall i = 1, \ldots, m$
+
+We assume that $\vec{\alpha}$ is known.
 
 
 ## Population generation

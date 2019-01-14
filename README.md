@@ -27,7 +27,7 @@ Available documentation can be found [here](https://lgaborini.github.io/rsamples
 
 The package contains:
 
-- utilites to sample from known distributions
+- utilities to sample from known distributions
 - utilities to generate a full set of data according to a two-level model
 - utilities to partition the full set of data into a reference/questioned/background partition
 

@@ -56,7 +56,7 @@
       <a href="../articles/dirichlet-distribution.html">Dirichlet distribution tools</a>
     </li>
     <li>
-      <a href="../articles/dirichletdirichlet.html">Dirichlet-Dirichlet study generation</a>
+      <a href="../articles/dirichletdirichlet-study.html">Dirichlet-Dirichlet study generation</a>
     </li>
   </ul>
 </li>
@@ -85,8 +85,8 @@
             
             <h4 class="date">2019-01-14</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/lgaborini/rsamplestudy/blob/master/vignettes/dirichletdirichlet.Rmd"><code>vignettes/dirichletdirichlet.Rmd</code></a></small>
-      <div class="hidden name"><code>dirichletdirichlet.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/lgaborini/rsamplestudy/blob/master/vignettes/dirichletdirichlet-study.Rmd"><code>vignettes/dirichletdirichlet-study.Rmd</code></a></small>
+      <div class="hidden name"><code>dirichletdirichlet-study.Rmd</code></div>
 
     </div>
 
@@ -137,24 +137,24 @@ This vignette describes the Dirichlet-Dirichlet model.</p>
 <p>Notice that the hyperparameter is sampled, too (but it can be fixed).</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(list_pop<span class="op">$</span>df_pop)</a>
 <a class="sourceLine" id="cb2-2" title="2"><span class="co">#&gt; # A tibble: 6 x 5</span></a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="co">#&gt;   source   `x[1]`   `x[2]` `x[3]` `x[4]`</span></a>
-<a class="sourceLine" id="cb2-4" title="4"><span class="co">#&gt;    &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb2-5" title="5"><span class="co">#&gt; 1      1 1.65e-32 6.55e- 2      0  0.935</span></a>
-<a class="sourceLine" id="cb2-6" title="6"><span class="co">#&gt; 2      1 1.20e- 7 6.71e- 2      0  0.933</span></a>
-<a class="sourceLine" id="cb2-7" title="7"><span class="co">#&gt; 3      1 5.69e-14 1.07e-13      0  1.000</span></a>
-<a class="sourceLine" id="cb2-8" title="8"><span class="co">#&gt; 4      1 1.47e-20 3.48e- 2      0  0.965</span></a>
-<a class="sourceLine" id="cb2-9" title="9"><span class="co">#&gt; 5      1 5.50e-32 2.80e- 2      0  0.972</span></a>
-<a class="sourceLine" id="cb2-10" title="10"><span class="co">#&gt; 6      1 1.36e-10 3.40e- 2      0  0.966</span></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co">#&gt;   source    `x[1]` `x[2]` `x[3]`   `x[4]`</span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="co">#&gt;    &lt;int&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="co">#&gt; 1      1 0.00882        0  0.991 6.71e- 4</span></a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="co">#&gt; 2      1 0.0145         0  0.985 5.01e-16</span></a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="co">#&gt; 3      1 0.0000792      0  0.986 1.34e- 2</span></a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="co">#&gt; 4      1 0.0391         0  0.957 4.16e- 3</span></a>
+<a class="sourceLine" id="cb2-9" title="9"><span class="co">#&gt; 5      1 0.848          0  0.152 1.24e-25</span></a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="co">#&gt; 6      1 0.00168        0  0.998 2.38e- 5</span></a>
 <a class="sourceLine" id="cb2-11" title="11"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(list_pop<span class="op">$</span>df_sources)</a>
 <a class="sourceLine" id="cb2-12" title="12"><span class="co">#&gt; # A tibble: 6 x 5</span></a>
 <a class="sourceLine" id="cb2-13" title="13"><span class="co">#&gt;   source `theta[1]` `theta[2]` `theta[3]` `theta[4]`</span></a>
 <a class="sourceLine" id="cb2-14" title="14"><span class="co">#&gt;    &lt;int&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb2-15" title="15"><span class="co">#&gt; 1      1  0.0257       0.147     3.08e- 9     0.828 </span></a>
-<a class="sourceLine" id="cb2-16" title="16"><span class="co">#&gt; 2      2  0.310        0.00428   5.30e- 2     0.633 </span></a>
-<a class="sourceLine" id="cb2-17" title="17"><span class="co">#&gt; 3      3  0.840        0.00732   5.98e- 2     0.0931</span></a>
-<a class="sourceLine" id="cb2-18" title="18"><span class="co">#&gt; 4      4  0.0239       0.836     3.90e- 6     0.140 </span></a>
-<a class="sourceLine" id="cb2-19" title="19"><span class="co">#&gt; 5      5  0.0000762    0.160     7.84e- 1     0.0560</span></a>
-<a class="sourceLine" id="cb2-20" title="20"><span class="co">#&gt; 6      6  0.000154     0.147     8.82e-15     0.853</span></a></code></pre></div>
+<a class="sourceLine" id="cb2-15" title="15"><span class="co">#&gt; 1      1     0.186   3.42e- 24      0.780   0.0333  </span></a>
+<a class="sourceLine" id="cb2-16" title="16"><span class="co">#&gt; 2      2     0.0857  2.65e- 12      0.912   0.00254 </span></a>
+<a class="sourceLine" id="cb2-17" title="17"><span class="co">#&gt; 3      3     0.726   2.31e- 11      0.274   0.000270</span></a>
+<a class="sourceLine" id="cb2-18" title="18"><span class="co">#&gt; 4      4     0.0812  9.85e- 27      0.909   0.00976 </span></a>
+<a class="sourceLine" id="cb2-19" title="19"><span class="co">#&gt; 5      5     0.538   1.62e-231      0.461   0.00134 </span></a>
+<a class="sourceLine" id="cb2-20" title="20"><span class="co">#&gt; 6      6     0.211   2.88e-174      0.775   0.0136</span></a></code></pre></div>
 </div>
 <div id="hyperparameters" class="section level2">
 <h2 class="hasAnchor">
@@ -164,7 +164,7 @@ In other words, we will sample the Dirichlet hyperparameter from the <span class
 <p>The shortcut function the package is <code>fun_rdirichlet_hyperparameter</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">df_diri &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">300</span>, <span class="op">~</span><span class="st"> </span><span class="kw"><a href="../reference/fun_rdirichlet_hyperparameter.html">fun_rdirichlet_hyperparameter</a></span>(<span class="dv">3</span>))</a>
 <a class="sourceLine" id="cb3-2" title="2"><span class="kw">scatter_matrix_simplex</span>(df_diri)</a></code></pre></div>
-<p><img src="dirichletdirichlet_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="dirichletdirichlet-study_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
 <div id="partitioning" class="section level2">
 <h2 class="hasAnchor">
@@ -181,33 +181,33 @@ This is generically done using <code>make_dataset_splits</code>:</p>
 <a class="sourceLine" id="cb4-8" title="8"><span class="co">#&gt; [5] "df_questioned"  "df_background"</span></a></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(list_samples<span class="op">$</span>df_reference)</a>
 <a class="sourceLine" id="cb5-2" title="2"><span class="co">#&gt; # A tibble: 6 x 5</span></a>
-<a class="sourceLine" id="cb5-3" title="3"><span class="co">#&gt;   source `x[1]`     `x[2]` `x[3]`      `x[4]`</span></a>
-<a class="sourceLine" id="cb5-4" title="4"><span class="co">#&gt;    &lt;int&gt;  &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;       &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb5-5" title="5"><span class="co">#&gt; 1      7 0.819  0.181           0 0.0000601  </span></a>
-<a class="sourceLine" id="cb5-6" title="6"><span class="co">#&gt; 2      7 0.578  0.157           0 0.265      </span></a>
-<a class="sourceLine" id="cb5-7" title="7"><span class="co">#&gt; 3      7 0.380  0.0238          0 0.596      </span></a>
-<a class="sourceLine" id="cb5-8" title="8"><span class="co">#&gt; 4      7 1.000  0.00000334      0 0.000000282</span></a>
-<a class="sourceLine" id="cb5-9" title="9"><span class="co">#&gt; 5      7 0.992  0.00813         0 0.0000489  </span></a>
-<a class="sourceLine" id="cb5-10" title="10"><span class="co">#&gt; 6      7 0.0171 0.635           0 0.348</span></a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="co">#&gt;   source   `x[1]` `x[2]` `x[3]`   `x[4]`</span></a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="co">#&gt;    &lt;int&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="co">#&gt; 1      4 2.09e- 8      0  0.997 2.71e- 3</span></a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="co">#&gt; 2      4 8.69e- 5      0  1.000 6.11e- 5</span></a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="co">#&gt; 3      4 2.58e- 8      0  1.000 3.00e-31</span></a>
+<a class="sourceLine" id="cb5-8" title="8"><span class="co">#&gt; 4      4 3.45e- 1      0  0.655 5.58e-46</span></a>
+<a class="sourceLine" id="cb5-9" title="9"><span class="co">#&gt; 5      4 4.14e-14      0  1.000 1.30e-66</span></a>
+<a class="sourceLine" id="cb5-10" title="10"><span class="co">#&gt; 6      4 6.59e- 1      0  0.341 4.54e-40</span></a>
 <a class="sourceLine" id="cb5-11" title="11"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(list_samples<span class="op">$</span>df_questioned)</a>
 <a class="sourceLine" id="cb5-12" title="12"><span class="co">#&gt; # A tibble: 5 x 5</span></a>
-<a class="sourceLine" id="cb5-13" title="13"><span class="co">#&gt;   source    `x[1]`     `x[2]` `x[3]`   `x[4]`</span></a>
-<a class="sourceLine" id="cb5-14" title="14"><span class="co">#&gt;    &lt;int&gt;     &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb5-15" title="15"><span class="co">#&gt; 1      1  1.47e-20 0.0348          0 9.65e- 1</span></a>
-<a class="sourceLine" id="cb5-16" title="16"><span class="co">#&gt; 2      8  0.       0.993           0 6.67e- 3</span></a>
-<a class="sourceLine" id="cb5-17" title="17"><span class="co">#&gt; 3     17  9.98e- 1 0.00000536      0 1.91e- 3</span></a>
-<a class="sourceLine" id="cb5-18" title="18"><span class="co">#&gt; 4     17 10.00e- 1 0.0000399       0 1.16e- 9</span></a>
-<a class="sourceLine" id="cb5-19" title="19"><span class="co">#&gt; 5     20  0.       1               0 8.66e-64</span></a>
+<a class="sourceLine" id="cb5-13" title="13"><span class="co">#&gt;   source        `x[1]` `x[2]` `x[3]`   `x[4]`</span></a>
+<a class="sourceLine" id="cb5-14" title="14"><span class="co">#&gt;    &lt;int&gt;         &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb5-15" title="15"><span class="co">#&gt; 1      8 0.00000000264      0 1.000  0.      </span></a>
+<a class="sourceLine" id="cb5-16" title="16"><span class="co">#&gt; 2     12 0.000994           0 0.999  0.      </span></a>
+<a class="sourceLine" id="cb5-17" title="17"><span class="co">#&gt; 3     14 0.981              0 0.0190 0.      </span></a>
+<a class="sourceLine" id="cb5-18" title="18"><span class="co">#&gt; 4     18 0.952              0 0.0478 1.29e-41</span></a>
+<a class="sourceLine" id="cb5-19" title="19"><span class="co">#&gt; 5     19 0.205              0 0.795  0.</span></a>
 <a class="sourceLine" id="cb5-20" title="20"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(list_samples<span class="op">$</span>df_background)</a>
 <a class="sourceLine" id="cb5-21" title="21"><span class="co">#&gt; # A tibble: 6 x 5</span></a>
-<a class="sourceLine" id="cb5-22" title="22"><span class="co">#&gt;   source   `x[1]`   `x[2]` `x[3]` `x[4]`</span></a>
-<a class="sourceLine" id="cb5-23" title="23"><span class="co">#&gt;    &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb5-24" title="24"><span class="co">#&gt; 1      1 1.65e-32 6.55e- 2      0  0.935</span></a>
-<a class="sourceLine" id="cb5-25" title="25"><span class="co">#&gt; 2      1 1.20e- 7 6.71e- 2      0  0.933</span></a>
-<a class="sourceLine" id="cb5-26" title="26"><span class="co">#&gt; 3      1 5.69e-14 1.07e-13      0  1.000</span></a>
-<a class="sourceLine" id="cb5-27" title="27"><span class="co">#&gt; 4      1 5.50e-32 2.80e- 2      0  0.972</span></a>
-<a class="sourceLine" id="cb5-28" title="28"><span class="co">#&gt; 5      1 1.36e-10 3.40e- 2      0  0.966</span></a>
-<a class="sourceLine" id="cb5-29" title="29"><span class="co">#&gt; 6      1 1.54e-10 2.62e- 3      0  0.997</span></a></code></pre></div>
+<a class="sourceLine" id="cb5-22" title="22"><span class="co">#&gt;   source    `x[1]` `x[2]` `x[3]`   `x[4]`</span></a>
+<a class="sourceLine" id="cb5-23" title="23"><span class="co">#&gt;    &lt;int&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb5-24" title="24"><span class="co">#&gt; 1      1 0.00882        0  0.991 6.71e- 4</span></a>
+<a class="sourceLine" id="cb5-25" title="25"><span class="co">#&gt; 2      1 0.0145         0  0.985 5.01e-16</span></a>
+<a class="sourceLine" id="cb5-26" title="26"><span class="co">#&gt; 3      1 0.0000792      0  0.986 1.34e- 2</span></a>
+<a class="sourceLine" id="cb5-27" title="27"><span class="co">#&gt; 4      1 0.0391         0  0.957 4.16e- 3</span></a>
+<a class="sourceLine" id="cb5-28" title="28"><span class="co">#&gt; 5      1 0.848          0  0.152 1.24e-25</span></a>
+<a class="sourceLine" id="cb5-29" title="29"><span class="co">#&gt; 6      1 0.00168        0  0.998 2.38e- 5</span></a></code></pre></div>
 <div id="source-parameters" class="section level3">
 <h3 class="hasAnchor">
 <a href="#source-parameters" class="anchor"></a>Source parameters</h3>
