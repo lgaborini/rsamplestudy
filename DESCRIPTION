@@ -9,7 +9,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/lgaborini/rsamplestudy, https://lgaborini.github.io/rsamplestudy/
-Imports: dplyr, magrittr, tidyr, purrr, Compositional, assertthat, tibble
+Imports: dplyr, magrittr, tidyr, purrr, Compositional, assertthat, tibble, rlang
 Suggests: 
     testthat,
     knitr,

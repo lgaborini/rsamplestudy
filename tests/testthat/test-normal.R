@@ -3,7 +3,7 @@ context("test-normal")
 test_that("rnormal_population works", {
    n <- 100
    m <- 20
-   list_hyper <- list(mu_mu0 = -1000, mu_sigma0 = 0.001, sigma_mu0 = 0.001, sigma_sigma0 = 0.001)
+   list_hyper <- list(m_mu = -1000, m_sigma = 0.001, s_mu = 0.001, s_sigma = 0.001)
    list_pop <- fun_rnorm_population(n = n, m = m, list_hyper = list_hyper)
 
    expect_true(all(list_pop$df_sources$mu < -900))

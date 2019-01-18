@@ -9,15 +9,15 @@
 #' The Normal-Normal model:
 #'
 #' \deqn{X_{ij} ~ N(\mu_i, \sigma_i^2)  i = 1, \ldots, n, j = 1, \ldots, m}
-#' \deqn{\mu_i ~ N(\mu^{\mu}_0, \sigma^{\mu}_0^2) j = 1, \ldots, m}
-#' \deqn{\sigma_i ~ N(\mu^{\sigma}_0, \sigma^{\sigma}_0^2) j = 1, \ldots, m}
+#' \deqn{\mu_i ~ N(m_{\mu}, s_{\mu}^2)   j = 1, \ldots, m}
+#' \deqn{\sigma_i ~ N(m_{\sigma}, s_{\sigma}^2)    j = 1, \ldots, m}
 #'
 #'
 #' @param n number of samples per source
 #' @param m number of sources
 #' @param list_hyper a list containing the hyperparameters:
-#'    - 'mu_mu0', 'mu_sigma0': the between-source mean hyperparameters
-#'    - 'sigma_mu0', 'sigma_sigma0': the between-source sd hyperparameters
+#'    - 'm_mu', 'm_sigma': the between-source mean hyperparameters
+#'    - 's_mu', 's_sigma': the between-source sd hyperparameters
 #'    A partial list will be merged.
 #'    If `NULL`, they are generated from the N(0,1) distribution.
 #'
@@ -34,9 +34,10 @@
 #'
 #' @export
 #' @importFrom utils modifyList
+#' @importFrom stats rnorm
 #' @family population functions
 #' @concept population
-#'
+#' @importFrom rlang :=
 fun_rnorm_population <- function(n, m, list_hyper = NULL, name_var = 'x', name_source = list(mu = 'mu', sigma = 'sigma')) {
 
    if (length(name_source) != 2) stop('name_source must be a 2-length character vector.')
@@ -47,18 +48,18 @@ fun_rnorm_population <- function(n, m, list_hyper = NULL, name_var = 'x', name_s
 
    # Setup hyperparameters
    list_hyper_defaults <- list()
-   list_hyper_defaults$mu_mu0 <- rnorm(1)
-   list_hyper_defaults$mu_sigma0 <- abs(rnorm(1))
-   list_hyper_defaults$sigma_mu0 <- rnorm(1)
-   list_hyper_defaults$sigma_sigma0 <- abs(rnorm(1))
+   list_hyper_defaults$m_mu <- rnorm(1)
+   list_hyper_defaults$m_sigma <- abs(rnorm(1))
+   list_hyper_defaults$s_mu <- rnorm(1)
+   list_hyper_defaults$s_sigma <- abs(rnorm(1))
 
    if (is.null(list_hyper)) list_hyper <- list()
    list_hyper <- utils::modifyList(list_hyper_defaults, list_hyper)
 
    col_source <- 'source'
    df_sources <- with(list_hyper, tibble::tibble(
-         mu = rnorm(m, mu_mu0, mu_sigma0),
-         sigma = abs(rnorm(m, sigma_mu0, sigma_sigma0))
+         mu = rnorm(m, m_mu, m_sigma),
+         sigma = abs(rnorm(m, s_mu, s_sigma))
       )) %>%
       purrr::set_names(c(name_source$mu, name_source$sigma)) %>%
       tibble::add_column(source = 1:m, .before = 1)
@@ -67,7 +68,7 @@ fun_rnorm_population <- function(n, m, list_hyper = NULL, name_var = 'x', name_s
    df_pop <- df_sources %>%
       dplyr::group_by(source) %>%
       tidyr::nest(.key = .nest_data) %>%
-      dplyr::mutate(samples = purrr::map(.nest_data, ~ rnorm(n, purrr::pluck(.x, name_source$mu), purrr::pluck(.x, name_source$sigma)) )) %>%
+      dplyr::mutate(samples = purrr::map(.nest_data, ~ stats::rnorm(n, purrr::pluck(.x, name_source$mu), purrr::pluck(.x, name_source$sigma)) )) %>%
       tidyr::unnest(samples) %>%
       dplyr::rename(!!name_var := samples)
 

@@ -144,8 +144,8 @@ Optionally pass the between-source hyperparameters used to generate the source p
     <tr>
       <th>list_hyper</th>
       <td><p>a list containing the hyperparameters:</p><ul>
-<li><p>'mu_mu0', 'mu_sigma0': the between-source mean hyperparameters</p></li>
-<li><p>'sigma_mu0', 'sigma_sigma0': the between-source sd hyperparameters
+<li><p>'m_mu', 'm_sigma': the between-source mean hyperparameters</p></li>
+<li><p>'s_mu', 's_sigma': the between-source sd hyperparameters
 A partial list will be merged.
 If <code>NULL</code>, they are generated from the N(0,1) distribution.</p></li>
 </ul></td>
@@ -176,8 +176,8 @@ If <code>NULL</code>, they are generated from the N(0,1) distribution.</p></li>
     
     <p>The Normal-Normal model:</p>
 <p>$$X_{ij} ~ N(\mu_i, \sigma_i^2)  i = 1, \ldots, n, j = 1, \ldots, m$$
-$$\mu_i ~ N(\mu^{\mu}_0, \sigma^{\mu}_0^2) j = 1, \ldots, m$$
-$$\sigma_i ~ N(\mu^{\sigma}_0, \sigma^{\sigma}_0^2) j = 1, \ldots, m$$</p>
+$$\mu_i ~ N(m_{\mu}, s_{\mu}^2)   j = 1, \ldots, m$$
+$$\sigma_i ~ N(m_{\sigma}, s_{\sigma}^2)    j = 1, \ldots, m$$</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 

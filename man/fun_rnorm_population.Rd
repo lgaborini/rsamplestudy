@@ -14,8 +14,8 @@ fun_rnorm_population(n, m, list_hyper = NULL, name_var = "x",
 
 \item{list_hyper}{a list containing the hyperparameters:
 \itemize{
-\item 'mu_mu0', 'mu_sigma0': the between-source mean hyperparameters
-\item 'sigma_mu0', 'sigma_sigma0': the between-source sd hyperparameters
+\item 'm_mu', 'm_sigma': the between-source mean hyperparameters
+\item 's_mu', 's_sigma': the between-source sd hyperparameters
 A partial list will be merged.
 If \code{NULL}, they are generated from the N(0,1) distribution.
 }}
@@ -44,8 +44,8 @@ Optionally pass the between-source hyperparameters used to generate the source p
 The Normal-Normal model:
 
 \deqn{X_{ij} ~ N(\mu_i, \sigma_i^2)  i = 1, \ldots, n, j = 1, \ldots, m}
-\deqn{\mu_i ~ N(\mu^{\mu}_0, \sigma^{\mu}_0^2) j = 1, \ldots, m}
-\deqn{\sigma_i ~ N(\mu^{\sigma}_0, \sigma^{\sigma}_0^2) j = 1, \ldots, m}
+\deqn{\mu_i ~ N(m_{\mu}, s_{\mu}^2)   j = 1, \ldots, m}
+\deqn{\sigma_i ~ N(m_{\sigma}, s_{\sigma}^2)    j = 1, \ldots, m}
 }
 
 \seealso{
