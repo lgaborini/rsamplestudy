@@ -34,3 +34,5 @@ The package contains:
 ## Implemented models
 
 - Dirichlet-Dirichlet model
+- Normal-Normal model
+
