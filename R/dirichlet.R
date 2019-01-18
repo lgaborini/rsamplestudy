@@ -32,15 +32,15 @@ fun_rdirichlet_hyperparameter <- function(p) {
 }
 
 
-
-#' Generate samples from m sources and p parameters, n sample per source.
+#' Generate a Dirichlet-Dirichlet population.
 #'
+#' Generate samples from m sources and p parameters, n sample per source.
 #' Optionally pass the between-source alpha hyperparameter used to generate the source parameters.
 #'
 #' @param n number of samples per source
 #' @param m number of sources
 #' @param alpha between-source alpha hyperparameter.
-#'    If `NULL`, it is generated from the Uniform distribution on the $(p-1)$-simplex (see [fun_rdirichlet_hyperparameter()]).
+#'    If `NULL`, it is generated from the Uniform distribution on the (p-1)-simplex (see [fun_rdirichlet_hyperparameter()]).
 #' @param name_var names for data variables (default: `'x'`)
 #' @param name_source names for source parameters (default: `'theta'`)
 #'

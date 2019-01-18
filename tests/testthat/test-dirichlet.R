@@ -22,3 +22,14 @@ test_that("rdirichlet_population works", {
    expect_equal(list_pop$df_sources %>% as.data.frame(), target_df_sources)
 })
 
+test_that("rdirichlet_population generates the correct names", {
+   p <- 4
+   name_var <- 'kk'
+   name_source <- 'tau'
+   name_var_target <- fun_var_names(p, name_var)
+   name_source_target <- fun_var_names(p, name_source)
+
+   list_pop <- fun_rdirichlet_population(10, 3, p, name_var = name_var, name_source = name_source)
+   expect_true(all(names(list_pop$df_pop) %in% c('source', name_var_target)))
+   expect_true(all(names(list_pop$df_sources) %in% c('source', name_source_target)))
+})

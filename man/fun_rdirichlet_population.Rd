@@ -2,7 +2,7 @@
 % Please edit documentation in R/dirichlet.R
 \name{fun_rdirichlet_population}
 \alias{fun_rdirichlet_population}
-\title{Generate samples from m sources and p parameters, n sample per source.}
+\title{Generate a Dirichlet-Dirichlet population.}
 \usage{
 fun_rdirichlet_population(n, m, p, alpha = NULL, name_var = "x",
   name_source = "theta")
@@ -15,7 +15,7 @@ fun_rdirichlet_population(n, m, p, alpha = NULL, name_var = "x",
 \item{p}{number of variables}
 
 \item{alpha}{between-source alpha hyperparameter.
-If \code{NULL}, it is generated from the Uniform distribution on the $(p-1)$-simplex (see \code{\link[=fun_rdirichlet_hyperparameter]{fun_rdirichlet_hyperparameter()}}).}
+If \code{NULL}, it is generated from the Uniform distribution on the (p-1)-simplex (see \code{\link[=fun_rdirichlet_hyperparameter]{fun_rdirichlet_hyperparameter()}}).}
 
 \item{name_var}{names for data variables (default: \code{'x'})}
 
@@ -32,7 +32,11 @@ list of samples:
 }
 }
 \description{
+Generate samples from m sources and p parameters, n sample per source.
 Optionally pass the between-source alpha hyperparameter used to generate the source parameters.
+}
+\seealso{
+Other population functions: \code{\link{fun_rnorm_population}}
 }
 \concept{population}
 \concept{population functions}

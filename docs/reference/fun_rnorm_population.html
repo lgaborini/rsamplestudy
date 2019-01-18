@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • rsamplestudy</title>
+<title>Generate a Normal-Normal population. — fun_rnorm_population • rsamplestudy</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,11 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Generate a Normal-Normal population. — fun_rnorm_population" />
+
+<meta property="og:description" content="Generate samples from m sources and p parameters, n sample per source.
+Optionally pass the between-source hyperparameters used to generate the source parameters." />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -47,7 +51,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -109,84 +113,90 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Generate a Normal-Normal population.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/lgaborini/rsamplestudy/blob/master/R/normal.R'><code>R/normal.R</code></a></small>
+    <div class="hidden name"><code>fun_rnorm_population.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    
+    <p>Generate samples from m sources and p parameters, n sample per source.
+Optionally pass the between-source hyperparameters used to generate the source parameters.</p>
+    
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
-
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="fun_rdirichlet.html">fun_rdirichlet()</a></code> </p>
-        </td>
-        <td><p>Sample n times from a Dirichlet</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fun_rdirichlet_hyperparameter.html">fun_rdirichlet_hyperparameter()</a></code> </p>
-        </td>
-        <td><p>Sample the Dirichlet hyperparameter</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fun_rdirichlet_population.html">fun_rdirichlet_population()</a></code> </p>
-        </td>
-        <td><p>Generate a Dirichlet-Dirichlet population.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fun_rnorm_population.html">fun_rnorm_population()</a></code> </p>
-        </td>
-        <td><p>Generate a Normal-Normal population.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fun_var_names.html">fun_var_names()</a></code> </p>
-        </td>
-        <td><p>Generate variable names</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_dataset_splits.html">make_dataset_splits()</a></code> </p>
-        </td>
-        <td><p>Generate reference/questioned/background observations from a multiple-source dataset.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_idx_splits.html">make_idx_splits()</a></code> </p>
-        </td>
-        <td><p>Extract questioned/reference/background samples from a list of populations from sources</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="resample.html">resample()</a></code> </p>
-        </td>
-        <td><p>Random Samples and Permutations</p></td>
-      </tr>
-    </tbody>
+    <pre class="usage"><span class='fu'>fun_rnorm_population</span>(<span class='no'>n</span>, <span class='no'>m</span>, <span class='kw'>list_hyper</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>name_var</span> <span class='kw'>=</span> <span class='st'>"x"</span>,
+  <span class='kw'>name_source</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>mu</span> <span class='kw'>=</span> <span class='st'>"mu"</span>, <span class='kw'>sigma</span> <span class='kw'>=</span> <span class='st'>"sigma"</span>))</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>n</th>
+      <td><p>number of samples per source</p></td>
+    </tr>
+    <tr>
+      <th>m</th>
+      <td><p>number of sources</p></td>
+    </tr>
+    <tr>
+      <th>list_hyper</th>
+      <td><p>a list containing the hyperparameters:</p><ul>
+<li><p>'mu_mu0', 'mu_sigma0': the between-source mean hyperparameters</p></li>
+<li><p>'sigma_mu0', 'sigma_sigma0': the between-source sd hyperparameters
+A partial list will be merged.
+If <code>NULL</code>, they are generated from the N(0,1) distribution.</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>name_var</th>
+      <td><p>names for data variables (default: <code>'x'</code>)</p></td>
+    </tr>
+    <tr>
+      <th>name_source</th>
+      <td><p>named list or character vector with names for source parameters \(\mu\) and \(\sigma\) (default: <code><a href='https://www.rdocumentation.org/packages/base/topics/list'>list(mu = 'mu', sigma = 'sigma')</a></code>)</p></td>
+    </tr>
     </table>
-  </div>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>list of samples:</p><ul>
+<li><p><code>list_hyper</code>: a list containing the hyperparameters:</p></li>
+<li><p><code>df_sources</code>: tibble of the Dirichlet population parameters, source column is <code>'source'</code>, variables start with <code>name_source</code></p></li>
+<li><p><code>df_pop</code>: the Dirichlet data, source column is <code>'source'</code>, variables start with <code>name_var</code></p></li>
+<li><p><code>names_var</code>: names of columns containing data variables</p></li>
+<li><p><code>names_source</code>: names of columns containing source variables</p></li>
+</ul>
+
+    
+    <h2 class="hasAnchor" id="model"><a class="anchor" href="#model"></a>Model</h2>
+
+    
+    <p>The Normal-Normal model:</p>
+<p>$$X_{ij} ~ N(\mu_i, \sigma_i^2)  i = 1, \ldots, n, j = 1, \ldots, m$$
+$$\mu_i ~ N(\mu^{\mu}_0, \sigma^{\mu}_0^2) j = 1, \ldots, m$$
+$$\sigma_i ~ N(\mu^{\sigma}_0, \sigma^{\sigma}_0^2) j = 1, \ldots, m$$</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other population functions: <code><a href='fun_rdirichlet_population.html'>fun_rdirichlet_population</a></code></p></div>
+    
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
-    </ul>
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#model">Model</a></li>
+
+      <li><a href="#see-also">See also</a></li>
+          </ul>
+
   </div>
 </div>
 
