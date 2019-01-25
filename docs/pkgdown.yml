@@ -4,4 +4,5 @@ pkgdown_sha: ~
 articles:
   dirichlet-distribution: dirichlet-distribution.html
   dirichletdirichlet-study: dirichletdirichlet-study.html
+  sampling_study: sampling_study.html
 
