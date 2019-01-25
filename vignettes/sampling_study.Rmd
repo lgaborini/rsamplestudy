@@ -1,0 +1,177 @@
+---
+title: "Sampling: reference and questioned items"
+author: "Lorenzo Gaborini"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Sampling}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette introduces the concepts behind the comparison of two sets of items, as the functions `make_dataset_splits` and `make_idx_splits` implement.
+
+## Source data
+
+Suppose that we have a set of observations with their associated source.    
+The $j$-th observation from the $i$-th source is indicated with $X_{ij}$.
+In total, we have $m$ sources, $n_i$ observations per source.
+
+The general model for the data is:
+
+$$X_{ij} \sim f(\theta_i) \quad \text{iid } j = 1, ..., n_i $$
+
+For the purpose of illustration, let's use the popular dataset `chickwts`:
+
+```{r}
+data(chickwts)
+head(chickwts)
+```
+
+The data are the recorded weights of `r nrow(chickwts)` chicks according to `nlevels(chickwts$feed)` different feed supplements (`feed` column).
+We consider `feed` as the source label: we assume that chicks are exchangeable given the administered feed.
+
+## Two-sample concept
+
+This package is used in a forensic evaluative setting, where one has a set of observations from a known source (the **reference set** and the **reference source**), and a set of observations whose source(s) is (are) unknown (the **questioned set**).    
+
+One commonly states two competing hypotheses, e.g. whether the source of the questioned set is the reference source, or one (or more) different sources.   
+These hypotheses are usually named $H_1$ and $H_2$. Notice that $H_2$ can consider a single alternative source, or multiple sources: all of them are unknown and different from the reference one. 
+
+This package assists with the generation of the reference and questioned set starting from the observed data.frame.   
+
+The dimensions of the reference and questioned sets can be specified, and are usually much smaller than the full data.    
+It follows that the rows which have not been picked constitute a third set, the **background set**.    
+This set is used in a Bayesian setting to learn the (hyper)priors for the statistical model.
+
+## Sample generation
+
+To connect with the example, we consider `horsebean` feed as the reference source. From the full data, we pick 5 observations to constitute each one of the reference and questioned sets. Let's see how `rsamplestudy` does it:
+
+```{r}
+set.seed(123)
+
+library(rsamplestudy)
+
+n_items <- 5
+col_source <- 'feed'
+
+list_split <- make_dataset_splits(chickwts, k_ref = n_items, k_quest = n_items, col_source = 'feed', source_ref = 'horsebean')
+list_split
+```
+
+The return value contains three lists: the indexes of the rows in `chickwts`, and three data frames (i.e. `chickwts` split up across the previous indexes).
+
+### Questioned source choice 
+
+Notice that it automatically picked a questioned source.    
+This behaviour is specified in `make_dataset_splits` documentation: if the questioned source is not specified, then any source different from the reference one is picked as a potential source. Then, items are randomly picked.
+
+We can also force the questioned source(s): e.g. we pick items from `'horsebean'` and `'soybean'`
+
+```{r}
+list_split <- make_dataset_splits(chickwts, k_ref = n_items, k_quest = n_items, col_source = 'feed', 
+                                  source_ref = 'horsebean', source_quest = c('horsebean', 'soybean'))
+list_split
+```
+
+### Sampling with repetition
+
+It is always guaranteed that no item appears more than once across sets.   
+It may be explicitely allowed to pick multiple times an item **in** a set (but it will never appear in other sets).
+
+For example, chick counts per feed:
+
+```{r}
+table(chickwts$feed)
+```
+
+We might want to obtain bootstrap samples from chicken who have been fed with horsebeans, by sampling 100 times.   
+
+
+```{r}
+n_items_rep <- 100
+list_split <- make_dataset_splits(chickwts, 
+                    k_ref = n_items_rep, 
+                    k_quest = n_items_rep, col_source = 'feed', source_ref = 'horsebean')
+
+head(list_split$df_reference)
+head(list_split$df_questioned)
+head(list_split$df_background)
+```
+
+Items are never picked more than once across the sets:
+
+```{r}
+intersect(list_split$idx_reference, list_split$idx_questioned)
+intersect(list_split$idx_questioned, list_split$idx_background)
+intersect(list_split$idx_reference, list_split$idx_background)
+```
+
+
+### Background selection
+
+The background set can be constituted in two ways depending if the **potential sampled sources** (i.e. sources whose items *could* appear either in the reference or in the questioned set) are excluded or not.
+
+`make_dataset_splits` accepts the parameter `background` which can take two values:
+
+`'outside'` (default): the potential observed sources may appear in the background dataset.
+
+```{r}
+set.seed(123)
+list_split <- make_dataset_splits(chickwts, k_ref = n_items, k_quest = n_items, col_source = 'feed', source_ref = 'horsebean',
+                                  background = 'outside')
+
+# Observed reference source
+unique(list_split$df_reference$feed)
+# Observed questioned sources
+unique(list_split$df_questioned$feed)
+# Sources in background
+unique(list_split$df_background$feed)
+
+```
+
+`'others'`: the potential observed sources cannot appear in the background set.
+
+Notice that if the potential sources span the entire available sources, than the background dataset must be empty.
+It is the case when the questioned source is not specified, as it is automatically considered to be "all but the reference source".
+
+
+```{r}
+set.seed(123)
+list_split <- make_dataset_splits(chickwts, k_ref = n_items, k_quest = n_items, col_source = 'feed', 
+                                  source_ref = 'horsebean', source_quest = NULL,
+                                  background = 'others')
+
+# Observed reference source
+unique(list_split$df_reference$feed)
+# Observed questioned sources
+unique(list_split$df_questioned$feed)
+# Sources in background
+unique(list_split$df_background$feed)
+
+```
+
+Once the potential observed sources are restricted, the background selection matters:
+
+```{r}
+set.seed(123)
+list_split <- make_dataset_splits(chickwts, k_ref = n_items, k_quest = n_items, col_source = 'feed', 
+                                  source_ref = 'horsebean', source_quest = c('horsebean', 'soybean'),
+                                  background = 'others')
+
+# Observed reference source
+unique(list_split$df_reference$feed)
+# Observed questioned sources
+unique(list_split$df_questioned$feed)
+# Sources in background
+unique(list_split$df_background$feed)
+
+```
