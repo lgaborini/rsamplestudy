@@ -191,8 +191,9 @@ make_idx_splits <- function(sources, k_ref, k_quest,
       # Remove reference source from candidates
       idx_background <- setdiff(idx_all, idx_ref_all)
       # Remove OBSEVED questioned sources from candidates
-      idx_quest_observed <- unique(sources[idx_questioned])
-      idx_background <- setdiff(idx_background, idx_quest_observed)
+      sources_quest_observed <- unique(sources[idx_questioned])
+      idx_quest_observed_all <- which(sources %in% sources_quest_observed)
+      idx_background <- setdiff(idx_background, idx_quest_observed_all)
 
    } else {
       stop('background not specified.')
