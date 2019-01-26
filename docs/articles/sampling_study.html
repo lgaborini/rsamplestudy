@@ -89,7 +89,7 @@
       <h1>Sampling: reference and questioned items</h1>
                         <h4 class="author">Lorenzo Gaborini</h4>
             
-            <h4 class="date">2019-01-25</h4>
+            <h4 class="date">2019-01-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lgaborini/rsamplestudy/blob/master/vignettes/sampling_study.Rmd"><code>vignettes/sampling_study.Rmd</code></a></small>
       <div class="hidden name"><code>sampling_study.Rmd</code></div>
@@ -106,6 +106,7 @@
 The <span class="math inline">\(j\)</span>-th observation from the <span class="math inline">\(i\)</span>-th source is indicated with <span class="math inline">\(X_{ij}\)</span>. In total, we have <span class="math inline">\(m\)</span> sources, <span class="math inline">\(n_i\)</span> observations per source.</p>
 <p>The general model for the data is:</p>
 <p><span class="math display">\[X_{ij} \sim f(\theta_i) \quad \text{iid } j = 1, ..., n_i \]</span></p>
+<p>where <span class="math inline">\(\theta_i\)</span> are parameters that characterise uniquely the <span class="math inline">\(i\)</span>-th source.</p>
 <p>For the purpose of illustration, let’s use the popular dataset <code>chickwts</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(chickwts)</a>
 <a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(chickwts)</a>
@@ -126,13 +127,14 @@ The <span class="math inline">\(j\)</span>-th observation from the <span class="
 These hypotheses are usually named <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>. Notice that <span class="math inline">\(H_2\)</span> can consider a single alternative source, or multiple sources: all of them are unknown and different from the reference one.</p>
 <p>This package assists with the generation of the reference and questioned set starting from the observed data.frame.</p>
 <p>The dimensions of the reference and questioned sets can be specified, and are usually much smaller than the full data.<br>
-It follows that the rows which have not been picked constitute a third set, the <strong>background set</strong>.<br>
-This set is used in a Bayesian setting to learn the (hyper)priors for the statistical model.</p>
+It follows that (a subset of) the rows which have not been picked constitute a third set, the <strong>background set</strong>.</p>
+<p>This set is used in a Bayesian setting to learn the (hyper)priors for the statistical model.</p>
 </div>
 <div id="sample-generation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#sample-generation" class="anchor"></a>Sample generation</h2>
-<p>To connect with the example, we consider <code>horsebean</code> feed as the reference source. From the full data, we pick 5 observations to constitute each one of the reference and questioned sets. Let’s see how <code>rsamplestudy</code> does it:</p>
+<p>To connect with the example, we consider <code>horsebean</code> feed as the reference source.<br>
+From the full data, we pick 5 observations to constitute each one of the reference and questioned sets. Let’s see how <code>rsamplestudy</code> does it:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">123</span>)</a>
 <a class="sourceLine" id="cb2-2" title="2"></a>
 <a class="sourceLine" id="cb2-3" title="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(rsamplestudy)</a>
@@ -386,9 +388,12 @@ It may be explicitely allowed to pick multiple times an item <strong>in</strong>
 <div id="background-selection" class="section level3">
 <h3 class="hasAnchor">
 <a href="#background-selection" class="anchor"></a>Background selection</h3>
-<p>The background set can be constituted in two ways depending if the <strong>potential sampled sources</strong> (i.e. sources whose items <em>could</em> appear either in the reference or in the questioned set) are excluded or not.</p>
-<p><code>make_dataset_splits</code> accepts the parameter <code>background</code> which can take two values:</p>
-<p><code>'outside'</code> (default): the potential observed sources may appear in the background dataset.</p>
+<p>The background set can be automatically constituted in three ways depending if the <strong>potential sampled sources</strong> (i.e. sources whose items <em>could</em> appear either in the reference or in the questioned set) are excluded or not.</p>
+<p><code>make_dataset_splits</code> accepts the parameter <code>background</code> which can take three values:</p>
+<ol style="list-style-type: decimal">
+<li>
+<code>background = 'outside'</code> (default): the potential observed sources may appear in the background dataset.</li>
+</ol>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">123</span>)</a>
 <a class="sourceLine" id="cb7-2" title="2">list_split &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span>(chickwts, <span class="dt">k_ref =</span> n_items, <span class="dt">k_quest =</span> n_items, <span class="dt">col_source =</span> <span class="st">'feed'</span>, <span class="dt">source_ref =</span> <span class="st">'horsebean'</span>,</a>
 <a class="sourceLine" id="cb7-3" title="3">                                  <span class="dt">background =</span> <span class="st">'outside'</span>)</a>
@@ -405,8 +410,12 @@ It may be explicitely allowed to pick multiple times an item <strong>in</strong>
 <a class="sourceLine" id="cb7-14" title="14"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>(list_split<span class="op">$</span>df_background<span class="op">$</span>feed)</a>
 <a class="sourceLine" id="cb7-15" title="15"><span class="co">#&gt; [1] horsebean linseed   soybean   sunflower meatmeal  casein   </span></a>
 <a class="sourceLine" id="cb7-16" title="16"><span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span></a></code></pre></div>
-<p><code>'others'</code>: the potential observed sources cannot appear in the background set.</p>
-<p>Notice that if the potential sources span the entire available sources, than the background dataset must be empty. It is the case when the questioned source is not specified, as it is automatically considered to be “all but the reference source”.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>
+<code>background = 'others'</code>: the potential observed sources cannot appear in the background set.</li>
+</ol>
+<p>Notice that if the potential sources span the entire available sources, than the background dataset must be empty.<br>
+It is the case when the questioned source is not specified, as it is automatically considered to be “all but the reference source”.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">123</span>)</a>
 <a class="sourceLine" id="cb8-2" title="2">list_split &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span>(chickwts, <span class="dt">k_ref =</span> n_items, <span class="dt">k_quest =</span> n_items, <span class="dt">col_source =</span> <span class="st">'feed'</span>, </a>
 <a class="sourceLine" id="cb8-3" title="3">                                  <span class="dt">source_ref =</span> <span class="st">'horsebean'</span>, <span class="dt">source_quest =</span> <span class="ot">NULL</span>,</a>
@@ -444,6 +453,28 @@ It may be explicitely allowed to pick multiple times an item <strong>in</strong>
 <a class="sourceLine" id="cb9-15" title="15"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>(list_split<span class="op">$</span>df_background<span class="op">$</span>feed)</a>
 <a class="sourceLine" id="cb9-16" title="16"><span class="co">#&gt; [1] linseed   sunflower meatmeal  casein   </span></a>
 <a class="sourceLine" id="cb9-17" title="17"><span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span></a></code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>
+<code>background = 'unobserved'</code>: the observed sources (i.e. sources whose items have been sampled, either in the reference or in the questioned set) cannot appear in the background set.</li>
+</ol>
+<p>Notice that previous example is no longer an error, as long as at least one source has never been observed:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">123</span>)</a>
+<a class="sourceLine" id="cb10-2" title="2">list_split &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span>(chickwts, <span class="dt">k_ref =</span> n_items, <span class="dt">k_quest =</span> n_items, <span class="dt">col_source =</span> <span class="st">'feed'</span>, </a>
+<a class="sourceLine" id="cb10-3" title="3">                                  <span class="dt">source_ref =</span> <span class="st">'horsebean'</span>, <span class="dt">source_quest =</span> <span class="ot">NULL</span>,</a>
+<a class="sourceLine" id="cb10-4" title="4">                                  <span class="dt">background =</span> <span class="st">'unobserved'</span>)</a>
+<a class="sourceLine" id="cb10-5" title="5"></a>
+<a class="sourceLine" id="cb10-6" title="6"><span class="co"># Observed reference source</span></a>
+<a class="sourceLine" id="cb10-7" title="7"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>(list_split<span class="op">$</span>df_reference<span class="op">$</span>feed)</a>
+<a class="sourceLine" id="cb10-8" title="8"><span class="co">#&gt; [1] horsebean</span></a>
+<a class="sourceLine" id="cb10-9" title="9"><span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span></a>
+<a class="sourceLine" id="cb10-10" title="10"><span class="co"># Observed questioned sources</span></a>
+<a class="sourceLine" id="cb10-11" title="11"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>(list_split<span class="op">$</span>df_questioned<span class="op">$</span>feed)</a>
+<a class="sourceLine" id="cb10-12" title="12"><span class="co">#&gt; [1] linseed   sunflower casein   </span></a>
+<a class="sourceLine" id="cb10-13" title="13"><span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span></a>
+<a class="sourceLine" id="cb10-14" title="14"><span class="co"># Sources in background</span></a>
+<a class="sourceLine" id="cb10-15" title="15"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>(list_split<span class="op">$</span>df_background<span class="op">$</span>feed)</a>
+<a class="sourceLine" id="cb10-16" title="16"><span class="co">#&gt; [1] soybean  meatmeal</span></a>
+<a class="sourceLine" id="cb10-17" title="17"><span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span></a></code></pre></div>
 </div>
 </div>
   </div>

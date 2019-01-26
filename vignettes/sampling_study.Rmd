@@ -28,6 +28,8 @@ The general model for the data is:
 
 $$X_{ij} \sim f(\theta_i) \quad \text{iid } j = 1, ..., n_i $$
 
+where $\theta_i$ are parameters that characterise uniquely the $i$-th source.
+
 For the purpose of illustration, let's use the popular dataset `chickwts`:
 
 ```{r}
@@ -48,12 +50,14 @@ These hypotheses are usually named $H_1$ and $H_2$. Notice that $H_2$ can consid
 This package assists with the generation of the reference and questioned set starting from the observed data.frame.   
 
 The dimensions of the reference and questioned sets can be specified, and are usually much smaller than the full data.    
-It follows that the rows which have not been picked constitute a third set, the **background set**.    
+It follows that (a subset of) the rows which have not been picked constitute a third set, the **background set**.    
+
 This set is used in a Bayesian setting to learn the (hyper)priors for the statistical model.
 
 ## Sample generation
 
-To connect with the example, we consider `horsebean` feed as the reference source. From the full data, we pick 5 observations to constitute each one of the reference and questioned sets. Let's see how `rsamplestudy` does it:
+To connect with the example, we consider `horsebean` feed as the reference source.    
+From the full data, we pick 5 observations to constitute each one of the reference and questioned sets. Let's see how `rsamplestudy` does it:
 
 ```{r}
 set.seed(123)
@@ -84,7 +88,7 @@ list_split
 
 ### Sampling with repetition
 
-It is always guaranteed that no item appears more than once across sets.   
+It is always guaranteed that no item appears more than once across sets.    
 It may be explicitely allowed to pick multiple times an item **in** a set (but it will never appear in other sets).
 
 For example, chick counts per feed:
@@ -118,11 +122,11 @@ intersect(list_split$idx_reference, list_split$idx_background)
 
 ### Background selection
 
-The background set can be constituted in two ways depending if the **potential sampled sources** (i.e. sources whose items *could* appear either in the reference or in the questioned set) are excluded or not.
+The background set can be automatically constituted in three ways depending if the **potential sampled sources** (i.e. sources whose items *could* appear either in the reference or in the questioned set) are excluded or not.
 
-`make_dataset_splits` accepts the parameter `background` which can take two values:
+`make_dataset_splits` accepts the parameter `background` which can take three values:
 
-`'outside'` (default): the potential observed sources may appear in the background dataset.
+1. `background = 'outside'` (default): the potential observed sources may appear in the background dataset.
 
 ```{r}
 set.seed(123)
@@ -138,9 +142,9 @@ unique(list_split$df_background$feed)
 
 ```
 
-`'others'`: the potential observed sources cannot appear in the background set.
+2. `background = 'others'`: the potential observed sources cannot appear in the background set.
 
-Notice that if the potential sources span the entire available sources, than the background dataset must be empty.
+Notice that if the potential sources span the entire available sources, than the background dataset must be empty.    
 It is the case when the questioned source is not specified, as it is automatically considered to be "all but the reference source".
 
 
@@ -166,6 +170,26 @@ set.seed(123)
 list_split <- make_dataset_splits(chickwts, k_ref = n_items, k_quest = n_items, col_source = 'feed', 
                                   source_ref = 'horsebean', source_quest = c('horsebean', 'soybean'),
                                   background = 'others')
+
+# Observed reference source
+unique(list_split$df_reference$feed)
+# Observed questioned sources
+unique(list_split$df_questioned$feed)
+# Sources in background
+unique(list_split$df_background$feed)
+
+```
+
+3. `background = 'unobserved'`: the observed sources (i.e. sources whose items have been sampled, either in the reference or in the questioned set) cannot appear in the background set.
+
+Notice that previous example is no longer an error, as long as at least one source has never been observed:
+
+
+```{r}
+set.seed(123)
+list_split <- make_dataset_splits(chickwts, k_ref = n_items, k_quest = n_items, col_source = 'feed', 
+                                  source_ref = 'horsebean', source_quest = NULL,
+                                  background = 'unobserved')
 
 # Observed reference source
 unique(list_split$df_reference$feed)

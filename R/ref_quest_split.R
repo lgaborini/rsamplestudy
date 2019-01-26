@@ -83,7 +83,7 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #' - If `background` is `'outside'`, the background dataset comprises all items who **do not lie** in any of the reference and questioned sets.
 #'   It can contain items from reference and questioned sources.
 #' - If `background` is `'others'`, the background dataset comprises all items from the **non**-reference and **non**-questioned **potential sources**.
-#' - If `background` is `'unobserved'`, the background dataset comprises all items from the sources who do not appear in any of the he reference and questioned sets.
+#' - If `background` is `'unobserved'`, the background dataset comprises all items from the sources who do not appear in any of the reference and questioned sets.
 #'
 #' By default, `background` is `'outside'`.
 #'
