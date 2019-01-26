@@ -312,4 +312,38 @@ if (!is_background_empty) {
    })
 }
 
+
+
+# background: unobserved
+test_that("make_dataset_splits: verify that background is non-intersecting, unobserved", {
+   splits <- make_dataset_splits(df, k_ref, k_quest, background = 'unobserved')
+   expect_length(intersect(splits$idx_reference, splits$idx_questioned), 0)
+   expect_length(intersect(splits$idx_reference, splits$idx_background), 0)
+   expect_length(intersect(splits$idx_questioned, splits$idx_background), 0)
+})
+
+if (!is_background_empty) {
+
+   test_that("make_dataset_splits: verify that background is non-intersecting, unobserved (sampling from unseen sources), with actual background", {
+      splits <- make_dataset_splits(df, k_ref, k_quest, background = 'unobserved', source_ref = s_ref)
+
+      expect_length(intersect(splits$idx_reference, splits$idx_questioned), 0)
+      expect_length(intersect(splits$idx_reference, splits$idx_background), 0)
+      expect_length(intersect(splits$idx_questioned, splits$idx_background), 0)
+
+      source_ref <- unique(splits$df_reference$source)
+      source_background <- unique(splits$df_background$source)
+      source_quest_actual <- unique(splits$df_questioned$source)
+      source_quest_potential <- setdiff(sources_all, s_ref)
+      source_quest_in_background <- setdiff(source_quest_potential, source_quest_actual)
+
+      expect_length(intersect(source_ref, source_background), 0)
+      expect_length(intersect(source_ref, source_quest_actual), 0)
+      expect_length(intersect(source_quest_actual, source_background), 0)
+      expect_gte(length(intersect(source_quest_in_background, source_background)), 0)
+   })
+
+}
+
+
 })    # /Rerun tests multiple times
