@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rsamplestudy</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -58,7 +58,13 @@
     <li>
       <a href="../articles/dirichletdirichlet-study.html">Dirichlet-Dirichlet study generation</a>
     </li>
+    <li>
+      <a href="../articles/sampling_study.html">Sampling: reference and questioned items</a>
+    </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -83,7 +89,7 @@
       <h1>Dirichlet distribution tools</h1>
                         <h4 class="author">Lorenzo Gaborini</h4>
             
-            <h4 class="date">2019-01-18</h4>
+            <h4 class="date">2019-01-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lgaborini/rsamplestudy/blob/master/vignettes/dirichlet-distribution.Rmd"><code>vignettes/dirichlet-distribution.Rmd</code></a></small>
       <div class="hidden name"><code>dirichlet-distribution.Rmd</code></div>
@@ -145,14 +151,14 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">df_diri &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span>(n, alpha)</a>
 <a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(df_diri)</a>
 <a class="sourceLine" id="cb2-3" title="3"><span class="co">#&gt; # A tibble: 6 x 4</span></a>
-<a class="sourceLine" id="cb2-4" title="4"><span class="co">#&gt;    `x[1]`   `x[2]` `x[3]`       `x[4]`</span></a>
-<a class="sourceLine" id="cb2-5" title="5"><span class="co">#&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;        &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb2-6" title="6"><span class="co">#&gt; 1 0.100   4.24e- 8  0.895 0.00523     </span></a>
-<a class="sourceLine" id="cb2-7" title="7"><span class="co">#&gt; 2 0.205   1.78e- 5  0.795 0.000000145 </span></a>
-<a class="sourceLine" id="cb2-8" title="8"><span class="co">#&gt; 3 0.00244 5.34e- 3  0.992 0.0000000796</span></a>
-<a class="sourceLine" id="cb2-9" title="9"><span class="co">#&gt; 4 0.0396  7.19e- 5  0.960 0.0000170   </span></a>
-<a class="sourceLine" id="cb2-10" title="10"><span class="co">#&gt; 5 0.0259  4.87e- 8  0.974 0.0000401   </span></a>
-<a class="sourceLine" id="cb2-11" title="11"><span class="co">#&gt; 6 0.344   4.10e-13  0.656 0.0000879</span></a></code></pre></div>
+<a class="sourceLine" id="cb2-4" title="4"><span class="co">#&gt;    `x[1]`   `x[2]` `x[3]`   `x[4]`</span></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="co">#&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="co">#&gt; 1 0.0319  2.45e- 1  0.714 9.39e- 3</span></a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="co">#&gt; 2 0.0960  1.14e- 8  0.875 2.93e- 2</span></a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="co">#&gt; 3 0.0348  4.09e- 4  0.965 2.28e- 9</span></a>
+<a class="sourceLine" id="cb2-9" title="9"><span class="co">#&gt; 4 0.00991 2.11e-20  0.990 2.73e-10</span></a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="co">#&gt; 5 0.316   7.30e-12  0.684 4.34e- 8</span></a>
+<a class="sourceLine" id="cb2-11" title="11"><span class="co">#&gt; 6 0.0510  3.72e- 7  0.949 1.02e- 4</span></a></code></pre></div>
 <pre><code>#&gt; Loading required namespace: GGally</code></pre>
 <p><img src="dirichlet-distribution_files/figure-html/sym-sens-plot-comp-1.png" width="700"></p>
 <div id="uniform-sampling" class="section level3">
@@ -166,14 +172,14 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">df_diri &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span>(n, alpha)</a>
 <a class="sourceLine" id="cb5-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(df_diri)</a>
 <a class="sourceLine" id="cb5-3" title="3"><span class="co">#&gt; # A tibble: 6 x 4</span></a>
-<a class="sourceLine" id="cb5-4" title="4"><span class="co">#&gt;   `x[1]` `x[2]`  `x[3]` `x[4]`</span></a>
-<a class="sourceLine" id="cb5-5" title="5"><span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb5-6" title="6"><span class="co">#&gt; 1 0.767  0.0883 0.0961  0.0490</span></a>
-<a class="sourceLine" id="cb5-7" title="7"><span class="co">#&gt; 2 0.240  0.445  0.00186 0.313 </span></a>
-<a class="sourceLine" id="cb5-8" title="8"><span class="co">#&gt; 3 0.501  0.0492 0.0596  0.390 </span></a>
-<a class="sourceLine" id="cb5-9" title="9"><span class="co">#&gt; 4 0.0255 0.749  0.0365  0.189 </span></a>
-<a class="sourceLine" id="cb5-10" title="10"><span class="co">#&gt; 5 0.200  0.0391 0.00906 0.752 </span></a>
-<a class="sourceLine" id="cb5-11" title="11"><span class="co">#&gt; 6 0.751  0.0842 0.116   0.0489</span></a></code></pre></div>
+<a class="sourceLine" id="cb5-4" title="4"><span class="co">#&gt;   `x[1]`   `x[2]` `x[3]` `x[4]`</span></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="co">#&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="co">#&gt; 1 0.0989 0.332    0.0673  0.501</span></a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="co">#&gt; 2 0.0211 0.196    0.427   0.357</span></a>
+<a class="sourceLine" id="cb5-8" title="8"><span class="co">#&gt; 3 0.0990 0.370    0.106   0.425</span></a>
+<a class="sourceLine" id="cb5-9" title="9"><span class="co">#&gt; 4 0.157  0.115    0.0286  0.700</span></a>
+<a class="sourceLine" id="cb5-10" title="10"><span class="co">#&gt; 5 0.0969 0.0357   0.588   0.279</span></a>
+<a class="sourceLine" id="cb5-11" title="11"><span class="co">#&gt; 6 0.270  0.000200 0.0774  0.652</span></a></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">scatter_matrix_simplex</span>(df_diri)</a></code></pre></div>
 <p><img src="dirichlet-distribution_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
@@ -190,12 +196,12 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 <a class="sourceLine" id="cb8-3" title="3"><span class="co">#&gt; # A tibble: 6 x 4</span></a>
 <a class="sourceLine" id="cb8-4" title="4"><span class="co">#&gt;   `x[1]` `x[2]` `x[3]` `x[4]`</span></a>
 <a class="sourceLine" id="cb8-5" title="5"><span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb8-6" title="6"><span class="co">#&gt; 1  0.168  0.343  0.284  0.206</span></a>
-<a class="sourceLine" id="cb8-7" title="7"><span class="co">#&gt; 2  0.271  0.271  0.261  0.198</span></a>
-<a class="sourceLine" id="cb8-8" title="8"><span class="co">#&gt; 3  0.195  0.259  0.214  0.332</span></a>
-<a class="sourceLine" id="cb8-9" title="9"><span class="co">#&gt; 4  0.296  0.216  0.182  0.306</span></a>
-<a class="sourceLine" id="cb8-10" title="10"><span class="co">#&gt; 5  0.269  0.279  0.179  0.273</span></a>
-<a class="sourceLine" id="cb8-11" title="11"><span class="co">#&gt; 6  0.211  0.230  0.262  0.298</span></a></code></pre></div>
+<a class="sourceLine" id="cb8-6" title="6"><span class="co">#&gt; 1  0.233  0.276  0.221  0.270</span></a>
+<a class="sourceLine" id="cb8-7" title="7"><span class="co">#&gt; 2  0.270  0.265  0.249  0.216</span></a>
+<a class="sourceLine" id="cb8-8" title="8"><span class="co">#&gt; 3  0.215  0.258  0.244  0.282</span></a>
+<a class="sourceLine" id="cb8-9" title="9"><span class="co">#&gt; 4  0.360  0.233  0.231  0.176</span></a>
+<a class="sourceLine" id="cb8-10" title="10"><span class="co">#&gt; 5  0.257  0.261  0.250  0.232</span></a>
+<a class="sourceLine" id="cb8-11" title="11"><span class="co">#&gt; 6  0.265  0.224  0.270  0.240</span></a></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">scatter_matrix_simplex</span>(df_diri)</a></code></pre></div>
 <p><img src="dirichlet-distribution_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 </div>
@@ -210,14 +216,14 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">df_diri &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span>(n, alpha)</a>
 <a class="sourceLine" id="cb11-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(df_diri)</a>
 <a class="sourceLine" id="cb11-3" title="3"><span class="co">#&gt; # A tibble: 6 x 4</span></a>
-<a class="sourceLine" id="cb11-4" title="4"><span class="co">#&gt;      `x[1]`    `x[2]`    `x[3]`    `x[4]`</span></a>
-<a class="sourceLine" id="cb11-5" title="5"><span class="co">#&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb11-6" title="6"><span class="co">#&gt; 1 3.46e- 23 1.14e-264 3.69e-182  1.00e+ 0</span></a>
-<a class="sourceLine" id="cb11-7" title="7"><span class="co">#&gt; 2 2.93e- 11 2.49e- 54 1.10e- 18 10.00e- 1</span></a>
-<a class="sourceLine" id="cb11-8" title="8"><span class="co">#&gt; 3 6.54e- 70 1.58e- 61 2.25e-116  1.00e+ 0</span></a>
-<a class="sourceLine" id="cb11-9" title="9"><span class="co">#&gt; 4 1.00e+  0 0.        0.         2.60e-60</span></a>
-<a class="sourceLine" id="cb11-10" title="10"><span class="co">#&gt; 5 1.00e+  0 0.        0.         3.63e-42</span></a>
-<a class="sourceLine" id="cb11-11" title="11"><span class="co">#&gt; 6 2.21e-126 2.75e- 16 9.86e-  1  1.42e- 2</span></a></code></pre></div>
+<a class="sourceLine" id="cb11-4" title="4"><span class="co">#&gt;       `x[1]`    `x[2]`    `x[3]`    `x[4]`</span></a>
+<a class="sourceLine" id="cb11-5" title="5"><span class="co">#&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb11-6" title="6"><span class="co">#&gt; 1  2.77e-270 10.00e- 1 3.24e-  9 3.65e-128</span></a>
+<a class="sourceLine" id="cb11-7" title="7"><span class="co">#&gt; 2 10.00e-  1  8.14e-12 1.98e- 64 3.65e- 33</span></a>
+<a class="sourceLine" id="cb11-8" title="8"><span class="co">#&gt; 3  1.00e+  0  2.81e-51 1.53e-263 2.55e- 82</span></a>
+<a class="sourceLine" id="cb11-9" title="9"><span class="co">#&gt; 4  1.00e+  0  4.97e-88 1.10e-125 2.35e- 92</span></a>
+<a class="sourceLine" id="cb11-10" title="10"><span class="co">#&gt; 5  1.00e+  0  0.       3.61e- 27 1.62e-240</span></a>
+<a class="sourceLine" id="cb11-11" title="11"><span class="co">#&gt; 6  1.48e- 66  1.00e+ 0 1.57e- 68 0.</span></a></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">scatter_matrix_simplex</span>(df_diri)</a></code></pre></div>
 <p><img src="dirichlet-distribution_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>

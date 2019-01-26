@@ -41,7 +41,8 @@ Sampling with replacement is used, if necessary and not forbidden.
 \itemize{
 \item If \code{background} is \code{'outside'}, the background dataset comprises all items who \strong{do not lie} in any of the reference and questioned sets.
 It can contain items from reference and questioned sources.
-\item If \code{background} is \code{'others'}, the background dataset comprises all items from the \strong{non}-reference and \strong{non}-questioned \strong{sources}.
+\item If \code{background} is \code{'others'}, the background dataset comprises all items from the \strong{non}-reference and \strong{non}-questioned \strong{potential sources}.
+\item If \code{background} is \code{'unobserved'}, the background dataset comprises all items from the sources who do not appear in any of the he reference and questioned sets.
 }
 
 By default, \code{background} is \code{'outside'}.

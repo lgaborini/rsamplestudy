@@ -82,7 +82,8 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #'
 #' - If `background` is `'outside'`, the background dataset comprises all items who **do not lie** in any of the reference and questioned sets.
 #'   It can contain items from reference and questioned sources.
-#' - If `background` is `'others'`, the background dataset comprises all items from the **non**-reference and **non**-questioned **sources**.
+#' - If `background` is `'others'`, the background dataset comprises all items from the **non**-reference and **non**-questioned **potential sources**.
+#' - If `background` is `'unobserved'`, the background dataset comprises all items from the sources who do not appear in any of the he reference and questioned sets.
 #'
 #' By default, `background` is `'outside'`.
 #'
@@ -108,6 +109,12 @@ make_idx_splits <- function(sources, k_ref, k_quest,
    sources <- as.vector(sources)
    source_all <- unique(sources)
    idx_all <- seq_along(sources)
+
+   assertthat::assert_that(is.vector(sources))
+   assertthat::assert_that(is.null(source_ref) || assertthat::is.scalar(source_ref))
+   assertthat::assert_that(is.null(source_quest) || is.vector(source_quest))
+   assertthat::assert_that(assertthat::is.string(background))
+   assertthat::assert_that(background %in% c('outside', 'unobserved', 'others'), msg = "'background' parameter is invalid")
 
    # Setup reference source
    if (is.null(source_ref)) {
@@ -175,9 +182,18 @@ make_idx_splits <- function(sources, k_ref, k_quest,
 
    # Build the background dataset
    if (background == 'others') {
+      # Remove reference and questioned potential SOURCES
       idx_background <- setdiff(setdiff(idx_all, idx_ref_all), idx_quest_all)
    } else if (background == 'outside') {
+      # Remove reference and questioned ITEMS
       idx_background <- setdiff(setdiff(idx_all, idx_reference), idx_questioned)
+   } else if (background == 'unobserved') {
+      # Remove reference source from candidates
+      idx_background <- setdiff(idx_all, idx_ref_all)
+      # Remove OBSEVED questioned sources from candidates
+      idx_quest_observed <- unique(sources[idx_questioned])
+      idx_background <- setdiff(idx_background, idx_quest_observed)
+
    } else {
       stop('background not specified.')
    }

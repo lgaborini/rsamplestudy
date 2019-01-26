@@ -64,7 +64,7 @@ The split is done according by the item source." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rsamplestudy</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -92,7 +92,13 @@ The split is done according by the item source." />
     <li>
       <a href="../articles/dirichletdirichlet-study.html">Dirichlet-Dirichlet study generation</a>
     </li>
+    <li>
+      <a href="../articles/sampling_study.html">Sampling: reference and questioned items</a>
+    </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -175,7 +181,8 @@ The split is done according by the item source.</p>
     <ul>
 <li><p>If <code>background</code> is <code>'outside'</code>, the background dataset comprises all items who <strong>do not lie</strong> in any of the reference and questioned sets.
 It can contain items from reference and questioned sources.</p></li>
-<li><p>If <code>background</code> is <code>'others'</code>, the background dataset comprises all items from the <strong>non</strong>-reference and <strong>non</strong>-questioned <strong>sources</strong>.</p></li>
+<li><p>If <code>background</code> is <code>'others'</code>, the background dataset comprises all items from the <strong>non</strong>-reference and <strong>non</strong>-questioned <strong>potential sources</strong>.</p></li>
+<li><p>If <code>background</code> is <code>'unobserved'</code>, the background dataset comprises all items from the sources who do not appear in any of the he reference and questioned sets.</p></li>
 </ul>
     <p>By default, <code>background</code> is <code>'outside'</code>.</p>
 <p>Notice that <code>background = 'others'</code> generates no background data if questioned sources are not specified:
