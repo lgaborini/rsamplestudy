@@ -65,16 +65,25 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #'
 #' Sampling with replacement is used, if necessary and not forbidden. If it is used, a message appears.
 #'
-#' It is **always** guaranteed that no sample appear more than once across reference/questioned/background items (but it can appear multiple times in a set).
+#' It is **always** guaranteed that no sample appear more than once across reference/questioned/background items (but it can appear multiple times in a set if `replace` is `TRUE`).
 #'
 #' @section Source sampling:
 #'
+#' By design, the package identifies sources which are allowed to be sampled from.
+#' By default, all available sources can appear in the reference or questioned samples.
+#'
+#' This restriction can be modified using the parameters `source_ref_allowed` and `source_quest_allowed`.
+#'
+#' The behaviour of `same_source` is stronger, and `source_quest_allowed` is overridden.
+#'
 #' If `source_quest` is `NULL`:
 #'
-#' - if `same_source` is `NULL` or `FALSE`, questioned items are sampled from all but the reference source.
-#' - if `same_source` is `TRUE`, questioned items are sampled from the reference source.
+#' - if `same_source` is `NULL` or `FALSE`, questioned items are sampled from all but the reference source (or `source_quest_allowed`).
+#' - if `same_source` is `TRUE`, questioned items are sampled from the reference source (`source_ref_allowed` is ignored).
 #'
 #' Else, questioned items will be sampled from the questioned source(s), even if it contains the reference one.
+#'
+#' It is also forbidden to specify a `source_ref` or a `source_quest` which are not allowed.
 #'
 #' Items will never be sampled once (unless `replace` is `TRUE`): they appear once in the reference/questioned/background items.
 #'
@@ -96,6 +105,8 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #' @param source_ref the reference source (scalar; if `NULL`, a random source will be picked)
 #' @param source_quest the questioned source(s) (if `NULL`, anything but the reference source: behaviour overridden by `same_source`)
 #' @param same_source if `source_quest` is `NULL` and `same_source` is `TRUE`, questioned source is the reference source
+#' @param source_ref_allowed allowed reference sources (if not `NULL` (default), reference source will be picked among these)
+#' @param source_quest_allowed allowed  questioned sources (if not `NULL` (default), questioned source(s) will be picked among these)
 #' @param k_ref number of reference samples
 #' @param k_quest number of questioned samples
 #' @param background see details (default: `'outside'`)
@@ -106,6 +117,7 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #' @concept set sampling
 make_idx_splits <- function(sources, k_ref, k_quest,
                             source_ref = NULL, source_quest = NULL,
+                            source_ref_allowed = NULL, source_quest_allowed = NULL,
                             same_source = NULL,
                             background = 'outside', replace = TRUE) {
    sources <- as.vector(sources)
@@ -121,26 +133,81 @@ make_idx_splits <- function(sources, k_ref, k_quest,
    assertthat::assert_that(assertthat::is.string(background))
    assertthat::assert_that(background %in% c('outside', 'unobserved', 'others'), msg = "'background' parameter is invalid")
 
+   assertthat::assert_that(is.null(source_ref_allowed) ||
+      (is.vector(source_ref_allowed) && all(source_ref_allowed %in% source_all)),
+      msg = '"source_ref_allowed" is not a vector, or contains extraneous sources.')
+
+   assertthat::assert_that(is.null(source_quest_allowed) ||
+      (is.vector(source_quest_allowed) && all(source_quest_allowed %in% source_all)),
+      msg = '"source_quest_allowed" is not a vector, or contains extraneous sources.')
+
+   # Forbid forcing a reference source which is not allowed
+   if (!is.null(source_ref_allowed) && !is.null(source_ref)) {
+      assertthat::assert_that(all(source_ref %in% source_ref_allowed),
+                              msg = '"source_ref" is not in the allowed set.')
+   }
+
+   # Forbid forcing a questioned source which is not allowed
+   if (!is.null(source_quest_allowed) && !is.null(source_quest)) {
+      assertthat::assert_that(all(source_quest %in% source_quest_allowed),
+                              msg = '"source_quest" is not in the allowed set.')
+   }
+
+   ## Setup sources -------------------------
+
    # Setup reference source
    if (is.null(source_ref)) {
-      source_ref <- sample_safe(source_all, 1)
+      source_ref_in_arguments <- FALSE
+
+      if (is.null(source_ref_allowed)) {
+         source_ref_allowed <- source_all
+      }
+      source_ref <- sample_safe(source_ref_allowed, 1)
+
+   } else {
+      source_ref_in_arguments <- TRUE
    }
-   assertthat::assert_that(assertthat::is.scalar(source_ref))
+   assertthat::assert_that(assertthat::is.scalar(source_ref), msg = '"source_ref" must be a single source.')
 
    # Setup questioned source(s)
    if (is.null(source_quest)) {
 
-      # Force sampling from the same source
+      # source_quest is NULL
+
+      # Force sampling from the same source if same_source is TRUE
       if (!is.null(same_source) && same_source) {
+
          source_quest <- source_ref
+
       } else {
-         source_quest <- setdiff(source_all, source_ref)
+
+         # source_quest is NULL
+         # same_source is FALSE or not specified (default: FALSE)
+
+         if (is.null(source_quest_allowed)) {
+            source_quest_allowed <- setdiff(source_all, source_ref)
+         } else {
+            # Avoid sampling from the reference source
+            source_quest_allowed <- setdiff(source_quest_allowed, source_ref)
+         }
+
+         source_quest <- source_quest_allowed
+
          if (length(source_quest) == 0) {
             # Only one source in the dataset: must sample both from that one
             source_quest <- source_ref
          }
       }
    } else {
+
+      # source_quest is not NULL
+
+      if (!is.null(same_source) && same_source && source_ref_in_arguments) {
+         if (source_quest != source_ref) {
+            warning('same_source is TRUE, but source_quest != source_ref. Honoring same_source!')
+            source_quest <- source_ref
+         }
+      }
       source_quest <- as.vector(source_quest)
    }
 
@@ -175,7 +242,7 @@ make_idx_splits <- function(sources, k_ref, k_quest,
       if (replace) { message('Reference items: sampling with replacement is being used.') }
       else { stop('Reference items: not enough items with the reference source, sampling without replacemnt.') }
    }
-   idx_reference <- sort(resample(idx_ref_all, k_ref, replace = need_replace_ref))
+   idx_reference <- sort(sample_safe(idx_ref_all, k_ref, replace = need_replace_ref))
 
    # Build the questioned sample w/o reference items
 

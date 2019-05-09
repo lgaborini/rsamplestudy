@@ -1,5 +1,6 @@
 # rsamplestudy 0.3
 
+* Adding restrictions on allowed sources: parameters `source_ref_allowed`, `source_quest_allowed`.
 * Exported function `sample_safe`: like `sample`, but safer for 1-length vectors.
 
 # rsamplestudy 0.2.1

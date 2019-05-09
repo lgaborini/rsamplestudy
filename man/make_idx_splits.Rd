@@ -5,8 +5,9 @@
 \title{Extract questioned/reference/background samples from a list of populations from sources}
 \usage{
 make_idx_splits(sources, k_ref, k_quest, source_ref = NULL,
-  source_quest = NULL, same_source = NULL, background = "outside",
-  replace = TRUE)
+  source_quest = NULL, source_ref_allowed = NULL,
+  source_quest_allowed = NULL, same_source = NULL,
+  background = "outside", replace = TRUE)
 }
 \arguments{
 \item{sources}{all class labels}
@@ -18,6 +19,10 @@ make_idx_splits(sources, k_ref, k_quest, source_ref = NULL,
 \item{source_ref}{the reference source (scalar; if \code{NULL}, a random source will be picked)}
 
 \item{source_quest}{the questioned source(s) (if \code{NULL}, anything but the reference source: behaviour overridden by \code{same_source})}
+
+\item{source_ref_allowed}{allowed reference sources (if not \code{NULL} (default), reference source will be picked among these)}
+
+\item{source_quest_allowed}{allowed  questioned sources (if not \code{NULL} (default), questioned source(s) will be picked among these)}
 
 \item{same_source}{if \code{source_quest} is \code{NULL} and \code{same_source} is \code{TRUE}, questioned source is the reference source}
 
@@ -36,18 +41,27 @@ Reference/questioned/background samples are always non-intersecting, even when t
 
 Sampling with replacement is used, if necessary and not forbidden. If it is used, a message appears.
 
-It is \strong{always} guaranteed that no sample appear more than once across reference/questioned/background items (but it can appear multiple times in a set).
+It is \strong{always} guaranteed that no sample appear more than once across reference/questioned/background items (but it can appear multiple times in a set if \code{replace} is \code{TRUE}).
 }
 \section{Source sampling}{
 
 
+By design, the package identifies sources which are allowed to be sampled from.
+By default, all available sources can appear in the reference or questioned samples.
+
+This restriction can be modified using the parameters \code{source_ref_allowed} and \code{source_quest_allowed}.
+
+The behaviour of \code{same_source} is stronger, and \code{source_quest_allowed} is overridden.
+
 If \code{source_quest} is \code{NULL}:
 \itemize{
-\item if \code{same_source} is \code{NULL} or \code{FALSE}, questioned items are sampled from all but the reference source.
-\item if \code{same_source} is \code{TRUE}, questioned items are sampled from the reference source.
+\item if \code{same_source} is \code{NULL} or \code{FALSE}, questioned items are sampled from all but the reference source (or \code{source_quest_allowed}).
+\item if \code{same_source} is \code{TRUE}, questioned items are sampled from the reference source (\code{source_ref_allowed} is ignored).
 }
 
 Else, questioned items will be sampled from the questioned source(s), even if it contains the reference one.
+
+It is also forbidden to specify a \code{source_ref} or a \code{source_quest} which are not allowed.
 
 Items will never be sampled once (unless \code{replace} is \code{TRUE}): they appear once in the reference/questioned/background items.
 }

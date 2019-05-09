@@ -5,6 +5,11 @@ library(rsamplestudy)
 
 context("test-ref-quest-split")
 
+
+# Replication -------------------------------------------------------------
+
+
+
 # Rerun tests multiple times
 
 n_replicate <- ifelse(TRAVIS || !NOT_CRAN, 1, 20)
@@ -42,6 +47,25 @@ s_quest_diff_candidates <- setdiff(unique(sources), s_ref)
 s_quest_diff <- sort(sample_safe(s_quest_diff_candidates, n_quest_diff))
 
 is_background_empty <- isTRUE(all.equal(unique(sources), unique(sort(union(s_ref, s_quest_diff)))))
+
+
+# Source restriction (new in 0.3)
+n_allowed <- floor(n/2)
+
+# Restricted sources
+s_ref_allowed <- sort(union(sample(sources_all, n_allowed), s_ref))
+s_quest_allowed_same <- sort(union(sample(sources_all, n_allowed), s_quest_same))
+s_quest_allowed_diff <- sort(union(sample(sources_all, n_allowed), s_quest_diff))
+
+# Sources which are not in the restricted set
+s_ref_forbidden <- sort(setdiff(sources_all, s_ref_allowed))
+s_quest_forbidden_same <- sort(setdiff(sources_all, s_quest_allowed_same))
+s_quest_forbidden_diff <- sort(setdiff(sources_all, s_quest_allowed_diff))
+
+# Wrong candidates: explicit sources are not allowed
+s_ref_allowed_wrong <- sort(setdiff(sample(sources_all, n_allowed), s_ref))
+s_quest_allowed_same_wrong <- sort(setdiff(sample(sources_all, n_allowed), s_quest_same))
+s_quest_allowed_diff_wrong <- sort(setdiff(sample(sources_all, n_allowed), s_quest_diff))
 
 # make_idx_splits: idx tests -------------------------------------------------------------------
 
@@ -84,10 +108,206 @@ test_that("make_idx_splits: quest!=ref", {
 
 
 test_that("make_idx_splits: quest!=ref, same_source = FALSE", {
+
    splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = FALSE)
+   source_ref_this <- unique(sources[splits$idx_reference])
+   source_quest_this <- unique(sources[splits$idx_questioned])
+
+   expect_true(source_ref_this == s_ref)
+   expect_true(all(source_quest_this %in% s_quest_diff))
+   expect_length(intersect(source_ref_this, source_quest_this), 0)
+})
+
+
+test_that("make_idx_splits: quest!=ref, same_source = TRUE (WARNING)", {
+
+   ## Should complain about overriding
+   expect_warning(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = TRUE))
+
+   splits <- expect_warning(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = TRUE))
+   source_ref_this <- unique(sources[splits$idx_reference])
+   source_quest_this <- unique(sources[splits$idx_questioned])
+
+   expect_true(source_ref_this == s_ref)
+   expect_true(all(source_quest_this %in% s_ref))
+})
+
+# make_idx_splits: idx tests, with candidates -------------------------------------------------------------------
+
+# Generic: forbid not allowed explicit sources
+test_that("make_idx_splits: forbid restricted explicit sources", {
+
+   expect_error(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_ref_allowed = s_ref_allowed_wrong))
+   expect_error(make_idx_splits(sources, k_ref, k_quest, source_quest = s_quest_same, source_quest_allowed = s_quest_allowed_same_wrong))
+   expect_error(make_idx_splits(sources, k_ref, k_quest, source_quest = s_quest_diff, source_quest_allowed = s_quest_allowed_diff_wrong))
+})
+
+# With specified candidate sources
+
+test_that("make_idx_splits: quest=ref, restricted ref", {
+
+   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_same, source_ref_allowed = s_ref_allowed)
+
+   expect_true(all(unique(sources[splits$idx_reference]) %in% s_ref))
+   expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_same))
+
+   # Check candidate restriction
+   expect_true(all(unique(sources[splits$idx_reference]) %in% s_ref_allowed))
+   expect_true(!any(unique(sources[splits$idx_reference]) %in% s_ref_forbidden))
+})
+
+test_that("make_idx_splits: quest=ref, restricted quest", {
+
+   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_same, source_quest_allowed = s_quest_allowed_same)
+
+   expect_true(all(unique(sources[splits$idx_reference]) %in% s_ref))
+   expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_same))
+
+   # Check candidate restriction
+   expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_allowed_same))
+   expect_true(!any(unique(sources[splits$idx_questioned]) %in% s_quest_forbidden_same))
+})
+
+
+# Different sources
+
+test_that("make_idx_splits: quest!=ref, restricted ref", {
+
+   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, source_ref_allowed = s_ref_allowed)
+
+   expect_true(all(unique(sources[splits$idx_reference]) %in% s_ref))
+   expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_diff))
+
+   # Check candidate restriction
+   expect_true(all(unique(sources[splits$idx_reference]) %in% s_ref_allowed))
+   expect_true(!any(unique(sources[splits$idx_reference]) %in% s_ref_forbidden))
+})
+
+test_that("make_idx_splits: quest!=ref, restricted quest", {
+
+   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, source_quest_allowed = s_quest_allowed_diff)
+
+   expect_true(all(unique(sources[splits$idx_reference]) %in% s_ref))
+   expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_diff))
+
+   # Check candidate restriction
+   expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_allowed_diff))
+   expect_true(!any(unique(sources[splits$idx_questioned]) %in% s_quest_forbidden_diff))
+})
+
+test_that("make_idx_splits: quest!=ref, same_source = FALSE, restricted ref", {
+   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = FALSE, source_ref_allowed = s_ref_allowed)
    expect_true(unique(sources[splits$idx_reference] == s_ref))
    expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_diff))
    expect_length(intersect(sources[splits$idx_reference], sources[splits$idx_questioned]), 0)
+
+   # Check candidate restriction
+   expect_true(all(unique(sources[splits$idx_reference]) %in% s_ref_allowed))
+   expect_true(!any(unique(sources[splits$idx_reference]) %in% s_ref_forbidden))
+})
+
+test_that("make_idx_splits: quest!=ref, same_source = FALSE, restricted quest", {
+   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = FALSE, source_quest_allowed = s_quest_allowed_diff)
+   expect_true(unique(sources[splits$idx_reference] == s_ref))
+   expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_diff))
+   expect_length(intersect(sources[splits$idx_reference], sources[splits$idx_questioned]), 0)
+
+   # Check candidate restriction
+   expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_allowed_diff))
+   expect_true(!any(unique(sources[splits$idx_questioned]) %in% s_quest_forbidden_diff))
+})
+
+
+test_that("make_idx_splits: quest!=ref, same_source = TRUE (WARNING)", {
+
+
+   expect_warning(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = TRUE,
+                                  source_ref_allowed = s_ref_allowed,
+                                  source_quest_allowed = s_quest_allowed_diff))
+
+   splits <- expect_warning(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = TRUE))
+
+   expect_true(unique(sources[splits$idx_reference] == s_ref))
+   expect_true(all(unique(sources[splits$idx_questioned]) %in% s_ref))
+})
+
+test_that("make_idx_splits: quest!=ref, same_source = TRUE, restricted ref+quest", {
+
+   ## Should complain about overriding
+   expect_warning(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = TRUE,
+                                  source_ref_allowed = s_ref_allowed,
+                                  source_quest_allowed = s_quest_allowed_diff))
+
+   splits <- expect_warning(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = TRUE,
+      source_ref_allowed = s_ref_allowed,
+      source_quest_allowed = s_quest_allowed_diff))
+
+   expect_true(unique(sources[splits$idx_reference] == s_ref))
+   expect_true(all(unique(sources[splits$idx_questioned]) %in% s_ref))
+})
+
+# make_idx_splits: no explicit sources ------------------------------------
+
+
+# With specified candidate sources
+
+test_that("make_idx_splits: restricted ref, same_source = TRUE", {
+
+   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref_allowed = s_ref_allowed, same_source = TRUE)
+
+   source_ref_this <- unique(sources[splits$idx_reference])
+   source_quest_this <- unique(sources[splits$idx_questioned])
+
+   expect_equal(source_ref_this, source_quest_this)
+
+   # Check candidate restriction
+   expect_true(all(source_ref_this %in% s_ref_allowed))
+   expect_true(!any(source_ref_this %in% s_ref_forbidden))
+})
+
+test_that("make_idx_splits: restricted ref, same_source = FALSE", {
+
+   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref_allowed = s_ref_allowed, same_source = FALSE)
+
+   source_ref_this <- unique(sources[splits$idx_reference])
+   source_quest_this <- unique(sources[splits$idx_questioned])
+
+   expect_true(!any(source_ref_this %in% source_quest_this))
+
+   # Check candidate restriction
+   expect_true(all(source_ref_this %in% s_ref_allowed))
+   expect_true(!any(source_ref_this %in% s_ref_forbidden))
+})
+
+
+test_that("make_idx_splits: restricted quest, same_source = FALSE", {
+
+   splits <- make_idx_splits(sources, k_ref, k_quest, source_quest_allowed = s_quest_allowed_diff, same_source = FALSE)
+
+   source_ref_this <- unique(sources[splits$idx_reference])
+   source_quest_this <- unique(sources[splits$idx_questioned])
+
+   expect_true(!any(source_ref_this %in% source_quest_this))
+
+   # Check candidate restriction
+   expect_true(all(source_quest_this %in% s_quest_allowed_diff))
+   expect_true(!any(source_quest_this %in% s_quest_forbidden_diff))
+})
+
+
+test_that("make_idx_splits: restricted quest, same_source = TRUE", {
+
+   splits <- make_idx_splits(sources, k_ref, k_quest, source_quest_allowed = s_quest_allowed_diff, same_source = TRUE)
+
+   source_ref_this <- unique(sources[splits$idx_reference])
+   source_quest_this <- unique(sources[splits$idx_questioned])
+
+   expect_identical(source_ref_this, source_quest_this)
+
+   # Check candidate restriction
+   # these may fail as questioned restriction is not honored
+   # expect_true(all(source_quest_this %in% s_quest_allowed_diff))
+   # expect_true(!any(source_quest_this %in% s_quest_forbidden_diff))
 })
 
 # make_idx_splits: Sample with replacement -----------------------------------------------------
@@ -145,7 +365,7 @@ test_that("make_idx_splits: verify that background is non-intersecting, outside"
 })
 
 # background: others
-test_that("make_idx_splits: others (sampling from other sources), no background", {
+test_that("make_idx_splits: others (sampling from other sources), no background (WARNING)", {
    expect_warning(make_idx_splits(sources, k_ref, k_quest, background = 'others'))
 })
 
@@ -292,7 +512,7 @@ test_that("make_dataset_splits: verify that background is non-intersecting, outs
    expect_length(intersect(splits$idx_questioned, splits$idx_background), 0)
 })
 
-test_that("make_dataset_splits: others (sampling from other sources), no background", {
+test_that("make_dataset_splits: others (sampling from other sources), no background (WARNING)", {
    expect_warning(make_dataset_splits(df, k_ref, k_quest, background = 'others'))
 
 })
@@ -345,6 +565,10 @@ if (!is_background_empty) {
    })
 
 }
+
+
+# End replicate -----------------------------------------------------------
+
 
 
 })    # /Rerun tests multiple times
