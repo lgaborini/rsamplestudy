@@ -1,3 +1,7 @@
+# rsamplestudy 0.3
+
+* Exported function `sample_safe`: like `sample`, but safer for 1-length vectors.
+
 # rsamplestudy 0.2.1
 
 * Fixed tests for `background = 'unobserved'`.

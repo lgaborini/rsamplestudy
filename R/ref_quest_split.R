@@ -78,6 +78,8 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #'
 #' Items will never be sampled once (unless `replace` is `TRUE`): they appear once in the reference/questioned/background items.
 #'
+#'
+#'
 #' @section Background selection:
 #'
 #' - If `background` is `'outside'`, the background dataset comprises all items who **do not lie** in any of the reference and questioned sets.
@@ -110,6 +112,9 @@ make_idx_splits <- function(sources, k_ref, k_quest,
    source_all <- unique(sources)
    idx_all <- seq_along(sources)
 
+
+   ## Parameter validation -------------------------
+
    assertthat::assert_that(is.vector(sources))
    assertthat::assert_that(is.null(source_ref) || assertthat::is.scalar(source_ref))
    assertthat::assert_that(is.null(source_quest) || is.vector(source_quest))
@@ -118,7 +123,7 @@ make_idx_splits <- function(sources, k_ref, k_quest,
 
    # Setup reference source
    if (is.null(source_ref)) {
-      source_ref <- sample(source_all, 1)
+      source_ref <- sample_safe(source_all, 1)
    }
    assertthat::assert_that(assertthat::is.scalar(source_ref))
 
@@ -138,6 +143,8 @@ make_idx_splits <- function(sources, k_ref, k_quest,
    } else {
       source_quest <- as.vector(source_quest)
    }
+
+   ## Setup sampling -------------------------
 
    # Check whether the questioned and reference sources are the same
    if (identical(unique(source_ref), unique(source_quest))) {
@@ -160,6 +167,8 @@ make_idx_splits <- function(sources, k_ref, k_quest,
       stop('Questioned class not found.')
    }
 
+   ## Sample reference/questioned items -------------------------
+
    # Build the reference sample
    need_replace_ref <- (len_ref < k_ref)
    if (need_replace_ref) {
@@ -178,7 +187,9 @@ make_idx_splits <- function(sources, k_ref, k_quest,
       if (replace) { message('Questioned items: sampling with replacement is being used.') }
       else { stop('Questioned items: not enough items with the questioned source(s), sampling without replacemnt.') }
    }
-   idx_questioned <- sort(resample(idx_quest_all_no_ref, k_quest, replace = need_replace_quest))
+   idx_questioned <- sort(sample_safe(idx_quest_all_no_ref, k_quest, replace = need_replace_quest))
+
+   ## Sample the background -------------------------
 
    # Build the background dataset
    if (background == 'others') {
@@ -208,15 +219,16 @@ make_idx_splits <- function(sources, k_ref, k_quest,
 
 
 
-#' Random Samples and Permutations
+#' Random Samples and Permutations (safer)
 #'
-#' `resample` takes a sample of the specified size from the elements of `x` using either with or without replacement.
+#' `sample_safe` takes a sample of the specified size from the elements of `x` using either with or without replacement.
 #'
 #' Works like [base::sample()], but it is safer if `x` is a scalar.
 #'
 #' @param x a vector of one or more elements from which to choose
 #' @param size a non-negative integer giving the number of items to choose.
 #' @param replace should sampling be with replacement?
-resample <- function(x, size, replace = FALSE) {
+#' @export
+sample_safe <- function(x, size, replace = FALSE) {
    x[sample.int(length(x), size = size, replace = replace)]
 }

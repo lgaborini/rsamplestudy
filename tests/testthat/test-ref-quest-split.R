@@ -6,6 +6,7 @@ library(rsamplestudy)
 context("test-ref-quest-split")
 
 # Rerun tests multiple times
+
 n_replicate <- ifelse(TRAVIS || !NOT_CRAN, 1, 20)
 replicate(n_replicate, {
 
@@ -33,12 +34,12 @@ n_quest_diff <- sample.int(n - 1 - 1, 1)    # guarantee that there is at least o
 # n_quest_diff <- n - 1                       # no background
 
 # Pick out the reference source
-s_ref <- sample(seq(n), 1)
+s_ref <- sample(sources_all, 1)
 s_quest_same <- s_ref
 
 # and the different questioned source(s)
 s_quest_diff_candidates <- setdiff(unique(sources), s_ref)
-s_quest_diff <- sort(resample(s_quest_diff_candidates, n_quest_diff))
+s_quest_diff <- sort(sample_safe(s_quest_diff_candidates, n_quest_diff))
 
 is_background_empty <- isTRUE(all.equal(unique(sources), unique(sort(union(s_ref, s_quest_diff)))))
 

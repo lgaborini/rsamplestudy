@@ -1,7 +1,7 @@
 Package: rsamplestudy
 Type: Package
 Title: Easily generate two-level studies from known distributions
-Version: 0.2.1
+Version: 0.2.1.9000
 Author: Lorenzo Gaborini
 Maintainer: Lorenzo Gaborini <lorenzo.gaborini@gmail.com>
 Description: Easily generate two-level studies from known distributions.
