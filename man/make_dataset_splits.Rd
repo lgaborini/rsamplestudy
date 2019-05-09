@@ -20,6 +20,8 @@ make_dataset_splits(df, k_ref, k_quest, col_source = "source", ...)
   \item{source_ref}{the reference source (scalar; if \code{NULL}, a random source will be picked)}
   \item{source_quest}{the questioned source(s) (if \code{NULL}, anything but the reference source: behaviour overridden by \code{same_source})}
   \item{same_source}{if \code{source_quest} is \code{NULL} and \code{same_source} is \code{TRUE}, questioned source is the reference source}
+  \item{source_ref_allowed}{allowed reference sources (if not \code{NULL} (default), reference source will be picked among these)}
+  \item{source_quest_allowed}{allowed  questioned sources (if not \code{NULL} (default), questioned source(s) will be picked among these)}
   \item{background}{see details (default: \code{'outside'})}
   \item{replace}{use sampling with replacement, else error}
 }}
@@ -41,7 +43,8 @@ Sampling with replacement is used, if necessary and not forbidden.
 \itemize{
 \item If \code{background} is \code{'outside'}, the background dataset comprises all items who \strong{do not lie} in any of the reference and questioned sets.
 It can contain items from reference and questioned sources.
-\item If \code{background} is \code{'others'}, the background dataset comprises all items from the \strong{non}-reference and \strong{non}-questioned \strong{sources}.
+\item If \code{background} is \code{'others'}, the background dataset comprises all items from the \strong{non}-reference and \strong{non}-questioned \strong{potential sources}.
+\item If \code{background} is \code{'unobserved'}, the background dataset comprises all items from the sources who do not appear in any of the reference and questioned sets.
 }
 
 By default, \code{background} is \code{'outside'}.
@@ -53,13 +56,22 @@ the union of reference and questioned sources fills the available sources in the
 \section{Source sampling}{
 
 
+By design, the package identifies sources which are allowed to be sampled from.
+By default, all available sources can appear in the reference or questioned samples.
+
+This restriction can be modified using the parameters \code{source_ref_allowed} and \code{source_quest_allowed}.
+
+The behaviour of \code{same_source} is stronger, and \code{source_quest_allowed} is overridden.
+
 If \code{source_quest} is \code{NULL}:
 \itemize{
-\item if \code{same_source} is \code{NULL} or \code{FALSE}, questioned items are sampled from all but the reference source.
-\item if \code{same_source} is \code{TRUE}, questioned items are sampled from the reference source.
+\item if \code{same_source} is \code{NULL} or \code{FALSE}, questioned items are sampled from all but the reference source (or \code{source_quest_allowed}).
+\item if \code{same_source} is \code{TRUE}, questioned items are sampled from the reference source (\code{source_ref_allowed} is ignored).
 }
 
 Else, questioned items will be sampled from the questioned source(s), even if it contains the reference one.
+
+It is also forbidden to specify a \code{source_ref} or a \code{source_quest} which are not allowed.
 
 Items will never be sampled once (unless \code{replace} is \code{TRUE}): they appear once in the reference/questioned/background items.
 }

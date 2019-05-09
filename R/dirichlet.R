@@ -12,7 +12,9 @@ fun_rdirichlet <- function(n, a, text='x') {
    a <- as.numeric(a)
    p <- length(a)
 
-   Compositional::rdiri(n, a) %>% tibble::as.tibble() %>% purrr::set_names(fun_var_names(p, text=text))
+   Compositional::rdiri(n, a) %>%
+      tibble::as_tibble(.name_repair = 'minimal') %>%
+      purrr::set_names(fun_var_names(p, text=text))
 }
 
 
