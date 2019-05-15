@@ -4,15 +4,15 @@ library(purrr)
 library(rsamplestudy)
 
 
+seed <- 196
 seed <- floor(runif(1, min = 0, max = 1000))
 cat(paste('Using seed:', seed, '\n\n'))
 set.seed(seed)
-set.seed(196)
 
 context("test-ref-quest-split")
 
 
-# set.seed(seed)
+set.seed(seed)
 
 
 # Replication -------------------------------------------------------------
@@ -21,10 +21,13 @@ context("test-ref-quest-split")
 
 # Rerun tests multiple times
 
+n_replicate_offline <- 20
+n_replicate_online <- 5
 if (exists('TRAVIS') && exists('NOT_CRAN')) {
-   n_replicate <- ifelse(TRAVIS || !NOT_CRAN, 1, 20)
+   # Fast tests on TRAVIS or CRAN
+   n_replicate <- ifelse(TRAVIS || !NOT_CRAN, n_replicate_online, n_replicate_offline)
 } else {
-   n_replicate <- 20
+   n_replicate <- n_replicate_offline
 }
 
 replicate(n_replicate, {
@@ -88,13 +91,12 @@ s_quest_allowed_diff_wrong <- sort(setdiff(sample(sources_all, n_allowed), s_que
 # expect_error_all_but_fatal <- partial(expect_error, class = c('simpleError', 'serious'))
 expect_error_all_but_fatal <- partial(expect_error, class = c('serious', 'assertError', 'simpleError'))
 
-# make_idx_splits: idx tests, explicit sources -------------------------------------------------------------------
+# make_idx_splits: explicit sources -------------------------------------------------------------------
 
 
 # Source not found
 test_that("make_idx_splits: missing reference or questioned source", {
    expect_error_all_but_fatal(make_idx_splits(sources, k_ref, k_quest, source_ref = n + 1, source_quest = s_quest_same))
-   expect_error(make_idx_splits(sources, k_ref, k_quest, source_ref = n + 1, source_quest = s_quest_same))
    expect_error_all_but_fatal(make_idx_splits(sources, k_ref, k_quest, source_ref = n + 1, source_quest = s_quest_diff))
    expect_error_all_but_fatal(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = n + 1))
 })
@@ -102,13 +104,13 @@ test_that("make_idx_splits: missing reference or questioned source", {
 # Same source
 
 test_that("make_idx_splits: quest=ref", {
-   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_same)
+   splits <- expect_silent(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_same))
    expect_true(all(unique(sources[splits$idx_reference]) %in% s_ref))
    expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_same))
 })
 
 test_that("make_idx_splits: quest=ref, same_source = TRUE", {
-   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, same_source = TRUE)
+   splits <- expect_silent(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, same_source = TRUE))
    expect_true(all(unique(sources[splits$idx_reference]) %in% s_ref))
    expect_true(all(unique(sources[splits$idx_questioned]) %in% s_ref))
 })
@@ -116,13 +118,13 @@ test_that("make_idx_splits: quest=ref, same_source = TRUE", {
 # Different sources
 
 test_that("make_idx_splits: reference source selection, different", {
-   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff)
+   splits <- expect_silent(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff))
    expect_equal(unique(sources[splits$idx_reference]), s_ref)
    expect_true(all(sources[splits$idx_questioned] %in% s_quest_diff))
 })
 
 test_that("make_idx_splits: quest!=ref", {
-   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff)
+   splits <- expect_silent(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff))
    expect_true(unique(sources[splits$idx_reference] == s_ref))
    expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_diff))
    expect_length(intersect(sources[splits$idx_reference], sources[splits$idx_questioned]), 0)
@@ -131,7 +133,7 @@ test_that("make_idx_splits: quest!=ref", {
 
 test_that("make_idx_splits: quest!=ref, same_source = FALSE", {
 
-   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = FALSE)
+   splits <- expect_silent(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = FALSE))
    source_ref_this <- unique(sources[splits$idx_reference])
    source_quest_this <- unique(sources[splits$idx_questioned])
 
@@ -143,10 +145,10 @@ test_that("make_idx_splits: quest!=ref, same_source = FALSE", {
 
 test_that("make_idx_splits: quest!=ref, same_source = TRUE (WARNING)", {
 
-   ## Should complain about overriding
-   expect_warning(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = TRUE))
-
+   # Should complain about overriding
    splits <- expect_warning(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = TRUE))
+   expect_error_all_but_fatal(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = TRUE, strict = TRUE))
+
    source_ref_this <- unique(sources[splits$idx_reference])
    source_quest_this <- unique(sources[splits$idx_questioned])
 
@@ -156,12 +158,12 @@ test_that("make_idx_splits: quest!=ref, same_source = TRUE (WARNING)", {
 
 
 test_that("make_idx_splits: quest==ref, same_source = FALSE (ERROR)", {
-   expect_error_all_but_fatal(
+   expect_s3_class(expect_error_all_but_fatal(
       make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_ref, same_source = FALSE)
-   )
+   ), 'serious')
 })
 
-# make_idx_splits: idx tests, with candidates -------------------------------------------------------------------
+# make_idx_splits: with restrictions -------------------------------------------------------------------
 
 # Generic: forbid not allowed explicit sources
 test_that("make_idx_splits: forbid restricted explicit sources", {
@@ -173,9 +175,11 @@ test_that("make_idx_splits: forbid restricted explicit sources", {
 
 # With specified candidate sources
 
+# Same source
+
 test_that("make_idx_splits: quest=ref, restricted ref", {
 
-   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_same, source_ref_allowed = s_ref_allowed)
+   splits <- expect_silent(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_same, source_ref_allowed = s_ref_allowed))
 
    expect_true(all(unique(sources[splits$idx_reference]) %in% s_ref))
    expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_same))
@@ -187,7 +191,7 @@ test_that("make_idx_splits: quest=ref, restricted ref", {
 
 test_that("make_idx_splits: quest=ref, restricted quest", {
 
-   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_same, source_quest_allowed = s_quest_allowed_same)
+   splits <- expect_silent(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_same, source_quest_allowed = s_quest_allowed_same))
 
    expect_true(all(unique(sources[splits$idx_reference]) %in% s_ref))
    expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_same))
@@ -202,7 +206,10 @@ test_that("make_idx_splits: quest=ref, restricted quest", {
 
 test_that("make_idx_splits: quest!=ref, restricted ref", {
 
-   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, source_ref_allowed = s_ref_allowed)
+   splits <- expect_silent(make_idx_splits(sources, k_ref, k_quest,
+                                           source_ref = s_ref,
+                                           source_quest = s_quest_diff,
+                                           source_ref_allowed = s_ref_allowed))
 
    expect_true(all(unique(sources[splits$idx_reference]) %in% s_ref))
    expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_diff))
@@ -214,7 +221,10 @@ test_that("make_idx_splits: quest!=ref, restricted ref", {
 
 test_that("make_idx_splits: quest!=ref, restricted quest", {
 
-   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, source_quest_allowed = s_quest_allowed_diff)
+   splits <- expect_silent(make_idx_splits(sources, k_ref, k_quest,
+                                           source_ref = s_ref,
+                                           source_quest = s_quest_diff,
+                                           source_quest_allowed = s_quest_allowed_diff))
 
    expect_true(all(unique(sources[splits$idx_reference]) %in% s_ref))
    expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_diff))
@@ -224,8 +234,32 @@ test_that("make_idx_splits: quest!=ref, restricted quest", {
    expect_true(!any(unique(sources[splits$idx_questioned]) %in% s_quest_forbidden_diff))
 })
 
-test_that("make_idx_splits: quest!=ref, same_source = FALSE, restricted ref", {
-   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = FALSE, source_ref_allowed = s_ref_allowed)
+# make_idx_splits: with restrictions, same_source override -------------------------------------------------------------------
+
+
+test_that("make_idx_splits: quest=ref, restricted quest, same_source = TRUE", {
+
+   splits <- expect_silent(
+      make_idx_splits(sources, k_ref, k_quest,
+                      source_ref = s_ref,
+                      source_quest = s_quest_same,
+                      source_quest_allowed = s_quest_allowed_same,
+                      same_source = TRUE))
+
+   expect_true(all(unique(sources[splits$idx_reference]) %in% s_ref))
+   expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_same))
+
+   # Check candidate restriction
+   expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_allowed_same))
+   expect_true(!any(unique(sources[splits$idx_questioned]) %in% s_quest_forbidden_same))
+})
+
+
+
+test_that("make_idx_splits: quest!=ref, restricted ref, same_source = FALSE", {
+
+   splits <- expect_silent(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = FALSE, source_ref_allowed = s_ref_allowed))
+
    expect_true(unique(sources[splits$idx_reference] == s_ref))
    expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_diff))
    expect_length(intersect(sources[splits$idx_reference], sources[splits$idx_questioned]), 0)
@@ -235,8 +269,9 @@ test_that("make_idx_splits: quest!=ref, same_source = FALSE, restricted ref", {
    expect_true(!any(unique(sources[splits$idx_reference]) %in% s_ref_forbidden))
 })
 
-test_that("make_idx_splits: quest!=ref, same_source = FALSE, restricted quest", {
-   splits <- make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = FALSE, source_quest_allowed = s_quest_allowed_diff)
+test_that("make_idx_splits: quest!=ref, restricted quest, same_source = FALSE", {
+   splits <- expect_silent(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = FALSE, source_quest_allowed = s_quest_allowed_diff))
+
    expect_true(unique(sources[splits$idx_reference] == s_ref))
    expect_true(all(unique(sources[splits$idx_questioned]) %in% s_quest_diff))
    expect_length(intersect(sources[splits$idx_reference], sources[splits$idx_questioned]), 0)
@@ -249,29 +284,81 @@ test_that("make_idx_splits: quest!=ref, same_source = FALSE, restricted quest", 
 
 test_that("make_idx_splits: quest!=ref, same_source = TRUE (WARNING)", {
 
-
-   expect_warning(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = TRUE,
-                                  source_ref_allowed = s_ref_allowed,
-                                  source_quest_allowed = s_quest_allowed_diff))
-
-   splits <- expect_warning(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = TRUE))
+   splits <- expect_warning(
+      make_idx_splits(sources, k_ref, k_quest,
+                      source_ref = s_ref,
+                      source_quest = s_quest_diff,
+                      same_source = TRUE),
+      regexp = 'Honoring')
 
    expect_true(unique(sources[splits$idx_reference] == s_ref))
    expect_true(all(unique(sources[splits$idx_questioned]) %in% s_ref))
 })
 
-test_that("make_idx_splits: quest!=ref, same_source = TRUE, restricted ref+quest", {
+
+test_that("make_idx_splits: quest!=ref, restricted ref+quest, same_source = TRUE (WARNING)", {
 
    ## Should complain about overriding
-   splits <- expect_warning(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = TRUE,
-      source_ref_allowed = s_ref_allowed,
-      source_quest_allowed = s_quest_allowed_diff))
+   splits <- expect_warning(make_idx_splits(sources, k_ref, k_quest,
+                                            source_ref = s_ref,
+                                            source_quest = s_quest_diff,
+                                            same_source = TRUE,
+                                            source_ref_allowed = s_ref_allowed,
+                                            source_quest_allowed = s_quest_allowed_diff),
+                            regexp = 'Honoring')
 
    expect_true(unique(sources[splits$idx_reference] == s_ref))
    expect_true(all(unique(sources[splits$idx_questioned]) %in% s_ref))
 })
 
-# make_idx_splits: no explicit sources ------------------------------------
+
+test_that("make_idx_splits: quest!=ref, ref free, restricted ref+quest, same_source = TRUE (WARNING)", {
+
+   ## Should complain about overriding
+   splits <- expect_warning(make_idx_splits(sources, k_ref, k_quest,
+                                            source_quest = s_quest_diff,
+                                            same_source = TRUE,
+                                            source_ref_allowed = s_ref_allowed,
+                                            source_quest_allowed = s_quest_allowed_diff),
+                            regexp = 'Honoring')
+
+
+   source_ref_this <- unique(sources[splits$idx_reference])
+
+   expect_true(unique(sources[splits$idx_reference] == source_ref_this))
+   expect_true(all(unique(sources[splits$idx_questioned]) %in% source_ref_this))
+})
+
+
+test_that("make_idx_splits: quest, ref free, restricted ref+quest, same_source = FALSE (WARNING if ref=quest)", {
+
+   ## source_ref (randomly picked) = source_quest: ERROR
+   splits <- expect_error(make_idx_splits(sources, k_ref, k_quest,
+                                            source_quest = s_quest_same,   # must be 1D
+                                            same_source = FALSE,
+                                            # source_ref_allowed = s_ref_allowed,
+                                            source_ref_allowed = s_quest_same,
+                                            source_quest_allowed = s_quest_same),
+                            class = 'serious')
+
+   ## source_ref (randomly picked) != source_quest: just a message
+   splits <- expect_message(make_idx_splits(sources, k_ref, k_quest,
+                                            source_quest = s_quest_diff,   # must be >1D
+                                            same_source = FALSE,
+                                            # source_ref_allowed = s_ref_allowed,
+                                            source_ref_allowed = s_quest_same,
+                                            source_quest_allowed = s_quest_diff),
+                            regexp = 'Honoring')
+
+
+   source_ref_this <- unique(sources[splits$idx_reference])
+   source_quest_this <- unique(sources[splits$idx_questioned])
+
+   expect_true(!identical(source_ref_this, source_quest_this))
+})
+
+
+# make_idx_splits: with restrictions, no explicit sources, only same_source ------------------------------------
 
 
 # With specified candidate sources
@@ -382,7 +469,7 @@ test_that("make_idx_splits: quest!=ref, not enough samples, replace", {
 
 
 test_that("make_idx_splits: verify that background is non-intersecting, outside", {
-   splits <- make_idx_splits(sources, k_ref, k_quest, background = 'outside')
+   splits <- expect_silent(make_idx_splits(sources, k_ref, k_quest, background = 'outside'))
    expect_length(intersect(splits$idx_reference, splits$idx_questioned), 0)
    expect_length(intersect(splits$idx_reference, splits$idx_background), 0)
    expect_length(intersect(splits$idx_questioned, splits$idx_background), 0)
@@ -395,7 +482,7 @@ test_that("make_idx_splits: others (sampling from other sources), no background 
 
 if (!is_background_empty) {
    test_that("make_idx_splits: verify that background is non-intersecting, others (sampling from other sources), with background", {
-      splits <- make_idx_splits(sources, k_ref, k_quest, background = 'others', source_ref = s_ref, source_quest = s_quest_diff)
+      splits <- expect_silent(make_idx_splits(sources, k_ref, k_quest, background = 'others', source_ref = s_ref, source_quest = s_quest_diff))
 
       expect_length(intersect(splits$idx_reference, splits$idx_questioned), 0)
       expect_length(intersect(splits$idx_reference, splits$idx_background), 0)
@@ -411,7 +498,7 @@ if (!is_background_empty) {
 
 # background: unobserved
 test_that("make_idx_splits: verify that background is non-intersecting, unobserved", {
-   splits <- make_idx_splits(sources, k_ref, k_quest, background = 'unobserved')
+   splits <- expect_silent(make_idx_splits(sources, k_ref, k_quest, background = 'unobserved'))
    expect_length(intersect(splits$idx_reference, splits$idx_questioned), 0)
    expect_length(intersect(splits$idx_reference, splits$idx_background), 0)
    expect_length(intersect(splits$idx_questioned, splits$idx_background), 0)
@@ -420,7 +507,7 @@ test_that("make_idx_splits: verify that background is non-intersecting, unobserv
 if (!is_background_empty) {
 
    test_that("make_idx_splits: verify that background is non-intersecting, unobserved (sampling from unseen sources), with actual background", {
-      splits <- make_idx_splits(sources, k_ref, k_quest, background = 'unobserved', source_ref = s_ref)
+      splits <- expect_silent(make_idx_splits(sources, k_ref, k_quest, background = 'unobserved', source_ref = s_ref))
 
       expect_length(intersect(splits$idx_reference, splits$idx_questioned), 0)
       expect_length(intersect(splits$idx_reference, splits$idx_background), 0)
@@ -471,8 +558,9 @@ test_that("make_dataset_splits: quest~=ref", {
 test_that("make_dataset_splits: quest~=ref, renamed column", {
    expect_error_all_but_fatal(make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, col_source = 'item'))
    expect_error_all_but_fatal(make_dataset_splits(df_item, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff))
+
    col_source <- 'item'
-   splits <- make_dataset_splits(df_item, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, col_source = 'item')
+   splits <- expect_silent(make_dataset_splits(df_item, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, col_source = 'item'))
    expect_true(unique(splits$df_reference[[col_source]]) == s_ref)
    expect_true(all(unique(splits$df_questioned[[col_source]]) %in% s_quest_diff))
    expect_length(intersect(splits$df_reference[[col_source]], splits$df_questioned[[col_source]]), 0)
@@ -483,21 +571,21 @@ test_that("make_dataset_splits: quest~=ref, renamed column", {
 
 # Same source
 test_that("make_dataset_splits: reference source selection, same", {
-   splits <- make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_same)
+   splits <- expect_silent(make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_same))
    expect_equal(unique(df$source[splits$idx_reference]), s_ref)
    expect_equal(unique(df$source[splits$idx_questioned]), s_quest_same)
 })
 
 
 test_that("make_dataset_splits: quest=ref", {
-   splits <- make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_same)
+   splits <- expect_silent(make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_same))
    expect_true(all(unique(df$source[splits$idx_reference]) %in% s_ref))
    expect_true(all(unique(df$source[splits$idx_questioned]) %in% s_quest_same))
 })
 
 
 test_that("make_dataset_splits: quest=ref, same_source = TRUE", {
-   splits <- make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, same_source = TRUE)
+   splits <- expect_silent(make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, same_source = TRUE))
    expect_true(all(unique(df$source[splits$idx_reference]) %in% s_ref))
    expect_true(all(unique(df$source[splits$idx_questioned]) %in% s_ref))
 })
@@ -505,13 +593,13 @@ test_that("make_dataset_splits: quest=ref, same_source = TRUE", {
 # Different sources
 
 test_that("make_dataset_splits: reference source selection, different", {
-   splits <- make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff)
+   splits <- expect_silent(make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff))
    expect_equal(unique(df$source[splits$idx_reference]), s_ref)
    expect_true(all(df$source[splits$idx_questioned] %in% s_quest_diff))
 })
 
 test_that("make_dataset_splits: quest~=ref", {
-   splits <- make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff)
+   splits <- expect_silent(make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff))
    expect_true(unique(df$source[splits$idx_reference] == s_ref))
    expect_true(all(unique(df$source[splits$idx_questioned]) %in% s_quest_diff))
    expect_length(intersect(df$source[splits$idx_reference], df$source[splits$idx_questioned]), 0)
@@ -519,7 +607,7 @@ test_that("make_dataset_splits: quest~=ref", {
 
 
 test_that("make_dataset_splits: quest~=ref, same_source = FALSE", {
-   splits <- make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = FALSE)
+   splits <- expect_silent(make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = FALSE))
    expect_true(unique(df$source[splits$idx_reference] == s_ref))
    expect_true(all(unique(df$source[splits$idx_questioned]) %in% s_quest_diff))
    expect_length(intersect(df$source[splits$idx_reference], df$source[splits$idx_questioned]), 0)
@@ -530,7 +618,7 @@ test_that("make_dataset_splits: quest~=ref, same_source = FALSE", {
 
 
 test_that("make_dataset_splits: verify that background is non-intersecting, outside", {
-   splits <- make_dataset_splits(df, k_ref, k_quest, background = 'outside')
+   splits <- expect_silent(make_dataset_splits(df, k_ref, k_quest, background = 'outside'))
    expect_length(intersect(splits$idx_reference, splits$idx_questioned), 0)
    expect_length(intersect(splits$idx_reference, splits$idx_background), 0)
    expect_length(intersect(splits$idx_questioned, splits$idx_background), 0)
@@ -543,7 +631,7 @@ test_that("make_dataset_splits: others (sampling from other sources), no backgro
 
 if (!is_background_empty) {
    test_that("make_dataset_splits: verify that background is non-intersecting, others (sampling from other sources), with background", {
-      splits <- make_dataset_splits(df, k_ref, k_quest, background = 'others', source_ref = s_ref, source_quest = s_quest_diff)
+      splits <- expect_silent(make_dataset_splits(df, k_ref, k_quest, background = 'others', source_ref = s_ref, source_quest = s_quest_diff))
 
       expect_length(intersect(splits$idx_reference, splits$idx_questioned), 0)
       expect_length(intersect(splits$idx_reference, splits$idx_background), 0)
@@ -561,7 +649,7 @@ if (!is_background_empty) {
 
 # background: unobserved
 test_that("make_dataset_splits: verify that background is non-intersecting, unobserved", {
-   splits <- make_dataset_splits(df, k_ref, k_quest, background = 'unobserved')
+   splits <- expect_silent(make_dataset_splits(df, k_ref, k_quest, background = 'unobserved'))
    expect_length(intersect(splits$idx_reference, splits$idx_questioned), 0)
    expect_length(intersect(splits$idx_reference, splits$idx_background), 0)
    expect_length(intersect(splits$idx_questioned, splits$idx_background), 0)
@@ -570,7 +658,7 @@ test_that("make_dataset_splits: verify that background is non-intersecting, unob
 if (!is_background_empty) {
 
    test_that("make_dataset_splits: verify that background is non-intersecting, unobserved (sampling from unseen sources), with actual background", {
-      splits <- make_dataset_splits(df, k_ref, k_quest, background = 'unobserved', source_ref = s_ref)
+      splits <- expect_silent(make_dataset_splits(df, k_ref, k_quest, background = 'unobserved', source_ref = s_ref))
 
       expect_length(intersect(splits$idx_reference, splits$idx_questioned), 0)
       expect_length(intersect(splits$idx_reference, splits$idx_background), 0)
@@ -596,3 +684,4 @@ if (!is_background_empty) {
 
 
 })    # /Rerun tests multiple times
+

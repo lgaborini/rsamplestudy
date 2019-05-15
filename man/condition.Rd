@@ -2,8 +2,7 @@
 % Please edit documentation in R/errors.R
 \name{condition}
 \alias{condition}
-\title{Constructor for custom condition class
-Constructor for custom condition class.}
+\title{Constructor for custom condition class}
 \usage{
 condition(subclass, message, call = sys.call(-1), ...)
 }
@@ -17,7 +16,6 @@ condition(subclass, message, call = sys.call(-1), ...)
 \item{...}{other classes}
 }
 \description{
-Constructor for custom condition class
 Constructor for custom condition class.
 }
 \keyword{internal}

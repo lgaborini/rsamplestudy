@@ -296,7 +296,7 @@ make_idx_splits <- function(sources, k_ref, k_quest,
                # CONFLICT!
                if (identical(source_quest, source_ref)) {
                   stop_serious('same_source is FALSE, but source_quest == source_ref.\nCould not honor same_source!')
-                  # should resample, too difficult
+                  # should resample, either source_ref or source_quest, too difficult
 
                   # source_quest <- source_ref
                }
@@ -313,6 +313,8 @@ make_idx_splits <- function(sources, k_ref, k_quest,
                   # should resample, too difficult
 
                   # source_quest <- source_ref
+               } else {
+                  message('same_source is FALSE, only source_quest has been specified.\nHonoring same_source.!')
                }
             }
 
@@ -419,8 +421,6 @@ make_idx_splits <- function(sources, k_ref, k_quest,
       idx_quest_observed_all <- which(sources %in% sources_quest_observed)
       idx_background <- setdiff(idx_background, idx_quest_observed_all)
 
-   } else {
-      stop_serious('background not specified.')
    }
 
    if (length(idx_background) == 0) {

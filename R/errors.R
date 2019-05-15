@@ -2,10 +2,12 @@
 
 
 #' Constructor for custom condition class
+#'
 #' Constructor for custom condition class.
 #'
 #' @param subclass the subclass for the condition
 #' @param ... other classes
+#' @export
 #' @inheritParams base::simpleCondition
 #' @keywords internal
 condition <- function(subclass, message, call = sys.call(-1), ...) {
@@ -21,8 +23,9 @@ condition <- function(subclass, message, call = sys.call(-1), ...) {
 #' Raise a FATAL error. Useful in testing.
 #' These errors should never happen.
 #'
-#' @inheritParams condition
 #' @keywords internal
+#' @export
+#' @inheritParams condition
 stop_fatal <- function(message, call = sys.call(-1), ...) {
    c <- condition(c('fatal', "error"), paste('[FATAL]', message), call = call, ...)
    stop(c)
@@ -34,8 +37,9 @@ stop_fatal <- function(message, call = sys.call(-1), ...) {
 #' Raise a SERIOUS error.
 #' These errors might be expected.
 #'
-#' @inheritParams condition
 #' @keywords internal
+#' @export
+#' @inheritParams condition
 stop_serious <- function(message, call = sys.call(-1), ...) {
    c <- condition(c('serious', "error"), paste('[Error]', message), call = call, ...)
    stop(c)
