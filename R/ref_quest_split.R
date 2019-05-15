@@ -43,7 +43,7 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
    sources <- purrr::pluck(df, col_source)
 
    if (is.null(sources)) {
-      stop(paste('column "', col_source, '" not found.'))
+      stop_serious(paste('column "', col_source, '" not found.'))
    }
 
    list_idx <- make_idx_splits(sources, k_ref = k_ref, k_quest = k_quest, ...)
@@ -69,24 +69,34 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #'
 #' @section Source sampling:
 #'
+#' Sampling happens in steps:
+#' 1. a reference source is picked
+#' 2. questioned sources are picked
+#' 3. items from reference sources are picked
+#' 4. items from questioned sources are picked
+#' 5. remaining items form the background set: apply background restrictions
+#'
 #' By design, the package identifies sources which are allowed to be sampled from.
 #' By default, all available sources can appear in the reference or questioned samples.
 #'
 #' This restriction can be modified using the parameters `source_ref_allowed` and `source_quest_allowed`.
+#' It is also forbidden to specify a `source_ref` or a `source_quest` which are not allowed.
 #'
-#' The behaviour of `same_source` is stronger, and `source_quest_allowed` is overridden.
+#' The behaviour of `same_source`, when specified, is stronger, and `source_quest_allowed` is overridden.
 #'
 #' If `source_quest` is `NULL`:
 #'
 #' - if `same_source` is `NULL` or `FALSE`, questioned items are sampled from all but the reference source (or `source_quest_allowed`).
 #' - if `same_source` is `TRUE`, questioned items are sampled from the reference source (`source_ref_allowed` is ignored).
 #'
+#' If `source_quest` is not `NULL`:
+#'
+#' - `same_source` always has priority: if specified, `source_quest` will be ignored, the chosen reference source will be picked.
+#' - if `source_quest` conflicts with `same_source`, **an error is raised**.
+#'
 #' Else, questioned items will be sampled from the questioned source(s), even if it contains the reference one.
 #'
-#' It is also forbidden to specify a `source_ref` or a `source_quest` which are not allowed.
-#'
 #' Items will never be sampled once (unless `replace` is `TRUE`): they appear once in the reference/questioned/background items.
-#'
 #'
 #'
 #' @section Background selection:
@@ -104,13 +114,14 @@ make_dataset_splits <- function(df, k_ref, k_quest, col_source = 'source', ...) 
 #' @param sources all class labels
 #' @param source_ref the reference source (scalar; if `NULL`, a random source will be picked)
 #' @param source_quest the questioned source(s) (if `NULL`, anything but the reference source: behaviour overridden by `same_source`)
-#' @param same_source if `source_quest` is `NULL` and `same_source` is `TRUE`, questioned source is the reference source
+#' @param same_source if `source_quest` is `NULL` and `same_source` is `TRUE`, questioned source is the reference source; see details for conflict resolution
 #' @param source_ref_allowed allowed reference sources (if not `NULL` (default), reference source will be picked among these)
 #' @param source_quest_allowed allowed  questioned sources (if not `NULL` (default), questioned source(s) will be picked among these)
 #' @param k_ref number of reference samples
 #' @param k_quest number of questioned samples
 #' @param background see details (default: `'outside'`)
 #' @param replace use sampling with replacement, else error
+#' @param strict fail at any incoherence between parameters instead of giving warnings or assuming (default: `FALSE`)
 #' @return list of indexes (`idx_reference`, `idx_questioned`, `idx_background`)
 #' @export
 #' @family set sampling functions
@@ -119,10 +130,21 @@ make_idx_splits <- function(sources, k_ref, k_quest,
                             source_ref = NULL, source_quest = NULL,
                             source_ref_allowed = NULL, source_quest_allowed = NULL,
                             same_source = NULL,
-                            background = 'outside', replace = TRUE) {
+                            background = 'outside',
+                            replace = TRUE,
+                            strict = FALSE) {
+
    sources <- as.vector(sources)
    source_all <- unique(sources)
    idx_all <- seq_along(sources)
+
+
+   # Activate strict mode
+   if (strict) {
+      warning <- function(x,...) { stop(paste('[STRICT, was warning]', x), ...) }
+      message <- function(x,...) { stop(paste('[STRICT, was message]', x), ...) }
+      stop_serious <- function(x,...) { stop(paste('[STRICT, was error/serious]', x), ...) }
+   }
 
 
    ## Parameter validation -------------------------
@@ -153,36 +175,67 @@ make_idx_splits <- function(sources, k_ref, k_quest,
                               msg = '"source_quest" is not in the allowed set.')
    }
 
-   ## Setup sources -------------------------
-
-   # Setup reference source
+   # Optional arguments
    if (is.null(source_ref)) {
       source_ref_in_arguments <- FALSE
-
-      if (is.null(source_ref_allowed)) {
-         source_ref_allowed <- source_all
-      }
-      source_ref <- sample_safe(source_ref_allowed, 1)
-
    } else {
       source_ref_in_arguments <- TRUE
    }
+
+   if (is.null(source_quest)) {
+      source_quest_in_arguments <- FALSE
+   } else {
+      source_quest_in_arguments <- TRUE
+   }
+
+   # Forbid forcing a reference source which is not existing
+   if (source_ref_in_arguments) {
+      assertthat::assert_that(source_ref %in% source_all,
+                              msg = '"source_ref" is not in available sources.')
+   }
+
+   # Forbid forcing a questioned source which is not existing
+   if (source_quest_in_arguments) {
+      assertthat::assert_that(all(source_quest %in% source_all),
+                              msg = '"source_quest" is not in available sources.')
+   }
+
+   same_source_in_arguments <- !is.null(same_source)
+
+   ## Setup sources -------------------------
+
+   # Setup reference source
+   if (!source_ref_in_arguments) {
+      # source_ref not specified
+
+      # Honor allowed reference sources
+      if (is.null(source_ref_allowed)) {
+         source_ref_allowed <- source_all
+      }
+      # Sample source_ref from allowed reference sources
+      source_ref <- sample_safe(source_ref_allowed, 1)
+   }
    assertthat::assert_that(assertthat::is.scalar(source_ref), msg = '"source_ref" must be a single source.')
 
-   # Setup questioned source(s)
-   if (is.null(source_quest)) {
+   # Reference source is here:
+   # source_ref
 
+
+   # Setup questioned source(s)
+
+   if (!source_quest_in_arguments) {
       # source_quest is NULL
 
       # Force sampling from the same source if same_source is TRUE
-      if (!is.null(same_source) && same_source) {
+      if (same_source_in_arguments && same_source) {
 
          source_quest <- source_ref
 
       } else {
 
-         # source_quest is NULL
          # same_source is FALSE or not specified (default: FALSE)
+         # source_quest is NULL
+         # -> honoring same_source
 
          if (is.null(source_quest_allowed)) {
             source_quest_allowed <- setdiff(source_all, source_ref)
@@ -202,36 +255,114 @@ make_idx_splits <- function(sources, k_ref, k_quest,
 
       # source_quest is not NULL
 
-      if (!is.null(same_source) && same_source && source_ref_in_arguments) {
-         if (source_quest != source_ref) {
-            warning('same_source is TRUE, but source_quest != source_ref. Honoring same_source!')
-            source_quest <- source_ref
+      # same_source always has priority over explicit sources
+      if (same_source_in_arguments) {
+         # same_source specified
+
+         if (same_source) {
+            # same_source = TRUE: honoring it
+
+            # source_ref specified?
+            if (source_ref_in_arguments) {
+
+               # source_ref has been specified
+               # source_quest has been specified: might be != source_ref
+               # CONFLICT!
+               if (!identical(source_quest, source_ref)) {
+                  warning('same_source is TRUE, but source_quest != source_ref.\nHonoring same_source: ignoring source_quest!')
+                  source_quest <- source_ref
+               }
+            } else {
+               # source_ref not specified, already been picked
+               # source_quest has been specified: might be != source_ref
+               if (!identical(source_quest, source_ref)) {
+                  # conflict!
+                  # Less severe since source_ref has not been fixed
+                  warning('same_source is TRUE, only source_quest has been specified.\nHonoring same_source: ignoring source_quest!')
+                  source_quest <- source_ref
+               }
+            }
+
+         } else {
+
+            # same_source = FALSE: honoring it
+            # source_quest has been specified: might be == source_ref
+            # source_ref might be identical to explicit source_quest
+
+            # source_ref specified?
+            if (source_ref_in_arguments) {
+
+               # source_ref has been specified
+               # CONFLICT!
+               if (identical(source_quest, source_ref)) {
+                  stop_serious('same_source is FALSE, but source_quest == source_ref.\nCould not honor same_source!')
+                  # should resample, too difficult
+
+                  # source_quest <- source_ref
+               }
+
+            } else {
+
+               # same_source = FALSE: honoring it
+               # source_quest has been specified
+               # source_ref not specified, already been picked
+               # source_ref might be identical to explicit source_quest
+
+               if (identical(source_quest, source_ref)) {
+                  stop_serious('same_source is FALSE, only source_quest has been specified.\nCould not honor same_source!')
+                  # should resample, too difficult
+
+                  # source_quest <- source_ref
+               }
+            }
+
          }
+
+
+      } else {
+         # same_source not specified: honoring source_quest
+         source_quest <- as.vector(source_quest)
       }
-      source_quest <- as.vector(source_quest)
    }
+
+   # Questioned source(s) is(are) here:
+   # source_quest
 
    ## Setup sampling -------------------------
 
-   # Check whether the questioned and reference sources are the same
-   if (identical(unique(source_ref), unique(source_quest))) {
-      sampling_same <- TRUE
-   } else {
-      sampling_same <- FALSE
-   }
+   # Check whether same_source is actually honored
+   # this should NEVER fail: that's why it raises a "fatal" condition: class fatal/error/condition
 
+   if (identical(unique(source_ref), unique(source_quest)) && (same_source_in_arguments && !same_source)) {
+      stop_fatal('this should not happen: same_source = FALSE, yet sources are the same.')
+   }
+   if (!identical(unique(source_ref), unique(source_quest)) && (same_source_in_arguments && same_source)) {
+      stop_fatal('this should not happen: same_source = TRUE, yet sources are different.')
+   }
+   # # same with assertthat: raise a class assertError/simpleError/error/condition
+   #
+   # Check whether the questioned and reference sources are the same
+   # assertthat::assert_that(
+   #    !(identical(unique(source_ref), unique(source_quest)) && (same_source_in_arguments && !same_source)),
+   #    msg = 'this should not happen: same_source = FALSE, yet sources are the same.')
+   #
+   # assertthat::assert_that(
+   #    !(!identical(unique(source_ref), unique(source_quest)) && (same_source_in_arguments && same_source)),
+   #    msg = 'this should not happen: same_source = TRUE, yet sources are different.'
+   # )
+
+   # These should never fail! Already dealt with in the beginning...
    # Indexes of items from the reference source
    idx_ref_all <- which(sources %in% source_ref)
    len_ref <- length(idx_ref_all)
    if (len_ref == 0) {
-      stop('Reference class not found.')
+      stop_fatal('Reference class not found.')
    }
 
    # Indexes of items from the questioned sources
    idx_quest_all <- which(sources %in% source_quest)
-   len_quest_all <- length(idx_quest_all)
-   if (len_quest_all == 0) {
-      stop('Questioned class not found.')
+   if (length(idx_quest_all) == 0) {
+      stop_fatal('Questioned class not found.')
    }
 
    ## Sample reference/questioned items -------------------------
@@ -239,20 +370,29 @@ make_idx_splits <- function(sources, k_ref, k_quest,
    # Build the reference sample
    need_replace_ref <- (len_ref < k_ref)
    if (need_replace_ref) {
-      if (replace) { message('Reference items: sampling with replacement is being used.') }
-      else { stop('Reference items: not enough items with the reference source, sampling without replacemnt.') }
+      if (replace) {
+         message('Reference items: sampling with replacement is being used.')
+      }
+      else {
+         stop_serious('Reference items: not enough items with the reference source, asked to sample without replacement.')
+      }
    }
    idx_reference <- sort(sample_safe(idx_ref_all, k_ref, replace = need_replace_ref))
 
    # Build the questioned sample w/o reference items
 
    # Do not sample items in the reference sample
+   #
    # All other items are kept, and can be sampled from
    idx_quest_all_no_ref <- setdiff(idx_quest_all, idx_reference)
    need_replace_quest <- (length(idx_quest_all_no_ref) < k_quest)
    if (need_replace_quest) {
-      if (replace) { message('Questioned items: sampling with replacement is being used.') }
-      else { stop('Questioned items: not enough items with the questioned source(s), sampling without replacemnt.') }
+      if (replace) {
+         message('Questioned items: sampling with replacement is being used.')
+      }
+      else {
+         stop_serious('Questioned items: not enough items with the questioned source(s), asked to sample without replacement.')
+      }
    }
    idx_questioned <- sort(sample_safe(idx_quest_all_no_ref, k_quest, replace = need_replace_quest))
 
@@ -260,21 +400,27 @@ make_idx_splits <- function(sources, k_ref, k_quest,
 
    # Build the background dataset
    if (background == 'others') {
+
       # Remove reference and questioned potential SOURCES
       idx_background <- setdiff(setdiff(idx_all, idx_ref_all), idx_quest_all)
+
    } else if (background == 'outside') {
+
       # Remove reference and questioned ITEMS
       idx_background <- setdiff(setdiff(idx_all, idx_reference), idx_questioned)
+
    } else if (background == 'unobserved') {
+
       # Remove reference source from candidates
       idx_background <- setdiff(idx_all, idx_ref_all)
+
       # Remove OBSEVED questioned sources from candidates
       sources_quest_observed <- unique(sources[idx_questioned])
       idx_quest_observed_all <- which(sources %in% sources_quest_observed)
       idx_background <- setdiff(idx_background, idx_quest_observed_all)
 
    } else {
-      stop('background not specified.')
+      stop_serious('background not specified.')
    }
 
    if (length(idx_background) == 0) {
@@ -299,3 +445,6 @@ make_idx_splits <- function(sources, k_ref, k_quest,
 sample_safe <- function(x, size, replace = FALSE) {
    x[sample.int(length(x), size = size, replace = replace)]
 }
+
+
+

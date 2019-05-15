@@ -3,7 +3,16 @@ library(purrr)
 
 library(rsamplestudy)
 
+
+seed <- floor(runif(1, min = 0, max = 1000))
+cat(paste('Using seed:', seed, '\n\n'))
+set.seed(seed)
+set.seed(196)
+
 context("test-ref-quest-split")
+
+
+# set.seed(seed)
 
 
 # Replication -------------------------------------------------------------
@@ -12,7 +21,12 @@ context("test-ref-quest-split")
 
 # Rerun tests multiple times
 
-n_replicate <- ifelse(TRAVIS || !NOT_CRAN, 1, 20)
+if (exists('TRAVIS') && exists('NOT_CRAN')) {
+   n_replicate <- ifelse(TRAVIS || !NOT_CRAN, 1, 20)
+} else {
+   n_replicate <- 20
+}
+
 replicate(n_replicate, {
 
 
@@ -67,14 +81,22 @@ s_ref_allowed_wrong <- sort(setdiff(sample(sources_all, n_allowed), s_ref))
 s_quest_allowed_same_wrong <- sort(setdiff(sample(sources_all, n_allowed), s_quest_same))
 s_quest_allowed_diff_wrong <- sort(setdiff(sample(sources_all, n_allowed), s_quest_diff))
 
-# make_idx_splits: idx tests -------------------------------------------------------------------
+
+# Error expectations
+# expect only errors which can be expected
+# tests still fail on failed assertions (explicitly: class `fatal`)
+# expect_error_all_but_fatal <- partial(expect_error, class = c('simpleError', 'serious'))
+expect_error_all_but_fatal <- partial(expect_error, class = c('serious', 'assertError', 'simpleError'))
+
+# make_idx_splits: idx tests, explicit sources -------------------------------------------------------------------
 
 
 # Source not found
 test_that("make_idx_splits: missing reference or questioned source", {
+   expect_error_all_but_fatal(make_idx_splits(sources, k_ref, k_quest, source_ref = n + 1, source_quest = s_quest_same))
    expect_error(make_idx_splits(sources, k_ref, k_quest, source_ref = n + 1, source_quest = s_quest_same))
-   expect_error(make_idx_splits(sources, k_ref, k_quest, source_ref = n + 1, source_quest = s_quest_diff))
-   expect_error(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = n + 1))
+   expect_error_all_but_fatal(make_idx_splits(sources, k_ref, k_quest, source_ref = n + 1, source_quest = s_quest_diff))
+   expect_error_all_but_fatal(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = n + 1))
 })
 
 # Same source
@@ -132,14 +154,21 @@ test_that("make_idx_splits: quest!=ref, same_source = TRUE (WARNING)", {
    expect_true(all(source_quest_this %in% s_ref))
 })
 
+
+test_that("make_idx_splits: quest==ref, same_source = FALSE (ERROR)", {
+   expect_error_all_but_fatal(
+      make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_ref, same_source = FALSE)
+   )
+})
+
 # make_idx_splits: idx tests, with candidates -------------------------------------------------------------------
 
 # Generic: forbid not allowed explicit sources
 test_that("make_idx_splits: forbid restricted explicit sources", {
 
-   expect_error(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_ref_allowed = s_ref_allowed_wrong))
-   expect_error(make_idx_splits(sources, k_ref, k_quest, source_quest = s_quest_same, source_quest_allowed = s_quest_allowed_same_wrong))
-   expect_error(make_idx_splits(sources, k_ref, k_quest, source_quest = s_quest_diff, source_quest_allowed = s_quest_allowed_diff_wrong))
+   expect_error_all_but_fatal(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_ref_allowed = s_ref_allowed_wrong))
+   expect_error_all_but_fatal(make_idx_splits(sources, k_ref, k_quest, source_quest = s_quest_same, source_quest_allowed = s_quest_allowed_same_wrong))
+   expect_error_all_but_fatal(make_idx_splits(sources, k_ref, k_quest, source_quest = s_quest_diff, source_quest_allowed = s_quest_allowed_diff_wrong))
 })
 
 # With specified candidate sources
@@ -234,10 +263,6 @@ test_that("make_idx_splits: quest!=ref, same_source = TRUE (WARNING)", {
 test_that("make_idx_splits: quest!=ref, same_source = TRUE, restricted ref+quest", {
 
    ## Should complain about overriding
-   expect_warning(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = TRUE,
-                                  source_ref_allowed = s_ref_allowed,
-                                  source_quest_allowed = s_quest_allowed_diff))
-
    splits <- expect_warning(make_idx_splits(sources, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, same_source = TRUE,
       source_ref_allowed = s_ref_allowed,
       source_quest_allowed = s_quest_allowed_diff))
@@ -316,17 +341,17 @@ test_that("make_idx_splits: restricted quest, same_source = TRUE", {
 test_that("make_idx_splits: quest=ref, not enough samples, replace", {
 
    # Not enough reference items
-   expect_error(make_idx_splits(sources, m + 1, k_quest, source_ref = s_ref, source_quest = s_quest_same, replace = FALSE))
+   expect_error_all_but_fatal(make_idx_splits(sources, m + 1, k_quest, source_ref = s_ref, source_quest = s_quest_same, replace = FALSE))
    expect_message(make_idx_splits(sources, m + 1, k_quest, source_ref = s_ref, source_quest = s_quest_same, replace = TRUE))
    expect_message(make_idx_splits(sources, m + 1, k_quest, source_ref = s_ref, source_quest = s_quest_same))
 
    # Not enough questioned items
-   expect_error(make_idx_splits(sources, k_ref, m + 1, source_ref = s_ref, source_quest = s_quest_same, replace = FALSE))
+   expect_error_all_but_fatal(make_idx_splits(sources, k_ref, m + 1, source_ref = s_ref, source_quest = s_quest_same, replace = FALSE))
    expect_message(make_idx_splits(sources, k_ref, m + 1, source_ref = s_ref, source_quest = s_quest_same, replace = TRUE))
    expect_message(make_idx_splits(sources, k_ref, m + 1, source_ref = s_ref, source_quest = s_quest_same))
 
    # quest=ref: one sample is already taken
-   expect_error(make_idx_splits(sources, k_ref, m, source_ref = s_ref, source_quest = s_quest_same, replace = FALSE))
+   expect_error_all_but_fatal(make_idx_splits(sources, k_ref, m, source_ref = s_ref, source_quest = s_quest_same, replace = FALSE))
    expect_message(make_idx_splits(sources, k_ref, m, source_ref = s_ref, source_quest = s_quest_same, replace = TRUE))
    expect_message(make_idx_splits(sources, k_ref, m, source_ref = s_ref, source_quest = s_quest_same))
 
@@ -336,12 +361,12 @@ test_that("make_idx_splits: quest=ref, not enough samples, replace", {
 test_that("make_idx_splits: quest!=ref, not enough samples, replace", {
 
    # Not enough reference items
-   expect_error(make_idx_splits(sources, m + 1, k_quest, source_ref = s_ref, source_quest = s_quest_diff, replace = FALSE))
+   expect_error_all_but_fatal(make_idx_splits(sources, m + 1, k_quest, source_ref = s_ref, source_quest = s_quest_diff, replace = FALSE))
    expect_message(make_idx_splits(sources, m + 1, k_quest, source_ref = s_ref, source_quest = s_quest_diff, replace = TRUE))
    expect_message(make_idx_splits(sources, m + 1, k_quest, source_ref = s_ref, source_quest = s_quest_diff))
 
    # Not enough questioned items
-   expect_error(make_idx_splits(sources, k_ref, m*n_quest_diff + 1, source_ref = s_ref, source_quest = s_quest_diff, replace = FALSE))
+   expect_error_all_but_fatal(make_idx_splits(sources, k_ref, m*n_quest_diff + 1, source_ref = s_ref, source_quest = s_quest_diff, replace = FALSE))
    expect_message(make_idx_splits(sources, k_ref, m*n_quest_diff + 1, source_ref = s_ref, source_quest = s_quest_diff, replace = TRUE))
    expect_message(make_idx_splits(sources, k_ref, m*n_quest_diff + 1, source_ref = s_ref, source_quest = s_quest_diff))
 
@@ -351,7 +376,6 @@ test_that("make_idx_splits: quest!=ref, not enough samples, replace", {
    expect_silent(make_idx_splits(sources, k_ref, m*n_quest_diff, source_ref = s_ref, source_quest = s_quest_diff))
 
 })
-
 
 
 # make_idx_splits: Sample intersections -----------------------------------------------------
@@ -424,9 +448,9 @@ df_item <- data.frame(item = sources, x = rnorm(length(sources)))
 
 # Source not found
 test_that("make_idx_splits: missing reference or questioned source", {
-   expect_error(make_dataset_splits(df, k_ref, k_quest, source_ref = n + 1, source_quest = s_quest_same))
-   expect_error(make_dataset_splits(df, k_ref, k_quest, source_ref = n + 1, source_quest = s_quest_diff))
-   expect_error(make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = n + 1))
+   expect_error_all_but_fatal(make_dataset_splits(df, k_ref, k_quest, source_ref = n + 1, source_quest = s_quest_same))
+   expect_error_all_but_fatal(make_dataset_splits(df, k_ref, k_quest, source_ref = n + 1, source_quest = s_quest_diff))
+   expect_error_all_but_fatal(make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = n + 1))
 })
 
 test_that("make_dataset_splits: quest=ref", {
@@ -445,8 +469,8 @@ test_that("make_dataset_splits: quest~=ref", {
 
 
 test_that("make_dataset_splits: quest~=ref, renamed column", {
-   expect_error(make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, col_source = 'item'))
-   expect_error(make_dataset_splits(df_item, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff))
+   expect_error_all_but_fatal(make_dataset_splits(df, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, col_source = 'item'))
+   expect_error_all_but_fatal(make_dataset_splits(df_item, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff))
    col_source <- 'item'
    splits <- make_dataset_splits(df_item, k_ref, k_quest, source_ref = s_ref, source_quest = s_quest_diff, col_source = 'item')
    expect_true(unique(splits$df_reference[[col_source]]) == s_ref)

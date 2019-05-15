@@ -19,11 +19,12 @@ make_dataset_splits(df, k_ref, k_quest, col_source = "source", ...)
 \describe{
   \item{source_ref}{the reference source (scalar; if \code{NULL}, a random source will be picked)}
   \item{source_quest}{the questioned source(s) (if \code{NULL}, anything but the reference source: behaviour overridden by \code{same_source})}
-  \item{same_source}{if \code{source_quest} is \code{NULL} and \code{same_source} is \code{TRUE}, questioned source is the reference source}
+  \item{same_source}{if \code{source_quest} is \code{NULL} and \code{same_source} is \code{TRUE}, questioned source is the reference source; see details for conflict resolution}
   \item{source_ref_allowed}{allowed reference sources (if not \code{NULL} (default), reference source will be picked among these)}
   \item{source_quest_allowed}{allowed  questioned sources (if not \code{NULL} (default), questioned source(s) will be picked among these)}
   \item{background}{see details (default: \code{'outside'})}
   \item{replace}{use sampling with replacement, else error}
+  \item{strict}{fail at any incoherence between parameters instead of giving warnings or assuming (default: \code{FALSE})}
 }}
 }
 \value{
@@ -56,12 +57,22 @@ the union of reference and questioned sources fills the available sources in the
 \section{Source sampling}{
 
 
+Sampling happens in steps:
+\enumerate{
+\item a reference source is picked
+\item questioned sources are picked
+\item items from reference sources are picked
+\item items from questioned sources are picked
+\item remaining items form the background set: apply background restrictions
+}
+
 By design, the package identifies sources which are allowed to be sampled from.
 By default, all available sources can appear in the reference or questioned samples.
 
 This restriction can be modified using the parameters \code{source_ref_allowed} and \code{source_quest_allowed}.
+It is also forbidden to specify a \code{source_ref} or a \code{source_quest} which are not allowed.
 
-The behaviour of \code{same_source} is stronger, and \code{source_quest_allowed} is overridden.
+The behaviour of \code{same_source}, when specified, is stronger, and \code{source_quest_allowed} is overridden.
 
 If \code{source_quest} is \code{NULL}:
 \itemize{
@@ -69,9 +80,13 @@ If \code{source_quest} is \code{NULL}:
 \item if \code{same_source} is \code{TRUE}, questioned items are sampled from the reference source (\code{source_ref_allowed} is ignored).
 }
 
-Else, questioned items will be sampled from the questioned source(s), even if it contains the reference one.
+If \code{source_quest} is not \code{NULL}:
+\itemize{
+\item \code{same_source} always has priority: if specified, \code{source_quest} will be ignored, the chosen reference source will be picked.
+\item if \code{source_quest} conflicts with \code{same_source}, \strong{an error is raised}.
+}
 
-It is also forbidden to specify a \code{source_ref} or a \code{source_quest} which are not allowed.
+Else, questioned items will be sampled from the questioned source(s), even if it contains the reference one.
 
 Items will never be sampled once (unless \code{replace} is \code{TRUE}): they appear once in the reference/questioned/background items.
 }
