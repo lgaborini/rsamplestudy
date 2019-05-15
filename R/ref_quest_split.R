@@ -278,7 +278,7 @@ make_idx_splits <- function(sources, k_ref, k_quest,
                if (!identical(source_quest, source_ref)) {
                   # conflict!
                   # Less severe since source_ref has not been fixed
-                  warning('same_source is TRUE, only source_quest has been specified.\nHonoring same_source: ignoring source_quest!')
+                  warning('same_source is TRUE, only source_quest has been specified, sampled source_ref != source_quest.\nHonoring same_source: ignoring source_quest!')
                   source_quest <- source_ref
                }
             }
@@ -309,12 +309,12 @@ make_idx_splits <- function(sources, k_ref, k_quest,
                # source_ref might be identical to explicit source_quest
 
                if (identical(source_quest, source_ref)) {
-                  stop_serious('same_source is FALSE, only source_quest has been specified.\nCould not honor same_source!')
+                  stop_serious('same_source is FALSE, only source_quest has been specified, sampled source_ref == source_quest.\nCould not honor same_source!')
                   # should resample, too difficult
 
                   # source_quest <- source_ref
                } else {
-                  message('same_source is FALSE, only source_quest has been specified.\nHonoring same_source.!')
+                  message('same_source is FALSE, only source_quest has been specified, sampled source_ref != source_quest.\nHonoring same_source.!')
                }
             }
 
