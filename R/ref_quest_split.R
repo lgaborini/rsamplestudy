@@ -176,31 +176,22 @@ make_idx_splits <- function(sources, k_ref, k_quest,
    }
 
    # Optional arguments
-   if (is.null(source_ref)) {
-      source_ref_in_arguments <- FALSE
-   } else {
-      source_ref_in_arguments <- TRUE
-   }
+   source_ref_in_arguments <- !is.null(source_ref)
+   source_quest_in_arguments <- !is.null(source_quest)
+   same_source_in_arguments <- !is.null(same_source)
 
-   if (is.null(source_quest)) {
-      source_quest_in_arguments <- FALSE
-   } else {
-      source_quest_in_arguments <- TRUE
-   }
-
-   # Forbid forcing a reference source which is not existing
+   # Forbid forcing a reference source which does not exist
    if (source_ref_in_arguments) {
       assertthat::assert_that(source_ref %in% source_all,
                               msg = '"source_ref" is not in available sources.')
    }
 
-   # Forbid forcing a questioned source which is not existing
+   # Forbid forcing a questioned source which does not exist
    if (source_quest_in_arguments) {
       assertthat::assert_that(all(source_quest %in% source_all),
                               msg = '"source_quest" is not in available sources.')
    }
 
-   same_source_in_arguments <- !is.null(same_source)
 
    ## Setup sources -------------------------
 
