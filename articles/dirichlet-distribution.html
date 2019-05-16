@@ -89,7 +89,7 @@
       <h1>Dirichlet distribution tools</h1>
                         <h4 class="author">Lorenzo Gaborini</h4>
             
-            <h4 class="date">2019-05-15</h4>
+            <h4 class="date">2019-05-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lgaborini/rsamplestudy/blob/master/vignettes/dirichlet-distribution.Rmd"><code>vignettes/dirichlet-distribution.Rmd</code></a></small>
       <div class="hidden name"><code>dirichlet-distribution.Rmd</code></div>
@@ -151,14 +151,14 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">df_diri &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span>(n, alpha)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(df_diri)</a>
 <a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt; # A tibble: 6 x 4</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt;   `x[1]`   `x[2]` `x[3]`   `x[4]`</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt; 1 0.0287 5.46e- 1  0.417 7.53e- 3</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt; 2 0.0205 3.20e- 6  0.979 2.18e-10</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; 3 0.0514 8.34e- 4  0.948 7.83e-15</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; 4 0.0518 3.47e-12  0.948 1.86e- 6</span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt; 5 0.296  9.85e-13  0.704 4.40e- 8</span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt; 6 0.299  1.78e- 2  0.683 9.01e- 5</span></a></code></pre></div>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt;       `x[1]`   `x[2]` `x[3]`   `x[4]`</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt;        &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt; 1 0.431      3.66e- 2  0.530 2.88e- 3</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt; 2 0.00000305 1.58e-23  0.991 9.33e- 3</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; 3 0.0517     2.37e- 1  0.712 3.85e-17</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; 4 0.0799     4.78e-14  0.920 3.24e-11</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt; 5 0.0138     2.02e-12  0.971 1.51e- 2</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt; 6 0.168      3.09e- 3  0.829 8.71e-11</span></a></code></pre></div>
 <pre><code>#&gt; Registered S3 methods overwritten by 'ggplot2':
 #&gt;   method         from 
 #&gt;   [.quosures     rlang
@@ -180,14 +180,14 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">df_diri &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span>(n, alpha)</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(df_diri)</a>
 <a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt; # A tibble: 6 x 4</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt;   `x[1]` `x[2]` `x[3]` `x[4]`</span></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt; 1 0.108  0.521  0.162  0.209 </span></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt; 2 0.0190 0.828  0.117  0.0363</span></a>
-<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt; 3 0.0962 0.0909 0.607  0.206 </span></a>
-<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt; 4 0.227  0.293  0.0669 0.414 </span></a>
-<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt; 5 0.160  0.0709 0.352  0.417 </span></a>
-<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#&gt; 6 0.370  0.0343 0.569  0.0261</span></a></code></pre></div>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt;   `x[1]` `x[2]`  `x[3]` `x[4]`</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt; 1 0.0163  0.373 0.596   0.0141</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt; 2 0.292   0.385 0.112   0.211 </span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt; 3 0.204   0.124 0.348   0.324 </span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt; 4 0.130   0.269 0.365   0.235 </span></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt; 5 0.197   0.488 0.274   0.0416</span></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#&gt; 6 0.263   0.482 0.00815 0.246</span></a></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">scatter_matrix_simplex</span>(df_diri)</a></code></pre></div>
 <p><img src="dirichlet-distribution_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
@@ -204,12 +204,12 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 <a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co">#&gt; # A tibble: 6 x 4</span></a>
 <a class="sourceLine" id="cb8-4" data-line-number="4"><span class="co">#&gt;   `x[1]` `x[2]` `x[3]` `x[4]`</span></a>
 <a class="sourceLine" id="cb8-5" data-line-number="5"><span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co">#&gt; 1  0.245  0.237  0.250  0.267</span></a>
-<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="co">#&gt; 2  0.217  0.265  0.234  0.284</span></a>
-<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">#&gt; 3  0.275  0.218  0.216  0.291</span></a>
-<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">#&gt; 4  0.218  0.240  0.234  0.309</span></a>
-<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">#&gt; 5  0.297  0.216  0.209  0.277</span></a>
-<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt; 6  0.246  0.261  0.225  0.268</span></a></code></pre></div>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co">#&gt; 1  0.231  0.219  0.312  0.238</span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="co">#&gt; 2  0.263  0.264  0.255  0.217</span></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">#&gt; 3  0.251  0.159  0.294  0.296</span></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">#&gt; 4  0.253  0.232  0.262  0.253</span></a>
+<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">#&gt; 5  0.214  0.364  0.208  0.214</span></a>
+<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt; 6  0.251  0.257  0.232  0.260</span></a></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">scatter_matrix_simplex</span>(df_diri)</a></code></pre></div>
 <p><img src="dirichlet-distribution_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 </div>
@@ -224,14 +224,14 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">df_diri &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span>(n, alpha)</a>
 <a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(df_diri)</a>
 <a class="sourceLine" id="cb11-3" data-line-number="3"><span class="co">#&gt; # A tibble: 6 x 4</span></a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="co">#&gt;      `x[1]`     `x[2]`    `x[3]`    `x[4]`</span></a>
-<a class="sourceLine" id="cb11-5" data-line-number="5"><span class="co">#&gt;       &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="co">#&gt; 1 1.00e+  0  4.56e-183  6.00e-32 3.20e-103</span></a>
-<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="co">#&gt; 2 2.34e- 17  4.19e- 14 10.00e- 1 0.       </span></a>
-<a class="sourceLine" id="cb11-8" data-line-number="8"><span class="co">#&gt; 3 0.         1.00e+  0  0.       5.00e-194</span></a>
-<a class="sourceLine" id="cb11-9" data-line-number="9"><span class="co">#&gt; 4 5.82e- 18  6.85e-243  1.68e-44 1.00e+  0</span></a>
-<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">#&gt; 5 0.        10.00e-  1  6.04e- 8 2.60e-247</span></a>
-<a class="sourceLine" id="cb11-11" data-line-number="11"><span class="co">#&gt; 6 5.46e-135  4.89e-125  0.       1.00e+  0</span></a></code></pre></div>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="co">#&gt;       `x[1]`    `x[2]`     `x[3]`    `x[4]`</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5"><span class="co">#&gt;        &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="co">#&gt; 1  2.69e- 10 6.24e-219 10.00e-  1 1.06e-259</span></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="co">#&gt; 2  7.52e-208 1.00e+  0  0.        1.20e-242</span></a>
+<a class="sourceLine" id="cb11-8" data-line-number="8"><span class="co">#&gt; 3  1.00e+  0 2.25e- 25  3.94e-221 0.       </span></a>
+<a class="sourceLine" id="cb11-9" data-line-number="9"><span class="co">#&gt; 4  1.81e-277 0.         1.00e+  0 4.35e- 71</span></a>
+<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">#&gt; 5 10.00e-  1 1.98e-120  2.75e-233 1.56e-  5</span></a>
+<a class="sourceLine" id="cb11-11" data-line-number="11"><span class="co">#&gt; 6  9.97e-  1 3.16e-  3  7.80e-165 1.02e- 79</span></a></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">scatter_matrix_simplex</span>(df_diri)</a></code></pre></div>
 <p><img src="dirichlet-distribution_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>

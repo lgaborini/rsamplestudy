@@ -89,7 +89,7 @@
       <h1>Dirichlet-Dirichlet study generation</h1>
                         <h4 class="author">Lorenzo Gaborini</h4>
             
-            <h4 class="date">2019-05-15</h4>
+            <h4 class="date">2019-05-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lgaborini/rsamplestudy/blob/master/vignettes/dirichletdirichlet-study.Rmd"><code>vignettes/dirichletdirichlet-study.Rmd</code></a></small>
       <div class="hidden name"><code>dirichletdirichlet-study.Rmd</code></div>
@@ -143,24 +143,24 @@ This vignette describes the Dirichlet-Dirichlet model.</p>
 <p>Notice that the hyperparameter is sampled, too (but it can be fixed).</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(list_pop<span class="op">$</span>df_pop)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt; # A tibble: 6 x 5</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt;   source `x[1]`   `x[2]` `x[3]` `x[4]`</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt;    &lt;int&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt; 1      1      0 1.29e- 6      0  1.000</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt; 2      1      0 5.80e- 6      0  1.000</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt; 3      1      0 2.60e-17      0  1    </span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; 4      1      0 1.85e-15      0  1.000</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; 5      1      0 1.39e-19      0  1    </span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt; 6      1      0 1.27e- 2      0  0.987</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt;   source     `x[1]`    `x[2]`   `x[3]` `x[4]`</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt;    &lt;int&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt; 1      1 0.00000950 2.27e-265 1.10e- 1  0.890</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt; 2      1 0.000268   7.87e-  3 1.26e-21  0.992</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt; 3      1 0.0583     2.05e-121 5.19e- 2  0.890</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; 4      1 0.634      8.48e- 81 1.81e-16  0.366</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; 5      1 0.407      5.53e-111 1.73e-10  0.593</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt; 6      1 0.213      6.81e- 33 7.11e-53  0.787</span></a>
 <a class="sourceLine" id="cb2-11" data-line-number="11"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(list_pop<span class="op">$</span>df_sources)</a>
 <a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt; # A tibble: 6 x 5</span></a>
 <a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#&gt;   source `theta[1]` `theta[2]` `theta[3]` `theta[4]`</span></a>
 <a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt;    &lt;int&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt; 1      1   4.61e-54     0.0825   3.11e-10     0.918 </span></a>
-<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt; 2      2   1.82e- 8     0.248    7.18e- 1     0.0338</span></a>
-<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt; 3      3   2.87e-29     0.262    3.00e- 2     0.708 </span></a>
-<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt; 4      4   4.14e-11     0.0802   8.71e- 1     0.0487</span></a>
-<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt; 5      5   1.85e- 5     0.0240   1.11e- 1     0.865 </span></a>
-<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt; 6      6   2.52e-15     0.880    3.05e- 4     0.120</span></a></code></pre></div>
+<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt; 1      1      0.199   3.31e- 3   2.31e- 2   0.774   </span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt; 2      2      0.897   9.46e-18   2.48e- 8   0.103   </span></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt; 3      3      0.992   5.64e-13   7.92e- 3   0.000550</span></a>
+<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt; 4      4      0.995   7.48e-16   4.51e- 3   0.000228</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt; 5      5      1.000   5.45e-15   1.80e- 4   0.000149</span></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt; 6      6      0.717   3.57e- 3   3.82e-21   0.279</span></a></code></pre></div>
 </div>
 <div id="hyperparameters" class="section level2">
 <h2 class="hasAnchor">
@@ -189,31 +189,31 @@ This is generically done using <code>make_dataset_splits</code>:</p>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&gt; # A tibble: 6 x 5</span></a>
 <a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt;   source `x[1]` `x[2]` `x[3]` `x[4]`</span></a>
 <a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt;    &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt; 1     15      0 0.0260      0  0.974</span></a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt; 2     15      0 0.0113      0  0.989</span></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt; 3     15      0 0.818       0  0.182</span></a>
-<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt; 4     15      0 0.881       0  0.119</span></a>
-<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt; 5     15      0 0.344       0  0.656</span></a>
-<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt; 6     15      0 0.782       0  0.218</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt; 1     15      1      0      0      0</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt; 2     15      1      0      0      0</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt; 3     15      1      0      0      0</span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt; 4     15      1      0      0      0</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt; 5     15      1      0      0      0</span></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt; 6     15      1      0      0      0</span></a>
 <a class="sourceLine" id="cb5-11" data-line-number="11"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(list_samples<span class="op">$</span>df_questioned)</a>
 <a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">#&gt; # A tibble: 5 x 5</span></a>
-<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt;   source   `x[1]`   `x[2]`   `x[3]` `x[4]`</span></a>
-<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt;    &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#&gt; 1     11 0.       2.58e- 1 7.67e- 8 0.742 </span></a>
-<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co">#&gt; 2     11 0.       8.60e- 1 1.94e- 2 0.121 </span></a>
-<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt; 3     13 1.08e-25 9.53e-41 1.71e-29 1     </span></a>
-<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt; 4     16 6.08e-51 1.82e-14 7.04e-11 1.000 </span></a>
-<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt; 5     17 3.26e- 1 8.52e-15 6.52e- 1 0.0227</span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt;   source        `x[1]`    `x[2]`   `x[3]` `x[4]`</span></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt;    &lt;int&gt;         &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#&gt; 1      1 0.0583        2.05e-121 5.19e- 2 0.890 </span></a>
+<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co">#&gt; 2      1 0.000194      1.47e-107 1.43e-38 1.000 </span></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt; 3      2 0.487         0.        0.       0.513 </span></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt; 4     11 0.00000000972 0.        1.33e- 3 0.999 </span></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt; 5     12 0.618         3.30e-  1 0.       0.0522</span></a>
 <a class="sourceLine" id="cb5-20" data-line-number="20"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(list_samples<span class="op">$</span>df_background)</a>
 <a class="sourceLine" id="cb5-21" data-line-number="21"><span class="co">#&gt; # A tibble: 6 x 5</span></a>
-<a class="sourceLine" id="cb5-22" data-line-number="22"><span class="co">#&gt;   source `x[1]`   `x[2]` `x[3]` `x[4]`</span></a>
-<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="co">#&gt;    &lt;int&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb5-24" data-line-number="24"><span class="co">#&gt; 1      1      0 1.29e- 6      0  1.000</span></a>
-<a class="sourceLine" id="cb5-25" data-line-number="25"><span class="co">#&gt; 2      1      0 5.80e- 6      0  1.000</span></a>
-<a class="sourceLine" id="cb5-26" data-line-number="26"><span class="co">#&gt; 3      1      0 2.60e-17      0  1    </span></a>
-<a class="sourceLine" id="cb5-27" data-line-number="27"><span class="co">#&gt; 4      1      0 1.85e-15      0  1.000</span></a>
-<a class="sourceLine" id="cb5-28" data-line-number="28"><span class="co">#&gt; 5      1      0 1.39e-19      0  1    </span></a>
-<a class="sourceLine" id="cb5-29" data-line-number="29"><span class="co">#&gt; 6      1      0 1.27e- 2      0  0.987</span></a></code></pre></div>
+<a class="sourceLine" id="cb5-22" data-line-number="22"><span class="co">#&gt;   source     `x[1]`    `x[2]`   `x[3]` `x[4]`</span></a>
+<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="co">#&gt;    &lt;int&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb5-24" data-line-number="24"><span class="co">#&gt; 1      1 0.00000950 2.27e-265 1.10e- 1  0.890</span></a>
+<a class="sourceLine" id="cb5-25" data-line-number="25"><span class="co">#&gt; 2      1 0.000268   7.87e-  3 1.26e-21  0.992</span></a>
+<a class="sourceLine" id="cb5-26" data-line-number="26"><span class="co">#&gt; 3      1 0.634      8.48e- 81 1.81e-16  0.366</span></a>
+<a class="sourceLine" id="cb5-27" data-line-number="27"><span class="co">#&gt; 4      1 0.407      5.53e-111 1.73e-10  0.593</span></a>
+<a class="sourceLine" id="cb5-28" data-line-number="28"><span class="co">#&gt; 5      1 0.213      6.81e- 33 7.11e-53  0.787</span></a>
+<a class="sourceLine" id="cb5-29" data-line-number="29"><span class="co">#&gt; 6      1 0.546      9.93e-165 5.89e-28  0.454</span></a></code></pre></div>
 <div id="source-parameters" class="section level3">
 <h3 class="hasAnchor">
 <a href="#source-parameters" class="anchor"></a>Source parameters</h3>
