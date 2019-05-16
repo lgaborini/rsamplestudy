@@ -25,8 +25,20 @@ n_replicate_offline <- 20
 n_replicate_online <- 5
 if (exists('TRAVIS') && exists('NOT_CRAN')) {
    # Fast tests on TRAVIS or CRAN
-   n_replicate <- ifelse(TRAVIS || !NOT_CRAN, n_replicate_online, n_replicate_offline)
+   if (TRAVIS) { 
+
+      n_replicate <- n_replicate_online
+   } else {
+      if (!NOT_CRAN) {
+         # on CRAN
+         n_replicate <- 1
+      } else {
+         # somewhere else
+         n_replicate <- n_replicate_online
+      }
+   }
 } else {
+   # Slow tests offline
    n_replicate <- n_replicate_offline
 }
 
