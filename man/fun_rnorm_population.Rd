@@ -4,8 +4,13 @@
 \alias{fun_rnorm_population}
 \title{Generate a Normal-Normal population.}
 \usage{
-fun_rnorm_population(n, m, list_hyper = NULL, name_var = "x",
-  name_source = list(mu = "mu", sigma = "sigma"))
+fun_rnorm_population(
+  n,
+  m,
+  list_hyper = NULL,
+  name_var = "x",
+  name_source = list(mu = "mu", sigma = "sigma")
+)
 }
 \arguments{
 \item{n}{number of samples per source}
@@ -49,7 +54,8 @@ The Normal-Normal model:
 }
 
 \seealso{
-Other population functions: \code{\link{fun_rdirichlet_population}}
+Other population functions: 
+\code{\link{fun_rdirichlet_population}()}
 }
 \concept{population}
 \concept{population functions}

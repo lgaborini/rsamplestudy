@@ -4,8 +4,14 @@
 \alias{fun_rdirichlet_population}
 \title{Generate a Dirichlet-Dirichlet population.}
 \usage{
-fun_rdirichlet_population(n, m, p, alpha = NULL, name_var = "x",
-  name_source = "theta")
+fun_rdirichlet_population(
+  n,
+  m,
+  p,
+  alpha = NULL,
+  name_var = "x",
+  name_source = "theta"
+)
 }
 \arguments{
 \item{n}{number of samples per source}
@@ -36,7 +42,8 @@ Generate samples from m sources and p parameters, n sample per source.
 Optionally pass the between-source alpha hyperparameter used to generate the source parameters.
 }
 \seealso{
-Other population functions: \code{\link{fun_rnorm_population}}
+Other population functions: 
+\code{\link{fun_rnorm_population}()}
 }
 \concept{population}
 \concept{population functions}

@@ -1,5 +1,3 @@
-library(rsamplestudy)
-library(testthat)
 context("test-dirichlet")
 
 set.seed(123)

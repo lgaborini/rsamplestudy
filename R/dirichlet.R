@@ -5,16 +5,16 @@
 #' @param text optional variable names (default: `'x'`)
 #' @return a tibble with named colums, where each row is a Dirichlet sample
 #' @export
-#' @inheritParams fun_rdirichlet_hyperparameter
 #' @seealso [Compositional::rdiri()]
 #' @family RNG functions
-fun_rdirichlet <- function(n, a, text='x') {
+fun_rdirichlet <- function(n, a, text = 'x') {
+
    a <- as.numeric(a)
    p <- length(a)
 
    Compositional::rdiri(n, a) %>%
       tibble::as_tibble(.name_repair = 'minimal') %>%
-      purrr::set_names(fun_var_names(p, text=text))
+      purrr::set_names(fun_var_names(p, text = text))
 }
 
 
@@ -30,7 +30,7 @@ fun_rdirichlet <- function(n, a, text='x') {
 #' @export
 #' @family RNG functions
 fun_rdirichlet_hyperparameter <- function(p) {
-   fun_rdirichlet(1, p*rep(1/p, p), 'alpha')
+   fun_rdirichlet(1, p * rep(1/p, p), 'alpha')
 }
 
 
@@ -58,7 +58,8 @@ fun_rdirichlet_hyperparameter <- function(p) {
 #' @inheritParams fun_rdirichlet_hyperparameter
 #' @family population functions
 #' @concept population
-fun_rdirichlet_population <- function(n, m, p, alpha=NULL, name_var='x', name_source='theta') {
+fun_rdirichlet_population <- function(n, m, p,
+                                      alpha = NULL, name_var = 'x', name_source = 'theta') {
 
    if (is.null(alpha)) {
       alpha <- fun_rdirichlet_hyperparameter(p)
@@ -67,22 +68,29 @@ fun_rdirichlet_population <- function(n, m, p, alpha=NULL, name_var='x', name_so
    }
 
    col_source <- 'source'
+
    df_sources <- fun_rdirichlet(m, alpha, text = name_source) %>%
       tibble::add_column(source = 1:m, .before = 1)
+
    names_source <- setdiff(colnames(df_sources), col_source)
 
    samples <- NULL   # avoid R CMD check error
+
    df_pop <- df_sources %>%
       dplyr::group_by(source) %>%
-      tidyr::nest(.key = name_source) %>%
+      tidyr::nest(name_source = -source) %>%
       dplyr::mutate(samples = purrr::map(name_source, ~ fun_rdirichlet(n, .x, name_var))) %>%
-      tidyr::unnest(samples)
+      tidyr::unnest(samples) %>%
+      dplyr::select(-name_source)
+
    names_var <- setdiff(colnames(df_pop), col_source)
 
-   list(alpha = alpha,
-        df_sources = df_sources,
-        df_pop = df_pop,
-        names_var = names_var,
-        names_source = names_source)
+   list(
+      alpha = alpha,
+      df_sources = df_sources,
+      df_pop = df_pop,
+      names_var = names_var,
+      names_source = names_source
+   )
 }
 

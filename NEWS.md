@@ -1,3 +1,7 @@
+# rsamplestudy 0.3.2
+
+* Update to new dplyr, tidyr.
+
 # rsamplestudy 0.3.1
 
 * `make_idx_splits`: documented case where `same_source` is `TRUE`, a `source_quest` is specified. (a message is thrown)

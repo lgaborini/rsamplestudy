@@ -4,10 +4,19 @@
 \alias{make_idx_splits}
 \title{Extract questioned/reference/background samples from a list of populations from sources}
 \usage{
-make_idx_splits(sources, k_ref, k_quest, source_ref = NULL,
-  source_quest = NULL, source_ref_allowed = NULL,
-  source_quest_allowed = NULL, same_source = NULL,
-  background = "outside", replace = TRUE, strict = FALSE)
+make_idx_splits(
+  sources,
+  k_ref,
+  k_quest,
+  source_ref = NULL,
+  source_quest = NULL,
+  source_ref_allowed = NULL,
+  source_quest_allowed = NULL,
+  same_source = NULL,
+  background = "outside",
+  replace = TRUE,
+  strict = FALSE
+)
 }
 \arguments{
 \item{sources}{all class labels}
@@ -98,7 +107,8 @@ the union of reference and questioned sources fills the available sources in the
 }
 
 \seealso{
-Other set sampling functions: \code{\link{make_dataset_splits}}
+Other set sampling functions: 
+\code{\link{make_dataset_splits}()}
 }
 \concept{set sampling}
 \concept{set sampling functions}

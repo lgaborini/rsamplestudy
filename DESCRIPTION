@@ -1,7 +1,7 @@
 Package: rsamplestudy
 Type: Package
 Title: Easily generate two-level studies from known distributions
-Version: 0.3.1
+Version: 0.3.2
 Author: Lorenzo Gaborini
 Maintainer: Lorenzo Gaborini <lorenzo.gaborini@gmail.com>
 Description: Easily generate two-level studies from known distributions.
@@ -16,6 +16,6 @@ Suggests:
     rmarkdown,
     covr,
     GGally
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)

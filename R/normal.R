@@ -67,10 +67,11 @@ fun_rnorm_population <- function(n, m, list_hyper = NULL, name_var = 'x', name_s
    samples <- .nest_data <- NULL   # avoid R CMD check error
    df_pop <- df_sources %>%
       dplyr::group_by(source) %>%
-      tidyr::nest(.key = .nest_data) %>%
+      tidyr::nest(.nest_data = -source) %>%
       dplyr::mutate(samples = purrr::map(.nest_data, ~ stats::rnorm(n, purrr::pluck(.x, name_source$mu), purrr::pluck(.x, name_source$sigma)) )) %>%
       tidyr::unnest(samples) %>%
-      dplyr::rename(!!name_var := samples)
+      dplyr::rename(!!name_var := samples) %>%
+      dplyr::select(-.nest_data)
 
    list(list_hyper = list_hyper,
         df_sources = df_sources,

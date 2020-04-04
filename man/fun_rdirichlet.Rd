@@ -22,6 +22,7 @@ Sample n times from a Dirichlet
 \seealso{
 \code{\link[Compositional:rdiri]{Compositional::rdiri()}}
 
-Other RNG functions: \code{\link{fun_rdirichlet_hyperparameter}}
+Other RNG functions: 
+\code{\link{fun_rdirichlet_hyperparameter}()}
 }
 \concept{RNG functions}
