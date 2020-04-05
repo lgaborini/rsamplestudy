@@ -30,6 +30,7 @@ fun_rdirichlet <- function(n, a, text = 'x') {
 #' @export
 #' @family RNG functions
 fun_rdirichlet_hyperparameter <- function(p) {
+   stopifnot(is.numeric(p) && p >= 1)
    fun_rdirichlet(1, p * rep(1/p, p), 'alpha')
 }
 
@@ -61,10 +62,13 @@ fun_rdirichlet_hyperparameter <- function(p) {
 fun_rdirichlet_population <- function(n, m, p,
                                       alpha = NULL, name_var = 'x', name_source = 'theta') {
 
+   stopifnot(is.numeric(n) & n >= 1)
+   stopifnot(is.numeric(m) & m >= 1)
+
    if (is.null(alpha)) {
       alpha <- fun_rdirichlet_hyperparameter(p)
    } else {
-      stopifnot(length(alpha) == p)
+      stopifnot(is.numeric(alpha) & length(alpha) == p)
    }
 
    col_source <- 'source'
@@ -81,7 +85,8 @@ fun_rdirichlet_population <- function(n, m, p,
       tidyr::nest(name_source = -source) %>%
       dplyr::mutate(samples = purrr::map(name_source, ~ fun_rdirichlet(n, .x, name_var))) %>%
       tidyr::unnest(samples) %>%
-      dplyr::select(-name_source)
+      dplyr::select(-name_source) %>%
+      dplyr::ungroup()
 
    names_var <- setdiff(colnames(df_pop), col_source)
 

@@ -1,21 +1,33 @@
-Package: rsamplestudy
 Type: Package
-Title: Easily generate two-level studies from known distributions
+Package: rsamplestudy
+Title: Easily generate two-level studies from known
+    distributions
 Version: 0.3.2
 Author: Lorenzo Gaborini
 Maintainer: Lorenzo Gaborini <lorenzo.gaborini@gmail.com>
-Description: Easily generate two-level studies from known distributions.
+Description: Easily generate two-level studies from known
+    distributions.
 License: GPL-3
-Encoding: UTF-8
-LazyData: true
-URL: https://github.com/lgaborini/rsamplestudy, https://lgaborini.github.io/rsamplestudy/
-Imports: dplyr, magrittr, tidyr, purrr, Compositional, assertthat, tibble, rlang
+URL: https://github.com/lgaborini/rsamplestudy,
+    https://lgaborini.github.io/rsamplestudy/
+Imports: 
+    assertthat,
+    Compositional,
+    dplyr,
+    magrittr,
+    purrr,
+    rlang,
+    stats,
+    tibble,
+    tidyr,
+    utils
 Suggests: 
-    testthat,
     knitr,
     rmarkdown,
-    covr,
-    GGally
-RoxygenNote: 7.0.2
-VignetteBuilder: knitr
+    testthat
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.0.2

@@ -40,11 +40,15 @@
 #' @importFrom rlang :=
 fun_rnorm_population <- function(n, m, list_hyper = NULL, name_var = 'x', name_source = list(mu = 'mu', sigma = 'sigma')) {
 
-   if (length(name_source) != 2) stop('name_source must be a 2-length character vector.')
-   if (length(name_var) != 1) stop('name_var must be a 1-length character vector.')
-   if (!is.list(name_source)) {
+   if (!is.list(name_source) | is.null(names(name_source))) {
       stop('name_source must be a named list.')
    }
+   if (length(name_source) != 2 | !all(sapply(name_source, is.character)))
+      stop('name_source must be a 2-length character vector.')
+   if (!is.character(name_var) | length(name_var) != 1) stop('name_var must be a 1-length character vector.')
+
+   stopifnot(is.numeric(n) & n >= 1)
+   stopifnot(is.numeric(m) & m >= 1)
 
    # Setup hyperparameters
    list_hyper_defaults <- list()
@@ -71,11 +75,14 @@ fun_rnorm_population <- function(n, m, list_hyper = NULL, name_var = 'x', name_s
       dplyr::mutate(samples = purrr::map(.nest_data, ~ stats::rnorm(n, purrr::pluck(.x, name_source$mu), purrr::pluck(.x, name_source$sigma)) )) %>%
       tidyr::unnest(samples) %>%
       dplyr::rename(!!name_var := samples) %>%
-      dplyr::select(-.nest_data)
+      dplyr::select(-.nest_data) %>%
+      dplyr::ungroup()
 
-   list(list_hyper = list_hyper,
-        df_sources = df_sources,
-        df_pop = df_pop,
-        names_var = name_var,
-        names_source = name_source)
+   list(
+      list_hyper = list_hyper,
+      df_sources = df_sources,
+      df_pop = df_pop,
+      names_var = name_var,
+      names_source = name_source
+   )
 }

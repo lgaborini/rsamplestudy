@@ -1,6 +1,7 @@
 # rsamplestudy 0.3.2
 
 * Update to new dplyr, tidyr.
+* More input checks.
 
 # rsamplestudy 0.3.1
 
