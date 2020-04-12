@@ -7,6 +7,9 @@
 #' @export
 #' @seealso [Compositional::rdiri()]
 #' @family RNG functions
+#' @importFrom magrittr set_colnames
+#' @importFrom tibble as_tibble
+#' @importFrom Compositional rdiri
 fun_rdirichlet <- function(n, a, text = 'x') {
 
    a <- as.numeric(a)
@@ -60,6 +63,10 @@ fun_rdirichlet_hyperparameter <- function(p) {
 #' @family population functions
 #' @concept population
 #' @importFrom withr with_preserve_seed
+#' @importFrom tibble add_column
+#' @importFrom dplyr group_by mutate select ungroup
+#' @importFrom purrr map
+#' @importFrom tidyr nest unnest
 fun_rdirichlet_population <- function(n, m, p,
                                       alpha = NULL, name_var = 'x', name_source = 'theta') {
 

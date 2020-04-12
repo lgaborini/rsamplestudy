@@ -79,7 +79,7 @@ In other words, we will sample the Dirichlet hyperparameter from the $\dirichlet
 The shortcut function the package is `fun_rdirichlet_hyperparameter`:
 
 ```{r}
-df_diri <- map_dfr(1:300, ~ fun_rdirichlet_hyperparameter(3))
+df_diri <- purrr::map_dfr(1:300, ~ fun_rdirichlet_hyperparameter(3))
 scatter_matrix_simplex(df_diri)
 ```
 
@@ -109,7 +109,3 @@ head(list_samples$df_background)
 The chosen sources can be fixed. 
 
 See the documentation for `make_dataset_splits`.
-
-
-
-
