@@ -9,12 +9,12 @@ fun_rdirichlet(n, a, text = "x")
 \arguments{
 \item{n}{number of samples}
 
-\item{a}{Dirichlet parameter (a vector)}
+\item{a}{Dirichlet parameter (a vector that will be coerced to numeric)}
 
 \item{text}{optional variable names (default: \code{'x'})}
 }
 \value{
-a tibble with named colums, where each row is a Dirichlet sample
+a tibble with named columns, where each row is a Dirichlet sample
 }
 \description{
 Sample n times from a Dirichlet

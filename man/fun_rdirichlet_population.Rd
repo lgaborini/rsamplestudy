@@ -20,8 +20,8 @@ fun_rdirichlet_population(
 
 \item{p}{number of variables}
 
-\item{alpha}{between-source alpha hyperparameter.
-If \code{NULL}, it is generated from the Uniform distribution on the (p-1)-simplex (see \code{\link[=fun_rdirichlet_hyperparameter]{fun_rdirichlet_hyperparameter()}}).}
+\item{alpha}{between-source alpha hyperparameter, a numeric vector or 1-row data.frame.
+If \code{NULL} (default), it is generated from the Uniform distribution on the (p-1)-simplex (see \code{\link[=fun_rdirichlet_hyperparameter]{fun_rdirichlet_hyperparameter()}}).}
 
 \item{name_var}{names for data variables (default: \code{'x'})}
 
