@@ -153,14 +153,14 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">df_diri</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span>(<span class="no">n</span>, <span class="no">alpha</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df_diri</span>)
 <span class="co">#&gt; # A tibble: 6 x 4</span>
-<span class="co">#&gt;   `x[1]`      `x[2]` `x[3]`   `x[4]`</span>
-<span class="co">#&gt;    &lt;dbl&gt;       &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 0.0727 0.00456      0.923 2.61e- 7</span>
-<span class="co">#&gt; 2 0.0155 0.0547       0.930 1.57e-15</span>
-<span class="co">#&gt; 3 0.0191 0.000159     0.975 5.88e- 3</span>
-<span class="co">#&gt; 4 0.0642 0.0120       0.908 1.55e- 2</span>
-<span class="co">#&gt; 5 0.0630 0.000000188  0.937 5.29e- 8</span>
-<span class="co">#&gt; 6 0.0118 0.00680      0.981 2.96e-11</span></pre></body></html></div>
+<span class="co">#&gt;    `x[1]`   `x[2]` `x[3]`   `x[4]`</span>
+<span class="co">#&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 0.00347 8.72e-15  0.997 1.76e-11</span>
+<span class="co">#&gt; 2 0.104   2.83e- 5  0.896 7.12e- 7</span>
+<span class="co">#&gt; 3 0.272   7.46e- 7  0.728 3.20e- 5</span>
+<span class="co">#&gt; 4 0.0220  3.87e- 6  0.978 2.47e- 5</span>
+<span class="co">#&gt; 5 0.185   1.51e- 5  0.815 3.45e- 6</span>
+<span class="co">#&gt; 6 0.0113  3.85e- 3  0.985 4.86e- 5</span></pre></body></html></div>
 <pre><code>#&gt; Loading required namespace: ggplot2
 #&gt; Loading required namespace: GGally
 #&gt; Registered S3 method overwritten by 'GGally':
@@ -178,14 +178,14 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">df_diri</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span>(<span class="no">n</span>, <span class="no">alpha</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df_diri</span>)
 <span class="co">#&gt; # A tibble: 6 x 4</span>
-<span class="co">#&gt;   `x[1]` `x[2]` `x[3]` `x[4]`</span>
-<span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 0.396   0.143 0.272  0.189 </span>
-<span class="co">#&gt; 2 0.170   0.445 0.297  0.0872</span>
-<span class="co">#&gt; 3 0.130   0.301 0.251  0.318 </span>
-<span class="co">#&gt; 4 0.0966  0.239 0.0122 0.652 </span>
-<span class="co">#&gt; 5 0.237   0.406 0.317  0.0397</span>
-<span class="co">#&gt; 6 0.141   0.119 0.422  0.317</span></pre></body></html></div>
+<span class="co">#&gt;   `x[1]` `x[2]`  `x[3]` `x[4]`</span>
+<span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 0.172  0.0447 0.723   0.0604</span>
+<span class="co">#&gt; 2 0.327  0.304  0.0588  0.310 </span>
+<span class="co">#&gt; 3 0.329  0.147  0.506   0.0170</span>
+<span class="co">#&gt; 4 0.0690 0.674  0.00810 0.249 </span>
+<span class="co">#&gt; 5 0.0565 0.479  0.345   0.119 </span>
+<span class="co">#&gt; 6 0.297  0.439  0.124   0.141</span></pre></body></html></div>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu">scatter_matrix_simplex</span>(<span class="no">df_diri</span>)</pre></body></html></div>
 <p><img src="dirichlet-distribution_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
@@ -202,12 +202,12 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 <span class="co">#&gt; # A tibble: 6 x 4</span>
 <span class="co">#&gt;   `x[1]` `x[2]` `x[3]` `x[4]`</span>
 <span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  0.280  0.214  0.253  0.252</span>
-<span class="co">#&gt; 2  0.210  0.268  0.277  0.244</span>
-<span class="co">#&gt; 3  0.218  0.160  0.318  0.305</span>
-<span class="co">#&gt; 4  0.231  0.235  0.236  0.299</span>
-<span class="co">#&gt; 5  0.216  0.351  0.208  0.225</span>
-<span class="co">#&gt; 6  0.228  0.207  0.278  0.288</span></pre></body></html></div>
+<span class="co">#&gt; 1  0.290  0.176  0.284  0.250</span>
+<span class="co">#&gt; 2  0.280  0.194  0.246  0.280</span>
+<span class="co">#&gt; 3  0.230  0.287  0.288  0.195</span>
+<span class="co">#&gt; 4  0.267  0.187  0.252  0.294</span>
+<span class="co">#&gt; 5  0.245  0.238  0.260  0.257</span>
+<span class="co">#&gt; 6  0.266  0.278  0.219  0.237</span></pre></body></html></div>
 <div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu">scatter_matrix_simplex</span>(<span class="no">df_diri</span>)</pre></body></html></div>
 <p><img src="dirichlet-distribution_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 </div>
@@ -224,12 +224,12 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 <span class="co">#&gt; # A tibble: 6 x 4</span>
 <span class="co">#&gt;      `x[1]`    `x[2]`    `x[3]`    `x[4]`</span>
 <span class="co">#&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 2.58e- 18 1.01e- 17 1.00e+  0 1.82e-116</span>
-<span class="co">#&gt; 2 1.00e+  0 1.62e- 48 0.        5.18e- 21</span>
-<span class="co">#&gt; 3 3.61e- 32 5.71e-260 1.00e+  0 7.56e- 52</span>
-<span class="co">#&gt; 4 1.41e- 68 1.00e+  0 1.64e-138 4.12e-216</span>
-<span class="co">#&gt; 5 1.04e- 97 2.72e- 60 5.03e-169 1.00e+  0</span>
-<span class="co">#&gt; 6 2.24e-241 1.00e+  0 5.48e-200 5.19e- 97</span></pre></body></html></div>
+<span class="co">#&gt; 1 6.01e-269 0.        1.00e+  0 1.32e- 83</span>
+<span class="co">#&gt; 2 1.11e- 93 3.74e-162 3.94e- 69 1.00e+  0</span>
+<span class="co">#&gt; 3 8.70e- 26 1.09e-177 1.00e+  0 1.06e- 21</span>
+<span class="co">#&gt; 4 2.00e- 11 1.96e-268 2.47e-229 1.00e+  0</span>
+<span class="co">#&gt; 5 0.        5.29e-142 1.00e+  0 4.98e-116</span>
+<span class="co">#&gt; 6 1.00e+  0 1.34e- 91 3.07e- 91 1.37e- 63</span></pre></body></html></div>
 <div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu">scatter_matrix_simplex</span>(<span class="no">df_diri</span>)</pre></body></html></div>
 <p><img src="dirichlet-distribution_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>
