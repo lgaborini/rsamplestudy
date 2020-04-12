@@ -5,8 +5,9 @@ This package contains utilities to simulate data from two-level hierarchical mod
 It is used in a evaluative forensic setting, where two sets of samples are extracted and compared.
 
 It will be coupled to other packages where the said models are evaluated in a Bayesian way.
-
-[![Travis build status](https://travis-ci.org/lgaborini/rsamplestudy.svg?branch=master)](https://travis-ci.org/lgaborini/rsamplestudy)
+  <!-- badges: start -->
+  [![R build status](https://github.com/lgaborini/rsamplestudy/workflows/R-CMD-check/badge.svg)](https://github.com/lgaborini/rsamplestudy/actions)
+  <!-- badges: end -->
 [![Codecov test coverage](https://codecov.io/gh/lgaborini/rsamplestudy/branch/master/graph/badge.svg)](https://codecov.io/gh/lgaborini/rsamplestudy?branch=master)
 
 ## Installation

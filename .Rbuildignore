@@ -5,3 +5,4 @@
 ^rsamplestudy\.sublime-project$
 ^rsamplestudy\.sublime-workspace$
 ^docs$
+^\.github$
