@@ -145,24 +145,24 @@ This vignette describes the Dirichlet-Dirichlet model.</p>
 <p>Notice that the hyperparameter is sampled, too (but it can be fixed).</p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">list_pop</span>$<span class="no">df_pop</span>)
 <span class="co">#&gt; # A tibble: 6 x 5</span>
-<span class="co">#&gt;   source `x[1]` `x[2]` `x[3]`   `x[4]`</span>
-<span class="co">#&gt;    &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1      1      0  0.876  0.111 1.27e- 2</span>
-<span class="co">#&gt; 2      1      0  0.451  0.332 2.17e- 1</span>
-<span class="co">#&gt; 3      1      0  0.752  0.248 4.16e-10</span>
-<span class="co">#&gt; 4      1      0  0.861  0.139 1.89e- 6</span>
-<span class="co">#&gt; 5      1      0  0.771  0.228 1.08e- 3</span>
-<span class="co">#&gt; 6      1      0  0.454  0.546 1.74e- 5</span>
+<span class="co">#&gt;   source   `x[1]`    `x[2]` `x[3]`   `x[4]`</span>
+<span class="co">#&gt;    &lt;int&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1      1 2.05e-10 1.03e- 97  1.00  1.60e- 5</span>
+<span class="co">#&gt; 2      1 3.78e- 3 0.         0.996 1.29e-15</span>
+<span class="co">#&gt; 3      1 9.10e- 2 0.         0.904 5.06e- 3</span>
+<span class="co">#&gt; 4      1 4.87e- 1 1.46e-124  0.508 4.09e- 3</span>
+<span class="co">#&gt; 5      1 9.90e- 2 7.83e- 22  0.901 1.39e-13</span>
+<span class="co">#&gt; 6      1 4.51e- 4 8.92e-126  1.00  2.79e-11</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">list_pop</span>$<span class="no">df_sources</span>)
 <span class="co">#&gt; # A tibble: 6 x 5</span>
 <span class="co">#&gt;   source `theta[1]` `theta[2]` `theta[3]` `theta[4]`</span>
 <span class="co">#&gt;    &lt;int&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt; 1      1   4.84e-11    0.462       0.415    0.124   </span>
-<span class="co">#&gt; 2      2   9.38e- 3    0.890       0.101    0.000149</span>
-<span class="co">#&gt; 3      3   3.77e-21    0.807       0.181    0.0115  </span>
-<span class="co">#&gt; 4      4   2.46e- 7    0.845       0.0121   0.143   </span>
-<span class="co">#&gt; 5      5   8.48e- 9    0.00515     0.994    0.000965</span>
-<span class="co">#&gt; 6      6   2.04e- 5    0.0788      0.907    0.0144</span></pre></body></html></div>
+<span class="co">#&gt; 1      1      0.135  0.000272    0.817     0.0484   </span>
+<span class="co">#&gt; 2      2      0.477  0.0000483   0.523     0.0000128</span>
+<span class="co">#&gt; 3      3      0.999  0.000318    0.000878  0.0000128</span>
+<span class="co">#&gt; 4      4      0.866  0.00490     0.122     0.00734  </span>
+<span class="co">#&gt; 5      5      0.172  0.0368      0.775     0.0160   </span>
+<span class="co">#&gt; 6      6      0.835  0.0694      0.0287    0.0669</span></pre></body></html></div>
 </div>
 <div id="hyperparameters" class="section level2">
 <h2 class="hasAnchor">
@@ -189,33 +189,33 @@ This is generically done using <code>make_dataset_splits</code>:</p>
 <span class="co">#&gt; [5] "df_questioned"  "df_background"</span></pre></body></html></div>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">list_samples</span>$<span class="no">df_reference</span>)
 <span class="co">#&gt; # A tibble: 6 x 5</span>
-<span class="co">#&gt;   source    `x[1]` `x[2]`   `x[3]` `x[4]`</span>
-<span class="co">#&gt;    &lt;int&gt;     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1      8 0.         0.263 7.37e- 1      0</span>
-<span class="co">#&gt; 2      8 0.         1.00  3.32e- 6      0</span>
-<span class="co">#&gt; 3      8 0.         0.996 4.12e- 3      0</span>
-<span class="co">#&gt; 4      8 0.         0.999 6.57e- 4      0</span>
-<span class="co">#&gt; 5      8 0.         1.00  9.57e-10      0</span>
-<span class="co">#&gt; 6      8 9.22e-181  1.00  4.85e- 5      0</span>
+<span class="co">#&gt;   source  `x[1]` `x[2]` `x[3]` `x[4]`</span>
+<span class="co">#&gt;    &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt; 1      2 0.278        0 0.722       0</span>
+<span class="co">#&gt; 2      2 0.00330      0 0.997       0</span>
+<span class="co">#&gt; 3      2 0.983        0 0.0170      0</span>
+<span class="co">#&gt; 4      2 0.00378      0 0.996       0</span>
+<span class="co">#&gt; 5      2 0.349        0 0.651       0</span>
+<span class="co">#&gt; 6      2 0.988        0 0.0118      0</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">list_samples</span>$<span class="no">df_questioned</span>)
 <span class="co">#&gt; # A tibble: 5 x 5</span>
-<span class="co">#&gt;   source   `x[1]`     `x[2]`      `x[3]`   `x[4]`</span>
-<span class="co">#&gt;    &lt;int&gt;    &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1      1 0.       0.454      0.546       1.74e- 5</span>
-<span class="co">#&gt; 2      4 0.       1.00       0.000000551 7.47e- 5</span>
-<span class="co">#&gt; 3      6 0.       0.00000201 1.00        2.35e-54</span>
-<span class="co">#&gt; 4      9 1.39e-23 0.223      0.777       0.      </span>
-<span class="co">#&gt; 5     15 0.       1.00       0.000311    1.02e-51</span>
+<span class="co">#&gt;   source    `x[1]` `x[2]`    `x[3]`    `x[4]`</span>
+<span class="co">#&gt;    &lt;int&gt;     &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     10 1.00e+  0 0      0         1.54e-132</span>
+<span class="co">#&gt; 2     11 9.59e-  1 0.0408 0         0.       </span>
+<span class="co">#&gt; 3     12 5.09e-123 0.0321 0.968     8.05e- 61</span>
+<span class="co">#&gt; 4     12 8.33e- 56 0.833  0.167     8.34e-220</span>
+<span class="co">#&gt; 5     17 9.89e-  1 0.0111 0.0000646 3.31e-259</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">list_samples</span>$<span class="no">df_background</span>)
 <span class="co">#&gt; # A tibble: 6 x 5</span>
-<span class="co">#&gt;   source `x[1]` `x[2]`  `x[3]`   `x[4]`</span>
-<span class="co">#&gt;    &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1      1      0  0.876 0.111   1.27e- 2</span>
-<span class="co">#&gt; 2      1      0  0.451 0.332   2.17e- 1</span>
-<span class="co">#&gt; 3      1      0  0.752 0.248   4.16e-10</span>
-<span class="co">#&gt; 4      1      0  0.861 0.139   1.89e- 6</span>
-<span class="co">#&gt; 5      1      0  0.771 0.228   1.08e- 3</span>
-<span class="co">#&gt; 6      1      0  0.999 0.00108 2.49e- 6</span></pre></body></html></div>
+<span class="co">#&gt;   source   `x[1]`    `x[2]` `x[3]`   `x[4]`</span>
+<span class="co">#&gt;    &lt;int&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1      1 2.05e-10 1.03e- 97  1.00  1.60e- 5</span>
+<span class="co">#&gt; 2      1 3.78e- 3 0.         0.996 1.29e-15</span>
+<span class="co">#&gt; 3      1 9.10e- 2 0.         0.904 5.06e- 3</span>
+<span class="co">#&gt; 4      1 4.87e- 1 1.46e-124  0.508 4.09e- 3</span>
+<span class="co">#&gt; 5      1 9.90e- 2 7.83e- 22  0.901 1.39e-13</span>
+<span class="co">#&gt; 6      1 4.51e- 4 8.92e-126  1.00  2.79e-11</span></pre></body></html></div>
 <div id="source-parameters" class="section level3">
 <h3 class="hasAnchor">
 <a href="#source-parameters" class="anchor"></a>Source parameters</h3>
