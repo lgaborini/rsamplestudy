@@ -6,9 +6,9 @@ It is used in a evaluative forensic setting, where two sets of samples are extra
 
 It will be coupled to other packages where the said models are evaluated in a Bayesian way.
   <!-- badges: start -->
-  [![R build status](https://github.com/lgaborini/rsamplestudy/workflows/R-CMD-check/badge.svg)](https://github.com/lgaborini/rsamplestudy/actions)
+  [![R build status](https://github.com/lgaborini/rsamplestudy/workflows/R-CMD-check/badge.svg)](https://github.com/lgaborini/rsamplestudy/actions) [![Codecov test coverage](https://codecov.io/gh/lgaborini/rsamplestudy/branch/master/graph/badge.svg)](https://codecov.io/gh/lgaborini/rsamplestudy?branch=master)
   <!-- badges: end -->
-[![Codecov test coverage](https://codecov.io/gh/lgaborini/rsamplestudy/branch/master/graph/badge.svg)](https://codecov.io/gh/lgaborini/rsamplestudy?branch=master)
+
 
 ## Installation
 
