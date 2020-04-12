@@ -1,9 +1,9 @@
 #' Sample n times from a Dirichlet
 #'
 #' @param n number of samples
-#' @param a Dirichlet parameter (a vector)
+#' @param a Dirichlet parameter (a vector that will be coerced to numeric)
 #' @param text optional variable names (default: `'x'`)
-#' @return a tibble with named colums, where each row is a Dirichlet sample
+#' @return a tibble with named columns, where each row is a Dirichlet sample
 #' @export
 #' @seealso [Compositional::rdiri()]
 #' @family RNG functions
@@ -13,8 +13,8 @@ fun_rdirichlet <- function(n, a, text = 'x') {
    p <- length(a)
 
    Compositional::rdiri(n, a) %>%
-      tibble::as_tibble(.name_repair = 'minimal') %>%
-      purrr::set_names(fun_var_names(p, text = text))
+      magrittr::set_colnames(fun_var_names(p, text = text)) %>%
+      tibble::as_tibble()
 }
 
 
@@ -31,7 +31,7 @@ fun_rdirichlet <- function(n, a, text = 'x') {
 #' @family RNG functions
 fun_rdirichlet_hyperparameter <- function(p) {
    stopifnot(is.numeric(p) && p >= 1)
-   fun_rdirichlet(1, p * rep(1/p, p), 'alpha')
+   fun_rdirichlet(n = 1, a = p * rep(1/p, p), text = 'alpha')
 }
 
 
@@ -42,8 +42,8 @@ fun_rdirichlet_hyperparameter <- function(p) {
 #'
 #' @param n number of samples per source
 #' @param m number of sources
-#' @param alpha between-source alpha hyperparameter.
-#'    If `NULL`, it is generated from the Uniform distribution on the (p-1)-simplex (see [fun_rdirichlet_hyperparameter()]).
+#' @param alpha between-source alpha hyperparameter, a numeric vector or 1-row data.frame.
+#'    If `NULL` (default), it is generated from the Uniform distribution on the (p-1)-simplex (see [fun_rdirichlet_hyperparameter()]).
 #' @param name_var names for data variables (default: `'x'`)
 #' @param name_source names for source parameters (default: `'theta'`)
 #'
@@ -59,6 +59,7 @@ fun_rdirichlet_hyperparameter <- function(p) {
 #' @inheritParams fun_rdirichlet_hyperparameter
 #' @family population functions
 #' @concept population
+#' @importFrom withr with_preserve_seed
 fun_rdirichlet_population <- function(n, m, p,
                                       alpha = NULL, name_var = 'x', name_source = 'theta') {
 
@@ -66,9 +67,18 @@ fun_rdirichlet_population <- function(n, m, p,
    stopifnot(is.numeric(m) & m >= 1)
 
    if (is.null(alpha)) {
-      alpha <- fun_rdirichlet_hyperparameter(p)
+      # do not advance RNG seed
+      df_alpha <- withr::with_preserve_seed(fun_rdirichlet_hyperparameter(p))
+      alpha <- as.numeric(df_alpha)
    } else {
-      stopifnot(is.numeric(alpha) & length(alpha) == p)
+      stopifnot(is.numeric(alpha) | is.data.frame(alpha))
+      stopifnot(length(alpha) == p)
+
+      alpha <- as.numeric(alpha)
+
+      # set names on alpha
+      df_alpha <- setNames(alpha, nm = fun_var_names(p, text = 'alpha')) %>% dplyr::bind_rows()
+      # df_alpha <- setNames(alpha, nm = fun_var_names(p, text = 'alpha')) %>% tibble::as_tibble_row()
    }
 
    col_source <- 'source'
@@ -83,7 +93,7 @@ fun_rdirichlet_population <- function(n, m, p,
    df_pop <- df_sources %>%
       dplyr::group_by(source) %>%
       tidyr::nest(name_source = -source) %>%
-      dplyr::mutate(samples = purrr::map(name_source, ~ fun_rdirichlet(n, .x, name_var))) %>%
+      dplyr::mutate(samples = purrr::map(name_source, ~ fun_rdirichlet(n = n, a = as.vector(.x), text = name_var))) %>%
       tidyr::unnest(samples) %>%
       dplyr::select(-name_source) %>%
       dplyr::ungroup()
@@ -91,7 +101,7 @@ fun_rdirichlet_population <- function(n, m, p,
    names_var <- setdiff(colnames(df_pop), col_source)
 
    list(
-      alpha = alpha,
+      alpha = df_alpha,
       df_sources = df_sources,
       df_pop = df_pop,
       names_var = names_var,
