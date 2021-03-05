@@ -1,3 +1,7 @@
+# rsamplestudy 0.3.3
+
+* Repo alignmentmaintenance release.
+
 # rsamplestudy 0.3.2
 
 * Update to new dplyr, tidyr.
