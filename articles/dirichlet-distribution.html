@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rsamplestudy</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -70,8 +66,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/lgaborini/rsamplestudy/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/lgaborini/rsamplestudy/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -85,15 +81,15 @@
 
       
 
-      </header><div class="row">
+      </header><script src="dirichlet-distribution_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Dirichlet distribution tools</h1>
-                        <h4 class="author">Lorenzo Gaborini</h4>
+                        <h4 data-toc-skip class="author">Lorenzo Gaborini</h4>
             
-            <h4 class="date">2020-04-12</h4>
+            <h4 data-toc-skip class="date">2021-03-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/lgaborini/rsamplestudy/blob/master/vignettes/dirichlet-distribution.Rmd"><code>vignettes/dirichlet-distribution.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/lgaborini/rsamplestudy/blob/master/vignettes/dirichlet-distribution.Rmd" class="external-link"><code>vignettes/dirichlet-distribution.Rmd</code></a></small>
       <div class="hidden name"><code>dirichlet-distribution.Rmd</code></div>
 
     </div>
@@ -140,29 +136,30 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 <h2 class="hasAnchor">
 <a href="#examples" class="anchor"></a>Examples</h2>
 <p>Sample from a <span class="math inline">\(p=4\)</span> Dirichlet:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="no">n</span> <span class="kw">&lt;-</span> <span class="fl">100</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">100</span>
 
 <span class="co"># The parameter</span>
-<span class="no">alpha</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.5</span>, <span class="fl">0.1</span>, <span class="fl">5</span>, <span class="fl">0.1</span>)
-<span class="no">p</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">alpha</span>)
+<span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.1</span>, <span class="fl">5</span>, <span class="fl">0.1</span><span class="op">)</span>
+<span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">alpha</span><span class="op">)</span>
 
 <span class="co"># Concentration and base measure</span>
-<span class="no">alpha0</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">alpha</span>)
-<span class="no">nu</span> <span class="kw">&lt;-</span> <span class="no">alpha</span> / <span class="no">alpha0</span></pre></body></html></div>
+<span class="va">alpha0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">alpha</span><span class="op">)</span>
+<span class="va">nu</span> <span class="op">&lt;-</span> <span class="va">alpha</span> <span class="op">/</span> <span class="va">alpha0</span></code></pre></div>
 <p><span class="math inline">\(\alpha_0 = 5.7\)</span><br><span class="math inline">\(\boldsymbol{\nu} = \left( 0.0877193, 0.0175439, 0.877193, 0.0175439 \right)\)</span><br><span class="math inline">\(\boldsymbol{\alpha} = \left( 0.5, 0.1, 5, 0.1 \right)\)</span></p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">df_diri</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span>(<span class="no">n</span>, <span class="no">alpha</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df_diri</span>)
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">df_diri</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">alpha</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df_diri</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 6 x 4</span>
-<span class="co">#&gt;     `x[1]`        `x[2]` `x[3]`   `x[4]`</span>
-<span class="co">#&gt;      &lt;dbl&gt;         &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 0.191    0.235          0.509 6.49e- 2</span>
-<span class="co">#&gt; 2 0.00242  0.00000000315  0.792 2.06e- 1</span>
-<span class="co">#&gt; 3 0.000817 0.00815        0.991 2.77e-14</span>
-<span class="co">#&gt; 4 0.0596   0.000266       0.749 1.92e- 1</span>
-<span class="co">#&gt; 5 0.130    0.000144       0.870 4.99e- 7</span>
-<span class="co">#&gt; 6 0.0139   0.0000514      0.986 2.68e- 5</span></pre></body></html></div>
-<pre><code>#&gt; Loading required namespace: ggplot2
-#&gt; Loading required namespace: GGally
+<span class="co">#&gt;     `x[1]`   `x[2]` `x[3]`   `x[4]`</span>
+<span class="co">#&gt;      &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 0.0243   9.74e- 4  0.901 7.33e- 2</span>
+<span class="co">#&gt; 2 0.0465   4.45e- 7  0.902 5.17e- 2</span>
+<span class="co">#&gt; 3 0.0625   3.00e- 3  0.890 4.47e- 2</span>
+<span class="co">#&gt; 4 0.158    1.07e- 4  0.842 4.17e- 7</span>
+<span class="co">#&gt; 5 0.000115 5.70e-20  1.00  1.10e-19</span>
+<span class="co">#&gt; 6 0.397    1.44e- 6  0.603 8.62e-11</span></code></pre></div>
+<pre><code>#&gt; Loading required namespace: GGally
 #&gt; Registered S3 method overwritten by 'GGally':
 #&gt;   method from   
 #&gt;   +.gg   ggplot2</code></pre>
@@ -171,66 +168,75 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 <h3 class="hasAnchor">
 <a href="#uniform-sampling" class="anchor"></a>Uniform sampling</h3>
 <p>Uniform base measure, unitary Dirichlet parameters: <span class="math inline">\(\boldsymbol{\alpha} = \boldsymbol{1}\)</span>.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">nu</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>, <span class="no">p</span>)/<span class="no">p</span>
-<span class="no">alpha0</span> <span class="kw">&lt;-</span> <span class="no">p</span>
-<span class="no">alpha</span> <span class="kw">&lt;-</span> <span class="no">nu</span> * <span class="no">alpha0</span></pre></body></html></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">nu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">p</span><span class="op">)</span><span class="op">/</span><span class="va">p</span>
+<span class="va">alpha0</span> <span class="op">&lt;-</span> <span class="va">p</span>
+<span class="va">alpha</span> <span class="op">&lt;-</span> <span class="va">nu</span> <span class="op">*</span> <span class="va">alpha0</span></code></pre></div>
 <p><span class="math inline">\(\alpha_0 = 4\)</span><br><span class="math inline">\(\boldsymbol{\nu} = \left( 0.25, 0.25, 0.25, 0.25 \right)\)</span><br><span class="math inline">\(\boldsymbol{\alpha} = \left( 1, 1, 1, 1 \right)\)</span></p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">df_diri</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span>(<span class="no">n</span>, <span class="no">alpha</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df_diri</span>)
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">df_diri</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">alpha</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df_diri</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 6 x 4</span>
-<span class="co">#&gt;     `x[1]` `x[2]` `x[3]` `x[4]`</span>
-<span class="co">#&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 0.279    0.270  0.186   0.264</span>
-<span class="co">#&gt; 2 0.229    0.0874 0.564   0.120</span>
-<span class="co">#&gt; 3 0.0659   0.206  0.233   0.495</span>
-<span class="co">#&gt; 4 0.229    0.0852 0.515   0.170</span>
-<span class="co">#&gt; 5 0.268    0.120  0.260   0.353</span>
-<span class="co">#&gt; 6 0.000579 0.281  0.0403  0.678</span></pre></body></html></div>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu">scatter_matrix_simplex</span>(<span class="no">df_diri</span>)</pre></body></html></div>
+<span class="co">#&gt;   `x[1]` `x[2]` `x[3]` `x[4]`</span>
+<span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 0.0269 0.289  0.529  0.155 </span>
+<span class="co">#&gt; 2 0.117  0.0997 0.158  0.625 </span>
+<span class="co">#&gt; 3 0.302  0.372  0.133  0.194 </span>
+<span class="co">#&gt; 4 0.549  0.260  0.0809 0.110 </span>
+<span class="co">#&gt; 5 0.139  0.493  0.0720 0.297 </span>
+<span class="co">#&gt; 6 0.223  0.244  0.485  0.0483</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">scatter_matrix_simplex</span><span class="op">(</span><span class="va">df_diri</span><span class="op">)</span></code></pre></div>
 <p><img src="dirichlet-distribution_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
 <div id="concentrated-sampling" class="section level3">
 <h3 class="hasAnchor">
 <a href="#concentrated-sampling" class="anchor"></a>Concentrated sampling</h3>
 <p>Concentration parameter <span class="math inline">\(\gg p\)</span>, Dirichlet parameters <span class="math inline">\(\gg 1\)</span></p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">nu</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>, <span class="no">p</span>)/<span class="no">p</span>
-<span class="no">alpha0</span> <span class="kw">&lt;-</span> <span class="fl">100</span>
-<span class="no">alpha</span> <span class="kw">&lt;-</span> <span class="no">nu</span> * <span class="no">alpha0</span></pre></body></html></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">nu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">p</span><span class="op">)</span><span class="op">/</span><span class="va">p</span>
+<span class="va">alpha0</span> <span class="op">&lt;-</span> <span class="fl">100</span>
+<span class="va">alpha</span> <span class="op">&lt;-</span> <span class="va">nu</span> <span class="op">*</span> <span class="va">alpha0</span></code></pre></div>
 <p><span class="math inline">\(\alpha_0 = 100\)</span><br><span class="math inline">\(\boldsymbol{\nu} = \left( 0.25, 0.25, 0.25, 0.25 \right)\)</span><br><span class="math inline">\(\boldsymbol{\alpha} = \left( 25, 25, 25, 25 \right)\)</span></p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">df_diri</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span>(<span class="no">n</span>, <span class="no">alpha</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df_diri</span>)
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">df_diri</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">alpha</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df_diri</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 6 x 4</span>
 <span class="co">#&gt;   `x[1]` `x[2]` `x[3]` `x[4]`</span>
 <span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  0.278  0.253  0.217  0.252</span>
-<span class="co">#&gt; 2  0.289  0.264  0.271  0.176</span>
-<span class="co">#&gt; 3  0.224  0.250  0.272  0.254</span>
-<span class="co">#&gt; 4  0.260  0.291  0.213  0.236</span>
-<span class="co">#&gt; 5  0.190  0.279  0.248  0.283</span>
-<span class="co">#&gt; 6  0.303  0.224  0.244  0.229</span></pre></body></html></div>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu">scatter_matrix_simplex</span>(<span class="no">df_diri</span>)</pre></body></html></div>
+<span class="co">#&gt; 1  0.257  0.294  0.211  0.239</span>
+<span class="co">#&gt; 2  0.202  0.326  0.202  0.269</span>
+<span class="co">#&gt; 3  0.199  0.263  0.253  0.284</span>
+<span class="co">#&gt; 4  0.241  0.268  0.299  0.192</span>
+<span class="co">#&gt; 5  0.281  0.257  0.202  0.259</span>
+<span class="co">#&gt; 6  0.220  0.221  0.255  0.304</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">scatter_matrix_simplex</span><span class="op">(</span><span class="va">df_diri</span><span class="op">)</span></code></pre></div>
 <p><img src="dirichlet-distribution_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 </div>
 <div id="degenerate-sampling" class="section level3">
 <h3 class="hasAnchor">
 <a href="#degenerate-sampling" class="anchor"></a>Degenerate sampling</h3>
 <p>Concentration parameter <span class="math inline">\(\\ p\)</span>, Dirichlet parameters <span class="math inline">\(\\ 1\)</span></p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">nu</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>, <span class="no">p</span>)/<span class="no">p</span>
-<span class="no">alpha0</span> <span class="kw">&lt;-</span> <span class="fl">0.01</span>
-<span class="no">alpha</span> <span class="kw">&lt;-</span> <span class="no">nu</span> * <span class="no">alpha0</span></pre></body></html></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">nu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">p</span><span class="op">)</span><span class="op">/</span><span class="va">p</span>
+<span class="va">alpha0</span> <span class="op">&lt;-</span> <span class="fl">0.01</span>
+<span class="va">alpha</span> <span class="op">&lt;-</span> <span class="va">nu</span> <span class="op">*</span> <span class="va">alpha0</span></code></pre></div>
 <p><span class="math inline">\(\alpha_0 = 0.01\)</span><br><span class="math inline">\(\boldsymbol{\nu} = \left( 0.25, 0.25, 0.25, 0.25 \right)\)</span><br><span class="math inline">\(\boldsymbol{\alpha} = \left( 0.0025, 0.0025, 0.0025, 0.0025 \right)\)</span></p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">df_diri</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span>(<span class="no">n</span>, <span class="no">alpha</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df_diri</span>)
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">df_diri</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fun_rdirichlet.html">fun_rdirichlet</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">alpha</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df_diri</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 6 x 4</span>
-<span class="co">#&gt;      `x[1]`    `x[2]`    `x[3]`    `x[4]`</span>
-<span class="co">#&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 1.00e+  0 1.05e- 11 1.48e- 99 2.77e- 90</span>
-<span class="co">#&gt; 2 4.77e- 66 2.79e-102 4.96e-130 1.00e+  0</span>
-<span class="co">#&gt; 3 0.        1.00e+  0 8.15e-104 1.80e- 13</span>
-<span class="co">#&gt; 4 5.25e-134 1.85e-114 1.00e+  0 1.20e-126</span>
-<span class="co">#&gt; 5 8.83e-222 1.96e-213 5.58e-259 1.00e+  0</span>
-<span class="co">#&gt; 6 1.00e+  0 3.84e- 14 1.86e- 97 0.</span></pre></body></html></div>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu">scatter_matrix_simplex</span>(<span class="no">df_diri</span>)</pre></body></html></div>
+<span class="co">#&gt;      `x[1]`    `x[2]`   `x[3]`    `x[4]`</span>
+<span class="co">#&gt;       &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 3.32e-  8 1.00e+  0 5.17e-53 1.92e-139</span>
+<span class="co">#&gt; 2 5.03e- 79 6.23e- 46 1.00e+ 0 0.       </span>
+<span class="co">#&gt; 3 1.00e+  0 3.22e- 16 3.92e-14 1.41e-154</span>
+<span class="co">#&gt; 4 8.03e- 15 9.67e-109 1.00e+ 0 3.43e- 61</span>
+<span class="co">#&gt; 5 1.00e+  0 5.86e-103 0.       3.09e- 81</span>
+<span class="co">#&gt; 6 1.25e-235 1.18e-182 1.00e+ 0 5.86e-206</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">scatter_matrix_simplex</span><span class="op">(</span><span class="va">df_diri</span><span class="op">)</span></code></pre></div>
 <p><img src="dirichlet-distribution_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>
 </div>
@@ -247,11 +253,13 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 
 
       <footer><div class="copyright">
-  <p>Developed by Lorenzo Gaborini.</p>
+  <p></p>
+<p>Developed by Lorenzo Gaborini.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link external-link">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
@@ -259,6 +267,8 @@ In other words, <span class="math inline">\(\boldsymbol{X} \in \text{Simplex}{(p
 
   
 
+
+  
 
   </body>
 </html>

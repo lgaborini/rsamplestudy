@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rsamplestudy</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -70,8 +66,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/lgaborini/rsamplestudy/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/lgaborini/rsamplestudy/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -85,15 +81,15 @@
 
       
 
-      </header><div class="row">
+      </header><script src="sampling_study_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Sampling: reference and questioned items</h1>
-                        <h4 class="author">Lorenzo Gaborini</h4>
+                        <h4 data-toc-skip class="author">Lorenzo Gaborini</h4>
             
-            <h4 class="date">2020-04-12</h4>
+            <h4 data-toc-skip class="date">2021-03-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/lgaborini/rsamplestudy/blob/master/vignettes/sampling_study.Rmd"><code>vignettes/sampling_study.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/lgaborini/rsamplestudy/blob/master/vignettes/sampling_study.Rmd" class="external-link"><code>vignettes/sampling_study.Rmd</code></a></small>
       <div class="hidden name"><code>sampling_study.Rmd</code></div>
 
     </div>
@@ -110,16 +106,17 @@ The <span class="math inline">\(j\)</span>-th observation from the <span class="
 <p><span class="math display">\[X_{ij} \sim f(\theta_i) \quad \text{iid } j = 1, ..., n_i \]</span></p>
 <p>where <span class="math inline">\(\theta_i\)</span> are parameters that characterise uniquely the <span class="math inline">\(i\)</span>-th source.</p>
 <p>For the purpose of illustration, let’s use the popular dataset <code>chickwts</code>:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">chickwts</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">chickwts</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">chickwts</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">chickwts</span><span class="op">)</span>
 <span class="co">#&gt;   weight      feed</span>
 <span class="co">#&gt; 1    179 horsebean</span>
 <span class="co">#&gt; 2    160 horsebean</span>
 <span class="co">#&gt; 3    136 horsebean</span>
 <span class="co">#&gt; 4    227 horsebean</span>
 <span class="co">#&gt; 5    217 horsebean</span>
-<span class="co">#&gt; 6    168 horsebean</span></pre></body></html></div>
-<p>The data are the recorded weights of 71 chicks according to <code><a href="https://rdrr.io/r/base/nlevels.html">nlevels(chickwts$feed)</a></code> different feed supplements (<code>feed</code> column). We consider <code>feed</code> as the source label: we assume that chicks are exchangeable given the administered feed.</p>
+<span class="co">#&gt; 6    168 horsebean</span></code></pre></div>
+<p>The data are the recorded weights of 71 chicks according to <code><a href="https://rdrr.io/r/base/nlevels.html" class="external-link">nlevels(chickwts$feed)</a></code> different feed supplements (<code>feed</code> column). We consider <code>feed</code> as the source label: we assume that chicks are exchangeable given the administered feed.</p>
 </div>
 <div id="two-sample-concept" class="section level2">
 <h2 class="hasAnchor">
@@ -137,15 +134,16 @@ It follows that (a subset of) the rows which have not been picked constitute a t
 <a href="#sample-generation" class="anchor"></a>Sample generation</h2>
 <p>To connect with the example, we consider <code>horsebean</code> feed as the reference source.<br>
 From the full data, we pick 5 observations to constitute each one of the reference and questioned sets. Let’s see how <code>rsamplestudy</code> does it:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">123</span>)
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">rsamplestudy</span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lgaborini/rsamplestudy" class="external-link">rsamplestudy</a></span><span class="op">)</span>
 
-<span class="no">n_items</span> <span class="kw">&lt;-</span> <span class="fl">5</span>
-<span class="no">col_source</span> <span class="kw">&lt;-</span> <span class="st">'feed'</span>
+<span class="va">n_items</span> <span class="op">&lt;-</span> <span class="fl">5</span>
+<span class="va">col_source</span> <span class="op">&lt;-</span> <span class="st">'feed'</span>
 
-<span class="no">list_split</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span>(<span class="no">chickwts</span>, <span class="kw">k_ref</span> <span class="kw">=</span> <span class="no">n_items</span>, <span class="kw">k_quest</span> <span class="kw">=</span> <span class="no">n_items</span>, <span class="kw">col_source</span> <span class="kw">=</span> <span class="st">'feed'</span>, <span class="kw">source_ref</span> <span class="kw">=</span> <span class="st">'horsebean'</span>)
-<span class="no">list_split</span>
+<span class="va">list_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span><span class="op">(</span><span class="va">chickwts</span>, k_ref <span class="op">=</span> <span class="va">n_items</span>, k_quest <span class="op">=</span> <span class="va">n_items</span>, col_source <span class="op">=</span> <span class="st">'feed'</span>, source_ref <span class="op">=</span> <span class="st">'horsebean'</span><span class="op">)</span>
+<span class="va">list_split</span>
 <span class="co">#&gt; $idx_reference</span>
 <span class="co">#&gt; [1]  2  3  6  8 10</span>
 <span class="co">#&gt; </span>
@@ -235,7 +233,7 @@ From the full data, we pick 5 observations to constitute each one of the referen
 <span class="co">#&gt; 68    216    casein</span>
 <span class="co">#&gt; 69    222    casein</span>
 <span class="co">#&gt; 70    283    casein</span>
-<span class="co">#&gt; 71    332    casein</span></pre></body></html></div>
+<span class="co">#&gt; 71    332    casein</span></code></pre></div>
 <p>The return value contains three lists: the indexes of the rows in <code>chickwts</code>, and three data frames (i.e. <code>chickwts</code> split up across the previous indexes).</p>
 <div id="questioned-source-choice" class="section level3">
 <h3 class="hasAnchor">
@@ -243,9 +241,10 @@ From the full data, we pick 5 observations to constitute each one of the referen
 <p>Notice that it automatically picked a questioned source.<br>
 This behaviour is specified in <code>make_dataset_splits</code> documentation: if the questioned source is not specified, then any source different from the reference one is picked as a potential source. Then, items are randomly picked.</p>
 <p>We can also force the questioned source(s): e.g. we pick items from <code>'horsebean'</code> and <code>'soybean'</code></p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">list_split</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span>(<span class="no">chickwts</span>, <span class="kw">k_ref</span> <span class="kw">=</span> <span class="no">n_items</span>, <span class="kw">k_quest</span> <span class="kw">=</span> <span class="no">n_items</span>, <span class="kw">col_source</span> <span class="kw">=</span> <span class="st">'feed'</span>,
-                                  <span class="kw">source_ref</span> <span class="kw">=</span> <span class="st">'horsebean'</span>, <span class="kw">source_quest</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'horsebean'</span>, <span class="st">'soybean'</span>))
-<span class="no">list_split</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">list_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span><span class="op">(</span><span class="va">chickwts</span>, k_ref <span class="op">=</span> <span class="va">n_items</span>, k_quest <span class="op">=</span> <span class="va">n_items</span>, col_source <span class="op">=</span> <span class="st">'feed'</span>, 
+                                  source_ref <span class="op">=</span> <span class="st">'horsebean'</span>, source_quest <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'horsebean'</span>, <span class="st">'soybean'</span><span class="op">)</span><span class="op">)</span>
+<span class="va">list_split</span>
 <span class="co">#&gt; $idx_reference</span>
 <span class="co">#&gt; [1] 1 3 5 8 9</span>
 <span class="co">#&gt; </span>
@@ -335,7 +334,7 @@ This behaviour is specified in <code>make_dataset_splits</code> documentation: i
 <span class="co">#&gt; 68    216    casein</span>
 <span class="co">#&gt; 69    222    casein</span>
 <span class="co">#&gt; 70    283    casein</span>
-<span class="co">#&gt; 71    332    casein</span></pre></body></html></div>
+<span class="co">#&gt; 71    332    casein</span></code></pre></div>
 </div>
 <div id="sampling-with-repetition" class="section level3">
 <h3 class="hasAnchor">
@@ -343,19 +342,21 @@ This behaviour is specified in <code>make_dataset_splits</code> documentation: i
 <p>It is always guaranteed that no item appears more than once across sets.<br>
 It may be explicitely allowed to pick multiple times an item <strong>in</strong> a set (but it will never appear in other sets).</p>
 <p>For example, chick counts per feed:</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span>(<span class="no">chickwts</span>$<span class="no">feed</span>)
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">chickwts</span><span class="op">$</span><span class="va">feed</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;    casein horsebean   linseed  meatmeal   soybean sunflower </span>
-<span class="co">#&gt;        12        10        12        11        14        12</span></pre></body></html></div>
+<span class="co">#&gt;        12        10        12        11        14        12</span></code></pre></div>
 <p>We might want to obtain bootstrap samples from chicken who have been fed with horsebeans, by sampling 100 times.</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">n_items_rep</span> <span class="kw">&lt;-</span> <span class="fl">100</span>
-<span class="no">list_split</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span>(<span class="no">chickwts</span>,
-                    <span class="kw">k_ref</span> <span class="kw">=</span> <span class="no">n_items_rep</span>,
-                    <span class="kw">k_quest</span> <span class="kw">=</span> <span class="no">n_items_rep</span>, <span class="kw">col_source</span> <span class="kw">=</span> <span class="st">'feed'</span>, <span class="kw">source_ref</span> <span class="kw">=</span> <span class="st">'horsebean'</span>)
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">n_items_rep</span> <span class="op">&lt;-</span> <span class="fl">100</span>
+<span class="va">list_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span><span class="op">(</span><span class="va">chickwts</span>, 
+                    k_ref <span class="op">=</span> <span class="va">n_items_rep</span>, 
+                    k_quest <span class="op">=</span> <span class="va">n_items_rep</span>, col_source <span class="op">=</span> <span class="st">'feed'</span>, source_ref <span class="op">=</span> <span class="st">'horsebean'</span><span class="op">)</span>
 <span class="co">#&gt; Reference items: sampling with replacement is being used.</span>
 <span class="co">#&gt; Questioned items: sampling with replacement is being used.</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">list_split</span>$<span class="no">df_reference</span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">df_reference</span><span class="op">)</span>
 <span class="co">#&gt;     weight      feed</span>
 <span class="co">#&gt; 1      179 horsebean</span>
 <span class="co">#&gt; 1.1    179 horsebean</span>
@@ -363,7 +364,7 @@ It may be explicitely allowed to pick multiple times an item <strong>in</strong>
 <span class="co">#&gt; 1.3    179 horsebean</span>
 <span class="co">#&gt; 1.4    179 horsebean</span>
 <span class="co">#&gt; 1.5    179 horsebean</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">list_split</span>$<span class="no">df_questioned</span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">df_questioned</span><span class="op">)</span>
 <span class="co">#&gt;    weight    feed</span>
 <span class="co">#&gt; 11    309 linseed</span>
 <span class="co">#&gt; 12    229 linseed</span>
@@ -371,21 +372,22 @@ It may be explicitely allowed to pick multiple times an item <strong>in</strong>
 <span class="co">#&gt; 14    141 linseed</span>
 <span class="co">#&gt; 16    203 linseed</span>
 <span class="co">#&gt; 17    148 linseed</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">list_split</span>$<span class="no">df_background</span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">df_background</span><span class="op">)</span>
 <span class="co">#&gt;    weight      feed</span>
 <span class="co">#&gt; 15    260   linseed</span>
 <span class="co">#&gt; 22    271   linseed</span>
 <span class="co">#&gt; 25    248   soybean</span>
 <span class="co">#&gt; 27    329   soybean</span>
 <span class="co">#&gt; 29    193   soybean</span>
-<span class="co">#&gt; 37    423 sunflower</span></pre></body></html></div>
+<span class="co">#&gt; 37    423 sunflower</span></code></pre></div>
 <p>Items are never picked more than once across the sets:</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/sets.html">intersect</a></span>(<span class="no">list_split</span>$<span class="no">idx_reference</span>, <span class="no">list_split</span>$<span class="no">idx_questioned</span>)
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">idx_reference</span>, <span class="va">list_split</span><span class="op">$</span><span class="va">idx_questioned</span><span class="op">)</span>
 <span class="co">#&gt; integer(0)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/sets.html">intersect</a></span>(<span class="no">list_split</span>$<span class="no">idx_questioned</span>, <span class="no">list_split</span>$<span class="no">idx_background</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">idx_questioned</span>, <span class="va">list_split</span><span class="op">$</span><span class="va">idx_background</span><span class="op">)</span>
 <span class="co">#&gt; integer(0)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/sets.html">intersect</a></span>(<span class="no">list_split</span>$<span class="no">idx_reference</span>, <span class="no">list_split</span>$<span class="no">idx_background</span>)
-<span class="co">#&gt; integer(0)</span></pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">idx_reference</span>, <span class="va">list_split</span><span class="op">$</span><span class="va">idx_background</span><span class="op">)</span>
+<span class="co">#&gt; integer(0)</span></code></pre></div>
 </div>
 <div id="background-selection" class="section level3">
 <h3 class="hasAnchor">
@@ -396,87 +398,91 @@ It may be explicitely allowed to pick multiple times an item <strong>in</strong>
 <li>
 <code>background = 'outside'</code> (default): the potential observed sources may appear in the background dataset.</li>
 </ol>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">123</span>)
-<span class="no">list_split</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span>(<span class="no">chickwts</span>, <span class="kw">k_ref</span> <span class="kw">=</span> <span class="no">n_items</span>, <span class="kw">k_quest</span> <span class="kw">=</span> <span class="no">n_items</span>, <span class="kw">col_source</span> <span class="kw">=</span> <span class="st">'feed'</span>, <span class="kw">source_ref</span> <span class="kw">=</span> <span class="st">'horsebean'</span>,
-                                  <span class="kw">background</span> <span class="kw">=</span> <span class="st">'outside'</span>)
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
+<span class="va">list_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span><span class="op">(</span><span class="va">chickwts</span>, k_ref <span class="op">=</span> <span class="va">n_items</span>, k_quest <span class="op">=</span> <span class="va">n_items</span>, col_source <span class="op">=</span> <span class="st">'feed'</span>, source_ref <span class="op">=</span> <span class="st">'horsebean'</span>,
+                                  background <span class="op">=</span> <span class="st">'outside'</span><span class="op">)</span>
 
 <span class="co"># Observed reference source</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">list_split</span>$<span class="no">df_reference</span>$<span class="no">feed</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">df_reference</span><span class="op">$</span><span class="va">feed</span><span class="op">)</span>
 <span class="co">#&gt; [1] horsebean</span>
 <span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span>
 <span class="co"># Observed questioned sources</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">list_split</span>$<span class="no">df_questioned</span>$<span class="no">feed</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">df_questioned</span><span class="op">$</span><span class="va">feed</span><span class="op">)</span>
 <span class="co">#&gt; [1] soybean   sunflower meatmeal  casein   </span>
 <span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span>
 <span class="co"># Sources in background</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">list_split</span>$<span class="no">df_background</span>$<span class="no">feed</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">df_background</span><span class="op">$</span><span class="va">feed</span><span class="op">)</span>
 <span class="co">#&gt; [1] horsebean linseed   soybean   sunflower meatmeal  casein   </span>
-<span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span></pre></body></html></div>
+<span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>
 <code>background = 'others'</code>: the potential observed sources cannot appear in the background set.</li>
 </ol>
 <p>Notice that if the potential sources span the entire available sources, than the background dataset must be empty.<br>
 It is the case when the questioned source is not specified, as it is automatically considered to be “all but the reference source”.</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">123</span>)
-<span class="no">list_split</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span>(<span class="no">chickwts</span>, <span class="kw">k_ref</span> <span class="kw">=</span> <span class="no">n_items</span>, <span class="kw">k_quest</span> <span class="kw">=</span> <span class="no">n_items</span>, <span class="kw">col_source</span> <span class="kw">=</span> <span class="st">'feed'</span>,
-                                  <span class="kw">source_ref</span> <span class="kw">=</span> <span class="st">'horsebean'</span>, <span class="kw">source_quest</span> <span class="kw">=</span> <span class="kw">NULL</span>,
-                                  <span class="kw">background</span> <span class="kw">=</span> <span class="st">'others'</span>)
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
+<span class="va">list_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span><span class="op">(</span><span class="va">chickwts</span>, k_ref <span class="op">=</span> <span class="va">n_items</span>, k_quest <span class="op">=</span> <span class="va">n_items</span>, col_source <span class="op">=</span> <span class="st">'feed'</span>, 
+                                  source_ref <span class="op">=</span> <span class="st">'horsebean'</span>, source_quest <span class="op">=</span> <span class="cn">NULL</span>,
+                                  background <span class="op">=</span> <span class="st">'others'</span><span class="op">)</span>
 <span class="co">#&gt; Warning in make_idx_splits(sources, k_ref = k_ref, k_quest = k_quest, ...): No</span>
 <span class="co">#&gt; background data!</span>
 
 <span class="co"># Observed reference source</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">list_split</span>$<span class="no">df_reference</span>$<span class="no">feed</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">df_reference</span><span class="op">$</span><span class="va">feed</span><span class="op">)</span>
 <span class="co">#&gt; [1] horsebean</span>
 <span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span>
 <span class="co"># Observed questioned sources</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">list_split</span>$<span class="no">df_questioned</span>$<span class="no">feed</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">df_questioned</span><span class="op">$</span><span class="va">feed</span><span class="op">)</span>
 <span class="co">#&gt; [1] soybean   sunflower meatmeal  casein   </span>
 <span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span>
 <span class="co"># Sources in background</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">list_split</span>$<span class="no">df_background</span>$<span class="no">feed</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">df_background</span><span class="op">$</span><span class="va">feed</span><span class="op">)</span>
 <span class="co">#&gt; factor(0)</span>
-<span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span></pre></body></html></div>
+<span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span></code></pre></div>
 <p>Once the potential observed sources are restricted, the background selection matters:</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">123</span>)
-<span class="no">list_split</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span>(<span class="no">chickwts</span>, <span class="kw">k_ref</span> <span class="kw">=</span> <span class="no">n_items</span>, <span class="kw">k_quest</span> <span class="kw">=</span> <span class="no">n_items</span>, <span class="kw">col_source</span> <span class="kw">=</span> <span class="st">'feed'</span>,
-                                  <span class="kw">source_ref</span> <span class="kw">=</span> <span class="st">'horsebean'</span>, <span class="kw">source_quest</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'horsebean'</span>, <span class="st">'soybean'</span>),
-                                  <span class="kw">background</span> <span class="kw">=</span> <span class="st">'others'</span>)
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
+<span class="va">list_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span><span class="op">(</span><span class="va">chickwts</span>, k_ref <span class="op">=</span> <span class="va">n_items</span>, k_quest <span class="op">=</span> <span class="va">n_items</span>, col_source <span class="op">=</span> <span class="st">'feed'</span>, 
+                                  source_ref <span class="op">=</span> <span class="st">'horsebean'</span>, source_quest <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'horsebean'</span>, <span class="st">'soybean'</span><span class="op">)</span>,
+                                  background <span class="op">=</span> <span class="st">'others'</span><span class="op">)</span>
 
 <span class="co"># Observed reference source</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">list_split</span>$<span class="no">df_reference</span>$<span class="no">feed</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">df_reference</span><span class="op">$</span><span class="va">feed</span><span class="op">)</span>
 <span class="co">#&gt; [1] horsebean</span>
 <span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span>
 <span class="co"># Observed questioned sources</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">list_split</span>$<span class="no">df_questioned</span>$<span class="no">feed</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">df_questioned</span><span class="op">$</span><span class="va">feed</span><span class="op">)</span>
 <span class="co">#&gt; [1] horsebean soybean  </span>
 <span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span>
 <span class="co"># Sources in background</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">list_split</span>$<span class="no">df_background</span>$<span class="no">feed</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">df_background</span><span class="op">$</span><span class="va">feed</span><span class="op">)</span>
 <span class="co">#&gt; [1] linseed   sunflower meatmeal  casein   </span>
-<span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span></pre></body></html></div>
+<span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>
 <code>background = 'unobserved'</code>: the observed sources (i.e. sources whose items have been sampled, either in the reference or in the questioned set) cannot appear in the background set.</li>
 </ol>
 <p>Notice that previous example is no longer an error, as long as at least one source has never been observed:</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">123</span>)
-<span class="no">list_split</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span>(<span class="no">chickwts</span>, <span class="kw">k_ref</span> <span class="kw">=</span> <span class="no">n_items</span>, <span class="kw">k_quest</span> <span class="kw">=</span> <span class="no">n_items</span>, <span class="kw">col_source</span> <span class="kw">=</span> <span class="st">'feed'</span>,
-                                  <span class="kw">source_ref</span> <span class="kw">=</span> <span class="st">'horsebean'</span>, <span class="kw">source_quest</span> <span class="kw">=</span> <span class="kw">NULL</span>,
-                                  <span class="kw">background</span> <span class="kw">=</span> <span class="st">'unobserved'</span>)
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
+<span class="va">list_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span><span class="op">(</span><span class="va">chickwts</span>, k_ref <span class="op">=</span> <span class="va">n_items</span>, k_quest <span class="op">=</span> <span class="va">n_items</span>, col_source <span class="op">=</span> <span class="st">'feed'</span>, 
+                                  source_ref <span class="op">=</span> <span class="st">'horsebean'</span>, source_quest <span class="op">=</span> <span class="cn">NULL</span>,
+                                  background <span class="op">=</span> <span class="st">'unobserved'</span><span class="op">)</span>
 
 <span class="co"># Observed reference source</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">list_split</span>$<span class="no">df_reference</span>$<span class="no">feed</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">df_reference</span><span class="op">$</span><span class="va">feed</span><span class="op">)</span>
 <span class="co">#&gt; [1] horsebean</span>
 <span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span>
 <span class="co"># Observed questioned sources</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">list_split</span>$<span class="no">df_questioned</span>$<span class="no">feed</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">df_questioned</span><span class="op">$</span><span class="va">feed</span><span class="op">)</span>
 <span class="co">#&gt; [1] soybean   sunflower meatmeal  casein   </span>
 <span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span>
 <span class="co"># Sources in background</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">list_split</span>$<span class="no">df_background</span>$<span class="no">feed</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">list_split</span><span class="op">$</span><span class="va">df_background</span><span class="op">$</span><span class="va">feed</span><span class="op">)</span>
 <span class="co">#&gt; [1] linseed</span>
-<span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span></pre></body></html></div>
+<span class="co">#&gt; Levels: casein horsebean linseed meatmeal soybean sunflower</span></code></pre></div>
 </div>
 </div>
   </div>
@@ -492,11 +498,13 @@ It is the case when the questioned source is not specified, as it is automatical
 
 
       <footer><div class="copyright">
-  <p>Developed by Lorenzo Gaborini.</p>
+  <p></p>
+<p>Developed by Lorenzo Gaborini.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link external-link">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
@@ -504,6 +512,8 @@ It is the case when the questioned source is not specified, as it is automatical
 
   
 
+
+  
 
   </body>
 </html>

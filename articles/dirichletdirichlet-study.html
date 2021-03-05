@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rsamplestudy</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -70,8 +66,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/lgaborini/rsamplestudy/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/lgaborini/rsamplestudy/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -85,15 +81,15 @@
 
       
 
-      </header><div class="row">
+      </header><script src="dirichletdirichlet-study_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Dirichlet-Dirichlet study generation</h1>
-                        <h4 class="author">Lorenzo Gaborini</h4>
+                        <h4 data-toc-skip class="author">Lorenzo Gaborini</h4>
             
-            <h4 class="date">2020-04-12</h4>
+            <h4 data-toc-skip class="date">2021-03-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/lgaborini/rsamplestudy/blob/master/vignettes/dirichletdirichlet-study.Rmd"><code>vignettes/dirichletdirichlet-study.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/lgaborini/rsamplestudy/blob/master/vignettes/dirichletdirichlet-study.Rmd" class="external-link"><code>vignettes/dirichletdirichlet-study.Rmd</code></a></small>
       <div class="hidden name"><code>dirichletdirichlet-study.Rmd</code></div>
 
     </div>
@@ -122,15 +118,16 @@ This vignette describes the Dirichlet-Dirichlet model.</p>
 <h2 class="hasAnchor">
 <a href="#population-generation" class="anchor"></a>Population generation</h2>
 <p>The population can be generated using <code>fun_rdirichlet_population</code>:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># Population parameters:</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Population parameters:</span>
 <span class="co"># Number of sources</span>
-<span class="no">n</span> <span class="kw">&lt;-</span> <span class="fl">10</span>
+<span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">10</span>
 <span class="co"># Number of items per source</span>
-<span class="no">m</span> <span class="kw">&lt;-</span> <span class="fl">20</span>
+<span class="va">m</span> <span class="op">&lt;-</span> <span class="fl">20</span>
 <span class="co"># Number of observations per item</span>
-<span class="no">p</span> <span class="kw">&lt;-</span> <span class="fl">4</span>
+<span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">4</span>
 
-<span class="no">list_pop</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/fun_rdirichlet_population.html">fun_rdirichlet_population</a></span>(<span class="no">n</span>, <span class="no">m</span>, <span class="no">p</span>)</pre></body></html></div>
+<span class="va">list_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fun_rdirichlet_population.html">fun_rdirichlet_population</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">m</span>, <span class="va">p</span><span class="op">)</span></code></pre></div>
 <p>The output contains:</p>
 <ul>
 <li>the population <code>df_pop</code>
@@ -143,26 +140,27 @@ This vignette describes the Dirichlet-Dirichlet model.</p>
 </li>
 </ul>
 <p>Notice that the hyperparameter is sampled, too (but it can be fixed).</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">list_pop</span>$<span class="no">df_pop</span>)
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">list_pop</span><span class="op">$</span><span class="va">df_pop</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 6 x 5</span>
-<span class="co">#&gt;   source `x[1]` `x[2]`    `x[3]` `x[4]`</span>
-<span class="co">#&gt;    &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1      1  0.636 0.364  1.30e- 82      0</span>
-<span class="co">#&gt; 2      1  0.847 0.153  9.62e- 46      0</span>
-<span class="co">#&gt; 3      1  0.821 0.179  5.33e-  8      0</span>
-<span class="co">#&gt; 4      1  0.250 0.750  1.92e-318      0</span>
-<span class="co">#&gt; 5      1  0.920 0.0803 5.24e- 70      0</span>
-<span class="co">#&gt; 6      1  0.973 0.0265 8.41e- 81      0</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">list_pop</span>$<span class="no">df_sources</span>)
+<span class="co">#&gt;   source   `x[1]` `x[2]` `x[3]` `x[4]`</span>
+<span class="co">#&gt;    &lt;int&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt; 1      1 5.64e-38      0  1          0</span>
+<span class="co">#&gt; 2      1 1.66e-35      0  1          0</span>
+<span class="co">#&gt; 3      1 2.88e-31      0  1          0</span>
+<span class="co">#&gt; 4      1 1.19e-46      0  1          0</span>
+<span class="co">#&gt; 5      1 1.51e- 3      0  0.998      0</span>
+<span class="co">#&gt; 6      1 2.14e-25      0  1          0</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">list_pop</span><span class="op">$</span><span class="va">df_sources</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 6 x 5</span>
 <span class="co">#&gt;   source `theta[1]` `theta[2]` `theta[3]` `theta[4]`</span>
 <span class="co">#&gt;    &lt;int&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt; 1      1     0.602      0.396    2.01e- 3   3.79e- 9</span>
-<span class="co">#&gt; 2      2     0.195      0.802    4.95e- 6   3.33e- 3</span>
-<span class="co">#&gt; 3      3     0.0529     0.947    9.20e-32   9.60e-10</span>
-<span class="co">#&gt; 4      4     0.358      0.638    2.48e- 8   3.79e- 3</span>
-<span class="co">#&gt; 5      5     0.508      0.0397   8.42e-12   4.52e- 1</span>
-<span class="co">#&gt; 6      6     0.923      0.0773   1.83e- 7   8.58e- 5</span></pre></body></html></div>
+<span class="co">#&gt; 1      1    0.0115    0.000113     0.988   1.30e-124</span>
+<span class="co">#&gt; 2      2    0.770     0.186        0.0431  3.83e-290</span>
+<span class="co">#&gt; 3      3    0.00198   0.436        0.562   2.41e-122</span>
+<span class="co">#&gt; 4      4    0.554     0.0287       0.417   1.91e-229</span>
+<span class="co">#&gt; 5      5    0.162     0.615        0.222   1.41e- 41</span>
+<span class="co">#&gt; 6      6    0.837     0.00159      0.162   0.</span></code></pre></div>
 </div>
 <div id="hyperparameters" class="section level2">
 <h2 class="hasAnchor">
@@ -170,8 +168,9 @@ This vignette describes the Dirichlet-Dirichlet model.</p>
 <p>We assume that the Dirichlet hyperparameter (the level farther from the data) comes from the Uniform distribution on the (p-1)-Simplex.<br>
 In other words, we will sample the Dirichlet hyperparameter from the <span class="math inline">\(\text{Dirichlet}{(\boldsymbol{1})}\)</span> distribution.</p>
 <p>The shortcut function the package is <code>fun_rdirichlet_hyperparameter</code>:</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">df_diri</span> <span class="kw">&lt;-</span> <span class="kw pkg">purrr</span><span class="kw ns">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dfr</a></span>(<span class="fl">1</span>:<span class="fl">300</span>, ~ <span class="fu"><a href="../reference/fun_rdirichlet_hyperparameter.html">fun_rdirichlet_hyperparameter</a></span>(<span class="fl">3</span>))
-<span class="fu">scatter_matrix_simplex</span>(<span class="no">df_diri</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">df_diri</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_dfr</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">300</span>, <span class="op">~</span> <span class="fu"><a href="../reference/fun_rdirichlet_hyperparameter.html">fun_rdirichlet_hyperparameter</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>
+<span class="fu">scatter_matrix_simplex</span><span class="op">(</span><span class="va">df_diri</span><span class="op">)</span></code></pre></div>
 <p><img src="dirichletdirichlet-study_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
 <div id="partitioning" class="section level2">
@@ -179,43 +178,45 @@ In other words, we will sample the Dirichlet hyperparameter from the <span class
 <a href="#partitioning" class="anchor"></a>Partitioning</h2>
 <p>Once the population is generated, the reference/questioned/background samples must be extracted.<br>
 This is generically done using <code>make_dataset_splits</code>:</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r">
-<span class="no">k_ref</span> <span class="kw">&lt;-</span> <span class="fl">10</span>
-<span class="no">k_quest</span> <span class="kw">&lt;-</span> <span class="fl">5</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="va">k_ref</span> <span class="op">&lt;-</span> <span class="fl">10</span>
+<span class="va">k_quest</span> <span class="op">&lt;-</span> <span class="fl">5</span>
 
-<span class="no">list_samples</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span>(<span class="no">list_pop</span>$<span class="no">df_pop</span>, <span class="no">k_ref</span>, <span class="no">k_quest</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">list_samples</span>)
+<span class="va">list_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_dataset_splits.html">make_dataset_splits</a></span><span class="op">(</span><span class="va">list_pop</span><span class="op">$</span><span class="va">df_pop</span>, <span class="va">k_ref</span>, <span class="va">k_quest</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">list_samples</span><span class="op">)</span>
 <span class="co">#&gt; [1] "idx_reference"  "idx_questioned" "idx_background" "df_reference"  </span>
-<span class="co">#&gt; [5] "df_questioned"  "df_background"</span></pre></body></html></div>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">list_samples</span>$<span class="no">df_reference</span>)
+<span class="co">#&gt; [5] "df_questioned"  "df_background"</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">list_samples</span><span class="op">$</span><span class="va">df_reference</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 6 x 5</span>
-<span class="co">#&gt;   source      `x[1]` `x[2]` `x[3]`    `x[4]`</span>
-<span class="co">#&gt;    &lt;int&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1      2 0.572        0.428      0 1.98e-203</span>
-<span class="co">#&gt; 2      2 0.0000719    1.00       0 2.80e-  7</span>
-<span class="co">#&gt; 3      2 0.000000861  1.00       0 9.43e-188</span>
-<span class="co">#&gt; 4      2 0.0000108    1.00       0 5.25e- 25</span>
-<span class="co">#&gt; 5      2 0.0000107    1.00       0 2.51e- 47</span>
-<span class="co">#&gt; 6      2 0.235        0.765      0 4.54e-173</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">list_samples</span>$<span class="no">df_questioned</span>)
+<span class="co">#&gt;   source `x[1]`     `x[2]` `x[3]` `x[4]`</span>
+<span class="co">#&gt;    &lt;int&gt;  &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     18      0 0.905      0.0951      0</span>
+<span class="co">#&gt; 2     18      0 0.381      0.619       0</span>
+<span class="co">#&gt; 3     18      0 0.00000422 1.00        0</span>
+<span class="co">#&gt; 4     18      0 0.0402     0.960       0</span>
+<span class="co">#&gt; 5     18      0 0.491      0.509       0</span>
+<span class="co">#&gt; 6     18      0 0.000656   0.999       0</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">list_samples</span><span class="op">$</span><span class="va">df_questioned</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 5 x 5</span>
-<span class="co">#&gt;   source  `x[1]`    `x[2]` `x[3]`   `x[4]`</span>
-<span class="co">#&gt;    &lt;int&gt;   &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1     12 0.0254  9.75e-  1      0 9.35e-25</span>
-<span class="co">#&gt; 2     12 0.00380 9.96e-  1      0 2.91e- 7</span>
-<span class="co">#&gt; 3     17 1       7.86e- 64      0 0.      </span>
-<span class="co">#&gt; 4     19 1       6.33e- 91      0 0.      </span>
-<span class="co">#&gt; 5     20 1.00    2.53e-252      0 4.38e- 4</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">list_samples</span>$<span class="no">df_background</span>)
+<span class="co">#&gt;   source `x[1]`        `x[2]`    `x[3]` `x[4]`</span>
+<span class="co">#&gt;    &lt;int&gt;  &lt;dbl&gt;         &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt; 1      4  0.476 0.00000000186 0.524          0</span>
+<span class="co">#&gt; 2      5  0.507 0.493         0.0000482      0</span>
+<span class="co">#&gt; 3      7  0     0             1              0</span>
+<span class="co">#&gt; 4     11  0     0.0266        0.973          0</span>
+<span class="co">#&gt; 5     16  0     0.0155        0.984          0</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">list_samples</span><span class="op">$</span><span class="va">df_background</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 6 x 5</span>
-<span class="co">#&gt;   source `x[1]` `x[2]`    `x[3]` `x[4]`</span>
-<span class="co">#&gt;    &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1      1  0.636 0.364  1.30e- 82      0</span>
-<span class="co">#&gt; 2      1  0.847 0.153  9.62e- 46      0</span>
-<span class="co">#&gt; 3      1  0.821 0.179  5.33e-  8      0</span>
-<span class="co">#&gt; 4      1  0.250 0.750  1.92e-318      0</span>
-<span class="co">#&gt; 5      1  0.920 0.0803 5.24e- 70      0</span>
-<span class="co">#&gt; 6      1  0.973 0.0265 8.41e- 81      0</span></pre></body></html></div>
+<span class="co">#&gt;   source   `x[1]` `x[2]` `x[3]` `x[4]`</span>
+<span class="co">#&gt;    &lt;int&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt; 1      1 5.64e-38      0  1          0</span>
+<span class="co">#&gt; 2      1 1.66e-35      0  1          0</span>
+<span class="co">#&gt; 3      1 2.88e-31      0  1          0</span>
+<span class="co">#&gt; 4      1 1.19e-46      0  1          0</span>
+<span class="co">#&gt; 5      1 1.51e- 3      0  0.998      0</span>
+<span class="co">#&gt; 6      1 2.14e-25      0  1          0</span></code></pre></div>
 <div id="source-parameters" class="section level3">
 <h3 class="hasAnchor">
 <a href="#source-parameters" class="anchor"></a>Source parameters</h3>
@@ -236,11 +237,13 @@ This is generically done using <code>make_dataset_splits</code>:</p>
 
 
       <footer><div class="copyright">
-  <p>Developed by Lorenzo Gaborini.</p>
+  <p></p>
+<p>Developed by Lorenzo Gaborini.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link external-link">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
@@ -248,6 +251,8 @@ This is generically done using <code>make_dataset_splits</code>:</p>
 
   
 
+
+  
 
   </body>
 </html>

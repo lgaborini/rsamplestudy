@@ -46,6 +46,8 @@ The split is done according by the item source." />
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -57,9 +59,15 @@ The split is done according by the item source." />
 
 
 
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -73,19 +81,13 @@ The split is done according by the item source." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rsamplestudy</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -113,7 +115,7 @@ The split is done according by the item source." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/lgaborini/rsamplestudy/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,7 +142,7 @@ The split is done according by the item source." />
 The split is done according by the item source.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>make_dataset_splits</span>(<span class='no'>df</span>, <span class='no'>k_ref</span>, <span class='no'>k_quest</span>, <span class='kw'>col_source</span> <span class='kw'>=</span> <span class='st'>"source"</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>make_dataset_splits</span><span class='op'>(</span><span class='va'>df</span>, <span class='va'>k_ref</span>, <span class='va'>k_quest</span>, col_source <span class='op'>=</span> <span class='st'>"source"</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -163,7 +165,7 @@ The split is done according by the item source.</p>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments passed on to <code><a href='make_idx_splits.html'>make_idx_splits</a></code></p><dl'>
+      <td><p>Arguments passed on to <code><a href='make_idx_splits.html'>make_idx_splits</a></code></p><dl>
     <dt><code>source_ref</code></dt><dd><p>the reference source (scalar; if <code>NULL</code>, a random source will be picked)</p></dd>
     <dt><code>source_quest</code></dt><dd><p>the questioned source(s) (if <code>NULL</code>, anything but the reference source: behaviour overridden by <code>same_source</code>)</p></dd>
     <dt><code>same_source</code></dt><dd><p>if <code>source_quest</code> is <code>NULL</code> and <code>same_source</code> is <code>TRUE</code>, questioned source is the reference source; see details for conflict resolution</p></dd>
@@ -234,26 +236,27 @@ It is also forbidden to specify a <code>source_ref</code> or a <code>source_ques
 <code><a href='make_idx_splits.html'>make_idx_splits</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># Sample different species</span>
-<span class='fu'>make_dataset_splits</span>(<span class='no'>iris</span>, <span class='fl'>5</span>, <span class='fl'>5</span>, <span class='kw'>col_source</span> <span class='kw'>=</span> <span class='st'>'Species'</span>)
+<span class='fu'>make_dataset_splits</span><span class='op'>(</span><span class='va'>iris</span>, <span class='fl'>5</span>, <span class='fl'>5</span>, col_source <span class='op'>=</span> <span class='st'>'Species'</span><span class='op'>)</span>
 
 <span class='co'># Sample same species</span>
-<span class='fu'>make_dataset_splits</span>(<span class='no'>iris</span>, <span class='fl'>5</span>, <span class='fl'>5</span>, <span class='kw'>col_source</span> <span class='kw'>=</span> <span class='st'>'Species'</span>, <span class='kw'>same_source</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>make_dataset_splits</span><span class='op'>(</span><span class='va'>iris</span>, <span class='fl'>5</span>, <span class='fl'>5</span>, col_source <span class='op'>=</span> <span class='st'>'Species'</span>, same_source <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># Sample from custom species</span>
-<span class='fu'>make_dataset_splits</span>(<span class='no'>iris</span>, <span class='fl'>5</span>, <span class='fl'>5</span>, <span class='kw'>col_source</span> <span class='kw'>=</span> <span class='st'>'Species'</span>,
-   <span class='kw'>source_ref</span> <span class='kw'>=</span> <span class='st'>'virginica'</span>, <span class='kw'>source_quest</span> <span class='kw'>=</span> <span class='st'>'versicolor'</span>)
-<span class='fu'>make_dataset_splits</span>(<span class='no'>iris</span>, <span class='fl'>5</span>, <span class='fl'>5</span>, <span class='kw'>col_source</span> <span class='kw'>=</span> <span class='st'>'Species'</span>,
-   <span class='kw'>source_ref</span> <span class='kw'>=</span> <span class='st'>'virginica'</span>, <span class='kw'>source_quest</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'virginica'</span>, <span class='st'>'versicolor'</span>))
+<span class='fu'>make_dataset_splits</span><span class='op'>(</span><span class='va'>iris</span>, <span class='fl'>5</span>, <span class='fl'>5</span>, col_source <span class='op'>=</span> <span class='st'>'Species'</span>,
+   source_ref <span class='op'>=</span> <span class='st'>'virginica'</span>, source_quest <span class='op'>=</span> <span class='st'>'versicolor'</span><span class='op'>)</span>
+<span class='fu'>make_dataset_splits</span><span class='op'>(</span><span class='va'>iris</span>, <span class='fl'>5</span>, <span class='fl'>5</span>, col_source <span class='op'>=</span> <span class='st'>'Species'</span>,
+   source_ref <span class='op'>=</span> <span class='st'>'virginica'</span>, source_quest <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'virginica'</span>, <span class='st'>'versicolor'</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># Sample from reference source with replacement</span>
-<span class='fu'>make_dataset_splits</span>(<span class='no'>iris</span>, <span class='fl'>500</span>, <span class='fl'>5</span>, <span class='kw'>col_source</span> <span class='kw'>=</span> <span class='st'>'Species'</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>make_dataset_splits</span><span class='op'>(</span><span class='va'>iris</span>, <span class='fl'>500</span>, <span class='fl'>5</span>, col_source <span class='op'>=</span> <span class='st'>'Species'</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># Use background sources from non-sampled items</span>
-<span class='fu'>make_dataset_splits</span>(<span class='no'>iris</span>, <span class='fl'>50</span>, <span class='fl'>50</span>, <span class='kw'>col_source</span> <span class='kw'>=</span> <span class='st'>'Species'</span>,
-   <span class='kw'>source_ref</span> <span class='kw'>=</span> <span class='st'>'virginica'</span>, <span class='kw'>source_quest</span> <span class='kw'>=</span> <span class='st'>'versicolor'</span>, <span class='kw'>background</span> <span class='kw'>=</span> <span class='st'>'others'</span>)
-}</div></pre>
+<span class='fu'>make_dataset_splits</span><span class='op'>(</span><span class='va'>iris</span>, <span class='fl'>50</span>, <span class='fl'>50</span>, col_source <span class='op'>=</span> <span class='st'>'Species'</span>,
+   source_ref <span class='op'>=</span> <span class='st'>'virginica'</span>, source_quest <span class='op'>=</span> <span class='st'>'versicolor'</span>, background <span class='op'>=</span> <span class='st'>'others'</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -265,11 +268,11 @@ It is also forbidden to specify a <code>source_ref</code> or a <code>source_ques
 
       <footer>
       <div class="copyright">
-  <p>Developed by Lorenzo Gaborini.</p>
+  <p><p>Developed by Lorenzo Gaborini.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9000.</p></p>
 </div>
 
       </footer>
@@ -277,6 +280,8 @@ It is also forbidden to specify a <code>source_ref</code> or a <code>source_ques
 
   
 
+
+  
 
   </body>
 </html>
